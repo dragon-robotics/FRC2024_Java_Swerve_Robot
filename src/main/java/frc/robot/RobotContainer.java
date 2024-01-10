@@ -48,12 +48,12 @@ public class RobotContainer {
     configureBindings();
 
     // Init Auto Chooser //
-    autoChooser = AutoBuilder.buildAutoChooser("TwoPieceBalance");
-    SmartDashboard.putData("TwoPieceBalance", autoChooser);
+    autoChooser = AutoBuilder.buildAutoChooser("OnePieceExit");
+    SmartDashboard.putData("OnePieceExit", autoChooser);
 
 
     // Register Named Commands //
-    NamedCommands.registerCommand("TwoPieceBalance", getAutonomousCommand());
+    NamedCommands.registerCommand("OnePieceExit", getAutonomousCommand());
   }
 
   /**

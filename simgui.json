@@ -61,6 +61,7 @@
       "/LiveWindow/Ungrouped/Pigeon 2 [0]": "Gyro",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/OnePieceExit": "String Chooser",
       "/SmartDashboard/Pigeon 2 [0]": "Gyro",
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
       "/SmartDashboard/TwoPieceBalance": "String Chooser",
