@@ -11,7 +11,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -68,6 +67,10 @@ public class SwerveDrive
    */
   private final Lock                     odometryLock                                    = new ReentrantLock();
   /**
+   * Deadband for speeds in heading correction.
+   */
+  private final double                   HEADING_CORRECTION_DEADBAND                     = 0.01;
+  /**
    * Field object.
    */
   public        Field2d                  field                                           = new Field2d();
@@ -104,6 +107,10 @@ public class SwerveDrive
    * Whether to correct heading when driving translationally. Set to true to enable.
    */
   public        boolean                  headingCorrection                               = false;
+  /**
+   * Whether heading correction PID is currently active.
+   */
+  private       boolean                  correctionEnabled                               = false;
   /**
    * Swerve IMU device for sensing the heading of the robot.
    */
@@ -396,27 +403,28 @@ public class SwerveDrive
     // https://www.chiefdelphi.com/t/whitepaper-swerve-drive-skew-and-second-order-kinematics/416964/5
     if (chassisVelocityCorrection)
     {
-      double dtConstant = 0.009;
-      Pose2d robotPoseVel = new Pose2d(velocity.vxMetersPerSecond * dtConstant,
-                                       velocity.vyMetersPerSecond * dtConstant,
-                                       Rotation2d.fromRadians(velocity.omegaRadiansPerSecond * dtConstant));
-      Twist2d twistVel = SwerveMath.PoseLog(robotPoseVel);
-
-      velocity = new ChassisSpeeds(twistVel.dx / dtConstant, twistVel.dy / dtConstant,
-                                   twistVel.dtheta / dtConstant);
+      velocity = ChassisSpeeds.discretize(velocity, 0.02);
     }
 
     // Heading Angular Velocity Deadband, might make a configuration option later.
     // Originally made by Team 1466 Webb Robotics.
+    // Modified by Team 7525 Pioneers and BoiledBurntBagel of 6036
     if (headingCorrection)
     {
-      if (Math.abs(velocity.omegaRadiansPerSecond) < 0.01)
+      if (Math.abs(velocity.omegaRadiansPerSecond) < HEADING_CORRECTION_DEADBAND
+          && (Math.abs(velocity.vxMetersPerSecond) > HEADING_CORRECTION_DEADBAND
+              || Math.abs(velocity.vyMetersPerSecond) > HEADING_CORRECTION_DEADBAND))
       {
+        if (!correctionEnabled)
+        {
+          lastHeadingRadians = getYaw().getRadians();
+          correctionEnabled = true;
+        }
         velocity.omegaRadiansPerSecond =
             swerveController.headingCalculate(lastHeadingRadians, getYaw().getRadians());
       } else
       {
-        lastHeadingRadians = getYaw().getRadians();
+        correctionEnabled = false;
       }
     }
 
@@ -487,15 +495,6 @@ public class SwerveDrive
                                            2] = module.lastState.angle.getDegrees();
         SwerveDriveTelemetry.desiredStates[(module.moduleNumber * 2) +
                                            1] = module.lastState.speedMetersPerSecond;
-      }
-      if (SwerveDriveTelemetry.verbosity == TelemetryVerbosity.HIGH)
-      {
-        SmartDashboard.putNumber(
-            "Module[" + module.configuration.name + "] Speed Setpoint: ",
-            module.lastState.speedMetersPerSecond);
-        SmartDashboard.putNumber(
-            "Module[" + module.configuration.name + "] Angle Setpoint: ",
-            module.lastState.angle.getDegrees());
       }
     }
   }
@@ -897,13 +896,8 @@ public class SwerveDrive
         sumVelocity += Math.abs(moduleState.speedMetersPerSecond);
         if (SwerveDriveTelemetry.verbosity == TelemetryVerbosity.HIGH)
         {
-          SmartDashboard.putNumber(
-              "Module[" + module.configuration.name + "] Relative Encoder", module.getRelativePosition());
-          SmartDashboard.putNumber(
-              "Module[" + module.configuration.name + "] Absolute Encoder", module.getAbsolutePosition());
-          SmartDashboard.putNumber(
-              "Module[" + module.configuration.name + "] Absolute Encoder Read Issue",
-              module.getAbsoluteEncoderReadIssue() ? 1 : 0);
+          module.updateTelemetry();
+          SmartDashboard.putNumber("Adjusted IMU Yaw", getYaw().getDegrees());
         }
         if (SwerveDriveTelemetry.verbosity.ordinal() >= TelemetryVerbosity.HIGH.ordinal())
         {
@@ -1051,24 +1045,11 @@ public class SwerveDrive
    * Reset the drive encoders on the robot, useful when manually resetting the robot without a reboot, like in
    * autonomous.
    */
-  public void resetEncoders()
+  public void resetDriveEncoders()
   {
     for (SwerveModule module : swerveModules)
     {
       module.configuration.driveMotor.setPosition(0);
-    }
-  }
-
-  /**
-   * Configure whether the {@link SwerveModuleState} will be optimized to prevent spinning more than 90deg.
-   *
-   * @param optimizationEnabled Whether the module optimization is enabled.
-   */
-  public void setModuleStateOptimization(boolean optimizationEnabled)
-  {
-    for (SwerveModule module : swerveModules)
-    {
-      module.moduleStateOptimization = optimizationEnabled;
     }
   }
 

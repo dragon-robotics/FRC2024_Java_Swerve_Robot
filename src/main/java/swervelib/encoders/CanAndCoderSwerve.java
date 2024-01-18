@@ -1,7 +1,6 @@
 package swervelib.encoders;
 
 import com.reduxrobotics.sensors.canandcoder.Canandcoder;
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * HELIUM {@link Canandcoder} from ReduxRobotics absolute encoder, attached through the CAN bus.
@@ -10,18 +9,14 @@ public class CanAndCoderSwerve extends SwerveAbsoluteEncoder
 {
 
   /**
-   * The {@link Canandcoder} representing the Canandcoder on the CAN bus.
+   * The {@link Canandcoder} representing the CANandCoder on the CAN bus.
    */
-  public  Canandcoder encoder;
-  /**
-   * Inversion state of the encoder.
-   */
-  private boolean     inverted = false;
+  public Canandcoder encoder;
 
   /**
    * Create the {@link Canandcoder}
    *
-   * @param canid The CAN ID whenever the Canandcoder is operating on the CANBus.
+   * @param canid The CAN ID whenever the CANandCoder is operating on the CANBus.
    */
   public CanAndCoderSwerve(int canid)
   {
@@ -30,6 +25,8 @@ public class CanAndCoderSwerve extends SwerveAbsoluteEncoder
 
   /**
    * Reset the encoder to factory defaults.
+   * <p>
+   * This will not clear the stored zero offset.
    */
   @Override
   public void factoryDefault()
@@ -54,7 +51,7 @@ public class CanAndCoderSwerve extends SwerveAbsoluteEncoder
   @Override
   public void configure(boolean inverted)
   {
-    this.inverted = inverted;
+    encoder.setSettings(new Canandcoder.Settings().setInvertDirection(inverted));
   }
 
   /**
@@ -65,7 +62,7 @@ public class CanAndCoderSwerve extends SwerveAbsoluteEncoder
   @Override
   public double getAbsolutePosition()
   {
-    return (inverted ? -1.0 : 1.0) * encoder.getPosition() * 360;
+    return encoder.getAbsPosition() * 360;
   }
 
   /**
@@ -83,15 +80,12 @@ public class CanAndCoderSwerve extends SwerveAbsoluteEncoder
    * Cannot set the offset of the Canandcoder.
    *
    * @param offset the offset the Absolute Encoder uses as the zero point.
-   * @return always false due to Canandcoder not supporting offset changing.
+   * @return true if setting the zero point succeeded, false otherwise
    */
   @Override
   public boolean setAbsoluteEncoderOffset(double offset)
   {
-    //Canandcoder does not support Absolute Offset Changing
-    DriverStation.reportWarning("Cannot Set Absolute Encoder Offset of Canandcoders ID: " + encoder.getAddress(),
-                                false);
-    return false;
+    return encoder.setSettings(new Canandcoder.Settings().setZeroOffset(offset));
   }
 
   /**
@@ -102,6 +96,6 @@ public class CanAndCoderSwerve extends SwerveAbsoluteEncoder
   @Override
   public double getVelocity()
   {
-    return encoder.getVelocity();
+    return encoder.getVelocity() * 360;
   }
 }
