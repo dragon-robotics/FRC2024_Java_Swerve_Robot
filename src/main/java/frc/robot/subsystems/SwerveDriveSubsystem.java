@@ -15,9 +15,9 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,13 +31,11 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class SwerveDriveSubsystem extends SubsystemBase {
 
-  private final SwerveDrive swerve;
+  public final SwerveDrive swerve;
 
-  private SwerveDriveKinematics kinematics;
-
-  private SlewRateLimiter translationLimiter = new SlewRateLimiter(Units.feetToMeters(14.5));
-  private SlewRateLimiter strafeLimiter = new SlewRateLimiter(Units.feetToMeters(14.5));
-  private SlewRateLimiter rotationLimiter = new SlewRateLimiter(Units.feetToMeters(14.5));
+  private SlewRateLimiter translationLimiter = new SlewRateLimiter(Units.feetToMeters(SwerveConstants.MAX_SPEED));
+  private SlewRateLimiter strafeLimiter = new SlewRateLimiter(Units.feetToMeters(SwerveConstants.MAX_SPEED));
+  private SlewRateLimiter rotationLimiter = new SlewRateLimiter(Units.feetToMeters(SwerveConstants.MAX_SPEED));
 
   /** Creates a new SwerveDriveSubsystem. */
   public SwerveDriveSubsystem() {
@@ -47,6 +45,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      */
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+    // SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
     try {
       swerve =
           new SwerveParser(
@@ -56,6 +55,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
           ).createSwerveDrive(
             Units.feetToMeters(SwerveConstants.MAX_SPEED)
           );
+
+      swerve.setHeadingCorrection(true);
 
       // Configure the AutoBuilder //
       AutoBuilder.configureHolonomic(
@@ -118,6 +119,46 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   public void drive(
     Translation2d translationVal, double rotationVal, boolean fieldRelative, boolean openLoop) {
     swerve.drive(translationVal, rotationVal, fieldRelative, openLoop);
+  }
+
+  public Command driveHeading(
+    DoubleSupplier translationSup,
+    DoubleSupplier strafeSup,
+    DoubleSupplier headingXSup,
+    DoubleSupplier headingYSup
+  ) {
+      return run(() -> {
+      double translation = translationSup.getAsDouble();
+      double strafe = strafeSup.getAsDouble();
+      double headingX = headingXSup.getAsDouble();
+      double headingY = headingYSup.getAsDouble();
+
+      double translationVal =
+          translationLimiter.calculate(
+              MathUtil.applyDeadband(
+                  translation, Constants.GeneralConstants.swerveDeadband));
+      double strafeVal =
+          strafeLimiter.calculate(
+              MathUtil.applyDeadband(
+                  strafe, Constants.GeneralConstants.swerveDeadband));
+
+      ChassisSpeeds desiredSpeeds
+          = swerve.swerveController.getTargetSpeeds(
+              translationVal, strafeVal,
+              headingX,
+              headingY,
+              swerve.getYaw().getRadians(),
+              SwerveConstants.MAX_SPEED
+          );
+
+      driveHeading(desiredSpeeds);
+    })
+    .withName("TeleopHeadingSwerve");
+  }
+
+  public void driveHeading(ChassisSpeeds velocity)
+  {
+    swerve.driveFieldOriented(velocity); // Open loop is disabled since it shouldn't be used most of the time.
   }
 
   public void setChassisSpeeds(ChassisSpeeds speeds) {

@@ -76,8 +76,17 @@ public class RobotContainer {
       )
     );
 
+    // m_swerveDriveSubsystem.setDefaultCommand(
+    //   m_swerveDriveSubsystem.driveHeading(
+    //     () -> -m_driverController.getLeftY(),   // Translation
+    //     () -> -m_driverController.getLeftX(),   // Strafe
+    //     () -> -m_driverController.getRightX(),  // X component of angle
+    //     () -> -m_driverController.getRightY()   // Y component of angle
+    //   )
+    // );
+
     // Use the "Back" button to reset the Gyro orientation //
-    m_driverController.start().onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.zeroGyro()));
+    m_driverController.a().onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.zeroGyro()));
 
     // // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)
