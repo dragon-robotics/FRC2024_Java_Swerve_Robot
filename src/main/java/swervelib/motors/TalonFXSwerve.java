@@ -34,13 +34,13 @@ public class TalonFXSwerve extends SwerveMotor
    */
   private final VelocityVoltage    m_velocityVoltageSetter = new VelocityVoltage(0);
   /**
-   * Conversion factor for the motor.
-   */
-  private       double             conversionFactor;
-  /**
    * TalonFX motor controller.
    */
   TalonFX motor;
+  /**
+   * Conversion factor for the motor.
+   */
+  private       double             conversionFactor;
   /**
    * Current TalonFX configuration.
    */
@@ -240,12 +240,6 @@ public class TalonFXSwerve extends SwerveMotor
   @Override
   public void configurePIDF(PIDFConfig config)
   {
-    if(!isDriveMotor)
-    {
-      config.p *= 360;
-      config.i *= 360;
-      config.d *= 360;
-    }
 
     TalonFXConfigurator cfg = motor.getConfigurator();
     cfg.refresh(configuration.Slot0);

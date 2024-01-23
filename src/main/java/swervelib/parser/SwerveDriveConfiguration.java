@@ -20,10 +20,6 @@ public class SwerveDriveConfiguration
    */
   public SwerveIMU                           imu;
   /**
-   * Invert the imu measurements.
-   */
-  public boolean                             invertedIMU = false;
-  /**
    * Number of modules on the robot.
    */
   public int                                 moduleCount;
@@ -54,7 +50,7 @@ public class SwerveDriveConfiguration
   {
     this.moduleCount = moduleConfigs.length;
     this.imu = swerveIMU;
-    this.invertedIMU = invertedIMU;
+    swerveIMU.setInverted(invertedIMU);
     this.modules = createModules(moduleConfigs, driveFeedforward);
     this.moduleLocationsMeters = new Translation2d[moduleConfigs.length];
     for (SwerveModule module : modules)
@@ -83,28 +79,21 @@ public class SwerveDriveConfiguration
   }
 
   /**
-   * Assume the first module is the furthest. Usually front-left.
+   * Calculate the Drive Base Radius
    *
    * @return Drive base radius from center of robot to the farthest wheel in meters.
    */
   public double getDriveBaseRadiusMeters()
   {
-    //Find Center of Robot by adding all module offsets together. Should be zero, but incase it isn't
-    Translation2d centerOfModules = moduleLocationsMeters[0].plus(moduleLocationsMeters[1])
-                                                            .plus(moduleLocationsMeters[2])
-                                                            .plus(moduleLocationsMeters[3]);
+    Translation2d centerOfModules = moduleLocationsMeters[0];
 
-    //Find Largest Radius by checking the distance to the center point 
-    double largestRadius = centerOfModules.getDistance(moduleLocationsMeters[0]);
+    //Calculate the Center by adding all module offsets together.
     for (int i = 1; i < moduleLocationsMeters.length; i++)
     {
-      if (largestRadius < centerOfModules.getDistance(moduleLocationsMeters[i]))
-      {
-        largestRadius = centerOfModules.getDistance(moduleLocationsMeters[i]);
-      }
+      centerOfModules = centerOfModules.plus(moduleLocationsMeters[i]);
     }
 
     //Return Largest Radius
-    return largestRadius;
+    return centerOfModules.getDistance(moduleLocationsMeters[0]);
   }
 }
