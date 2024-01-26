@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import swervelib.SwerveDrive;
+import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
@@ -46,6 +47,18 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     // SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
+    
+    // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
+    //  In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
+    //  The encoder resolution per motor revolution is 1 per motor revolution.
+    double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(12.8, 1);
+
+    // Motor conversion factor is (PI * WHEEL DIAMETER IN METERS) / (GEAR RATIO * ENCODER RESOLUTION).
+    //  In this case the wheel diameter is 4 inches, which must be converted to meters to get meters/second.
+    //  The gear ratio is 6.75 motor revolutions per wheel rotation.
+    //  The encoder resolution per motor revolution is 1 per motor revolution.
+    double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(4), 8.14, 1);
+
     try {
       swerve =
           new SwerveParser(
@@ -53,10 +66,17 @@ public class SwerveDriveSubsystem extends SubsystemBase {
               Filesystem.getDeployDirectory(), "swerve"
             )
           ).createSwerveDrive(
-            Units.feetToMeters(SwerveConstants.MAX_SPEED)
+            Units.feetToMeters(SwerveConstants.MAX_SPEED),
+            angleConversionFactor,
+            driveConversionFactor
           );
 
       swerve.setHeadingCorrection(true);
+      swerve.setMaximumSpeeds(
+        Units.feetToMeters(SwerveConstants.MAX_SPEED),
+        Units.feetToMeters(SwerveConstants.MAX_SPEED),
+        Units.feetToMeters(SwerveConstants.MAX_SPEED)
+      );
 
       // Configure the AutoBuilder //
       AutoBuilder.configureHolonomic(
