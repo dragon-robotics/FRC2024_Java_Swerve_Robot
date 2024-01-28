@@ -49,6 +49,52 @@ public final class Constants {
     public static final double loopTime = 0.13;
 
   }
+
+  /** Intake Subsystem Constants */
+  public static class IntakeConstants {
+    public static final int INTAKE_MOTOR = 0;
+  }
+
+  /** Uptake Subsystem Constants */
+  public static class UptakeConstants {
+    public static final int UPTAKE_LEFT_MOTOR = 1;
+    public static final int UPTAKE_RIGHT_MOTOR = 2;
+  }
+
+  /** ShooterAndAmp Subsystem Constants */
+  public static class ShooterAndAmpConstants {
+    public static final int SHOOTER_TOP_MOTOR = 3;
+    public static final int SHOOTER_BOTTOM_MOTOR = 4;
+    public static final int AMP_LEFT_MOTOR = 5;
+    public static final int ANP_RIGHT_MOTOR = 6;
+
+    public static final double SHOOTER_RPM_P = 0.0001;
+    public static final double SHOOTER_RPM_I = 0.0001;
+    public static final double SHOOTER_RPM_D = 0.0001;
+    public static final double SHOOTER_RPM_F = 0.0001;
+
+    /* Desired RPM for the shooter (to be tuned later) */
+    public static final double DESIRED_SHOOTER_RPM = 4000;
+
+    public static final double AMP_P = 0.0001;
+    public static final double AMP_I = 0.0001;
+    public static final double AMP_D = 0.0001;
+    public static final double AMP_F = 0.0001;
+
+    /* Desired absolute encoder setpoint for moving shooter and amp mechanism (to be tuned later) */
+    public static final double INITIAL_SETPOINT = 0.0;
+    public static final double SHOOTER_SETPOINT = 0.0;
+    public static final double AMP_SETPOINT = 0.0;
+  }
+
+  /** Climber Subsystem Constants */
+  public static class ClimberConstants {
+    public static final int CLIMBER_LEFT_MOTOR = 7;
+    public static final int CLIMBER_RIGHT_MOTOR = 8;
+  }
+
+  /** Limelight Subsystem Constants */
+  /** PhotonVision Subsystem Constants */
   
   public static class SwerveConstants {
     // General constants for swerve drive //
