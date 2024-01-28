@@ -34,9 +34,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
   public final SwerveDrive swerve;
 
-  private SlewRateLimiter translationLimiter = new SlewRateLimiter(Units.feetToMeters(SwerveConstants.MAX_SPEED));
-  private SlewRateLimiter strafeLimiter = new SlewRateLimiter(Units.feetToMeters(SwerveConstants.MAX_SPEED));
-  private SlewRateLimiter rotationLimiter = new SlewRateLimiter(Units.feetToMeters(SwerveConstants.MAX_SPEED));
+  private SlewRateLimiter translationLimiter = new SlewRateLimiter(SwerveConstants.MAX_SPEED_METERS_PER_SECOND);
+  private SlewRateLimiter strafeLimiter = new SlewRateLimiter(SwerveConstants.MAX_SPEED_METERS_PER_SECOND);
+  private SlewRateLimiter rotationLimiter = new SlewRateLimiter(SwerveConstants.MAX_SPEED_METERS_PER_SECOND);
 
   /** Creates a new SwerveDriveSubsystem. */
   public SwerveDriveSubsystem() {
@@ -45,8 +45,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * configuration files deployed to the RoboRIO
      */
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
-    // SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
+    // SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
     
     // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
     //  In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
@@ -66,17 +66,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
               Filesystem.getDeployDirectory(), "swerve"
             )
           ).createSwerveDrive(
-            Units.feetToMeters(SwerveConstants.MAX_SPEED),
+            SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
             angleConversionFactor,
             driveConversionFactor
           );
 
       swerve.setHeadingCorrection(true);
-      swerve.setMaximumSpeeds(
-        Units.feetToMeters(SwerveConstants.MAX_SPEED),
-        Units.feetToMeters(SwerveConstants.MAX_SPEED),
-        Units.feetToMeters(SwerveConstants.MAX_SPEED)
-      );
 
       // Configure the AutoBuilder //
       AutoBuilder.configureHolonomic(
@@ -128,7 +123,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                     rotation, Constants.GeneralConstants.swerveDeadband));
 
         drive(
-            new Translation2d(translationVal, strafeVal).times(SwerveConstants.MAX_SPEED),
+            new Translation2d(translationVal,strafeVal).times(SwerveConstants.MAX_SPEED_METERS_PER_SECOND),
             rotationVal * swerve.swerveController.config.maxAngularVelocity,
             true,
             false);
@@ -164,11 +159,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
       ChassisSpeeds desiredSpeeds
           = swerve.swerveController.getTargetSpeeds(
-              translationVal, strafeVal,
+              translationVal * SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
+              strafeVal * SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
               headingX,
               headingY,
               swerve.getYaw().getRadians(),
-              SwerveConstants.MAX_SPEED
+              SwerveConstants.MAX_SPEED_METERS_PER_SECOND
           );
 
       driveHeading(desiredSpeeds);
