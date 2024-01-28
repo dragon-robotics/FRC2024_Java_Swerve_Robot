@@ -52,7 +52,8 @@ public final class Constants {
   
   public static class SwerveConstants {
     // General constants for swerve drive //
-    public static final double MAX_SPEED = 13.7; // 14.5 feet per second
+    public static final double MAX_SPEED_FEET_PER_SECOND = 12.5; // 12.5 feet per second
+    public static final double MAX_SPEED_METERS_PER_SECOND = Units.feetToMeters(MAX_SPEED_FEET_PER_SECOND); // 12.5 feet per second
   }
 
   public static class OperatorConstants {
