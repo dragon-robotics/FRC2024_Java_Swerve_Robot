@@ -64,6 +64,11 @@ public final class Constants {
   public static class UptakeConstants {
     public static final int LEFT_MOTOR_ID = 1;
     public static final int RIGHT_MOTOR_ID = 2;
+    public static final double NOMINAL_VOLTAGE = 8.0;
+    public static final int STALL_CURRENT_LIMIT = 20;
+    public static final int FREE_CURRENT_LIMIT = 10;
+    public static final double SECONDARY_CURRENT_LIMIT = 40.0;
+    public static final double RAMP_RATE_IN_SEC = 0.25; // Ramp rate in seconds
   }
 
   /** ShooterAndAmp Subsystem Constants */
