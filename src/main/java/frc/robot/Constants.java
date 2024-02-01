@@ -102,8 +102,12 @@ public final class Constants {
 
   /** Climber Subsystem Constants */
   public static class ClimberConstants {
-    public static final int CLIMBER_LEFT_MOTOR = 7;
-    public static final int CLIMBER_RIGHT_MOTOR = 8;
+    public static final int LEFT_MOTOR_ID = 7;
+    public static final int RIGHT_MOTOR_ID = 8;
+
+    public static final double NOMINAL_VOLTAGE = 10.0;
+    public static final int STALL_CURRENT_LIMIT = 40;
+    public static final double SECONDARY_CURRENT_LIMIT = 60.0;
   }
 
   /** Limelight Subsystem Constants */
