@@ -47,26 +47,29 @@ public final class Constants {
     public static final double chassisMass = robotMass;
     public static final Translation3d chassisCG = new Translation3d(0, 0, Units.inchesToMeters(8));
     public static final double loopTime = 0.13;
-
   }
 
   /** Intake Subsystem Constants */
   public static class IntakeConstants {
-    public static final int INTAKE_MOTOR = 0;
+    public static final int MOTOR_ID = 0;
+    public static final double NOMINAL_VOLTAGE = 8.0;
+    public static final int STALL_CURRENT_LIMIT = 20;
+    public static final int FREE_CURRENT_LIMIT = 10;
+    public static final int RPM_LIMIT = 3000;
+    public static final double SECONDARY_CURRENT_LIMIT = 40.0;
+    public static final double RAMP_RATE_IN_SEC = 0.25; // Ramp rate in seconds
   }
 
   /** Uptake Subsystem Constants */
   public static class UptakeConstants {
-    public static final int UPTAKE_LEFT_MOTOR = 1;
-    public static final int UPTAKE_RIGHT_MOTOR = 2;
+    public static final int LEFT_MOTOR_ID = 1;
+    public static final int RIGHT_MOTOR_ID = 2;
   }
 
   /** ShooterAndAmp Subsystem Constants */
-  public static class ShooterAndAmpConstants {
-    public static final int SHOOTER_TOP_MOTOR = 3;
-    public static final int SHOOTER_BOTTOM_MOTOR = 4;
-    public static final int AMP_LEFT_MOTOR = 5;
-    public static final int ANP_RIGHT_MOTOR = 6;
+  public static class ShooterConstants {
+    public static final int SHOOTER_TOP_MOTOR_ID = 3;
+    public static final int SHOOTER_BOTTOM_MOTOR_ID = 4;
 
     public static final double SHOOTER_RPM_P = 0.0001;
     public static final double SHOOTER_RPM_I = 0.0001;
@@ -75,13 +78,18 @@ public final class Constants {
 
     /* Desired RPM for the shooter (to be tuned later) */
     public static final double DESIRED_SHOOTER_RPM = 4000;
+  }
+
+  public static class AmpConstants {
+    public static final int AMP_LEFT_MOTOR_ID = 5;
+    public static final int AMP_RIGHT_MOTOR_ID = 6;
 
     public static final double AMP_P = 0.0001;
     public static final double AMP_I = 0.0001;
     public static final double AMP_D = 0.0001;
     public static final double AMP_F = 0.0001;
 
-    /* Desired absolute encoder setpoint for moving shooter and amp mechanism (to be tuned later) */
+    /* Desired absolute encoder setpoint for moving shooter and amp mechanism (to be tuned later using absolute encoder) */
     public static final double INITIAL_SETPOINT = 0.0;
     public static final double SHOOTER_SETPOINT = 0.0;
     public static final double AMP_SETPOINT = 0.0;
