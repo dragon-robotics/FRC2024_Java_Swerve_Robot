@@ -16,15 +16,23 @@ public class UptakeSubsystem extends SubsystemBase {
   CANSparkMax m_uptakeFollow = new CANSparkMax(1, MotorType.kBrushless);
 
   public UptakeSubsystem() {
+    m_uptakeLead.restoreFactoryDefaults();
+    m_uptakeFollow.restoreFactoryDefaults();
+
     m_uptakeFollow.follow(m_uptakeLead);
+
+    m_uptakeLead.set(0);
   }
 
-  public void uptake100() {
+  public void setSpeedFoward100() {
     m_uptakeLead.set(1);
   }
 
-  public void uptake40() {
-    m_uptakeLead.set(0.4);
+  public void setSpeedReverse100() {
+    m_uptakeLead.set(-1);
   }
 
+  public void setSpeed0() {
+    m_uptakeLead.set(0);
+  }
 }

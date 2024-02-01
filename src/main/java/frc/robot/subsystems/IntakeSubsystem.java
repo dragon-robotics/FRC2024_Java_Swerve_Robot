@@ -18,11 +18,15 @@ public class IntakeSubsystem extends SubsystemBase {
     m_intakeFollow.follow(m_intakeLead);
   }
 
-  public void intake100() {
+  public void setSpeedForward100() {
     m_intakeLead.set(1);
   }
 
-  public void intake40() {
-    m_intakeLead.set(0.4);
+  public void setSpeedReverse100() {
+    m_intakeLead.set(-1);
+  }
+
+  public void setSpeed0() {
+    m_intakeLead.set(0);
   }
 }
