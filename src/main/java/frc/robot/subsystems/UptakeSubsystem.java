@@ -8,12 +8,13 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.UptakeConstants;
 
 public class UptakeSubsystem extends SubsystemBase {
   /** Creates a new UptakeSubsystem. */
   
-  CANSparkMax m_uptakeLead = new CANSparkMax(0, MotorType.kBrushless);
-  CANSparkMax m_uptakeFollow = new CANSparkMax(1, MotorType.kBrushless);
+  private final CANSparkMax m_uptakeLead = new CANSparkMax(UptakeConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
+  private final CANSparkMax m_uptakeFollow = new CANSparkMax(UptakeConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
 
   public UptakeSubsystem() {
     m_uptakeFollow.follow(m_uptakeLead);
