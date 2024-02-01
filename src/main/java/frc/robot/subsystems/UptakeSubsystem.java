@@ -9,7 +9,6 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.UptakeConstants;
 
 public class UptakeSubsystem extends SubsystemBase {
@@ -73,10 +72,10 @@ public class UptakeSubsystem extends SubsystemBase {
   }
 
   /**
-   * Set the intake to intake or outtake
-   * @param intake true to intake, false to outtake
+   * Set the intake to uptake or downtake
+   * @param uptake true to uptake, false to downtake
    */
-  public void setIntake(boolean uptake) {
+  public void setUptake(boolean uptake) {
     if (uptake) {
       m_uptakeLead.set(1.0);
     } else {
@@ -85,25 +84,37 @@ public class UptakeSubsystem extends SubsystemBase {
   } 
 
   /**
-   * Set the intake to a specific speed
-   * @param speed the speed to set the intake to
+   * Set the uptake to a specific speed
+   * @param speed the speed to set the uptake to
    */
   public void set(double speed) {
     m_uptakeLead.set(speed);
   }
 
+  /**
+   * Set the uptake to uptake at 100% speed
+   */
   public void uptake100() {
     m_uptakeLead.set(1);
   }
 
+  /**
+   * Set the uptake to uptake at 40% speed
+   */
   public void uptake40() {
     m_uptakeLead.set(0.4);
   }
 
+  /**
+   * Set the uptake to downtake at 100% speed
+   */
   public void downtake100() {
     m_uptakeLead.set(-1);
   }
 
+  /**
+   * Set the uptake to downtake at 40% speed
+   */
   public void downtake40() {
     m_uptakeLead.set(-0.4);
   }
@@ -113,5 +124,10 @@ public class UptakeSubsystem extends SubsystemBase {
    */
   public void stopUptake() {
     m_uptakeLead.set(0.0);
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
   }
 }
