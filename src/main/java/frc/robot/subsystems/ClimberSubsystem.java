@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
@@ -31,6 +33,15 @@ public class ClimberSubsystem extends SubsystemBase {
     // Set the lead motor's hard stop current limit to 60 amps //
     m_climberLead.setSecondaryCurrentLimit(ClimberConstants.SECONDARY_CURRENT_LIMIT);
 
+    // Set the lead motor to brake mode //
+    m_climberLead.setIdleMode(IdleMode.kBrake);
+
+    // Set the lead motor's soft limit to prevent the climber from going too far down //
+    m_climberLead.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.STARTING_LIMIT);
+    
+    // Set the lead motor's soft limit to prevent the climber from going too far up //
+    m_climberLead.setSoftLimit(SoftLimitDirection.kForward, ClimberConstants.ENDING_LIMIT);
+
     /* Follow motor settings */    
     // Restore follow motor to factory default //
     m_climberFollow.restoreFactoryDefaults();
@@ -43,6 +54,18 @@ public class ClimberSubsystem extends SubsystemBase {
 
     // Set the follow motor's hard stop current limit to 60 amps //
     m_climberFollow.setSecondaryCurrentLimit(ClimberConstants.SECONDARY_CURRENT_LIMIT);
+
+    // Set the follow motor to brake mode //
+    m_climberFollow.setIdleMode(IdleMode.kBrake);
+
+    // Set the follow motor's soft limit to prevent the climber from going too far down //
+    m_climberFollow.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.STARTING_LIMIT);
+    
+    // Set the follow motor's soft limit to prevent the climber from going too far up //
+    m_climberFollow.setSoftLimit(SoftLimitDirection.kForward, ClimberConstants.ENDING_LIMIT);
+
+    // Set the follow motor to follow the lead motor //
+    m_climberFollow.follow(m_climberLead, true);
   }
 
   /**

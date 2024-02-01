@@ -68,7 +68,7 @@ public class UptakeSubsystem extends SubsystemBase {
     m_uptakeFollow.setOpenLoopRampRate(UptakeConstants.RAMP_RATE_IN_SEC);
 
     // Make the follow motor follow the lead motor //
-    m_uptakeFollow.follow(m_uptakeLead);
+    m_uptakeFollow.follow(m_uptakeLead, true);
   }
 
   /**

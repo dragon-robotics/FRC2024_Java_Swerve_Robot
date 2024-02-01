@@ -108,6 +108,9 @@ public final class Constants {
     public static final double NOMINAL_VOLTAGE = 10.0;
     public static final int STALL_CURRENT_LIMIT = 40;
     public static final double SECONDARY_CURRENT_LIMIT = 60.0;
+
+    public static final float STARTING_LIMIT = 0.0f;
+    public static final float ENDING_LIMIT = 100.0f;
   }
 
   /** Limelight Subsystem Constants */
