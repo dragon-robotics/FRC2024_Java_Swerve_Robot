@@ -36,6 +36,10 @@ public class ClimberSubsystem extends SubsystemBase {
     // Set the lead motor to brake mode //
     m_climberLead.setIdleMode(IdleMode.kBrake);
 
+    // Enable soft limits for the lead motor //
+    m_climberLead.enableSoftLimit(SoftLimitDirection.kForward, true);
+    m_climberLead.enableSoftLimit(SoftLimitDirection.kReverse, true);
+
     // Set the lead motor's soft limit to prevent the climber from going too far down //
     m_climberLead.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.STARTING_LIMIT);
     
@@ -57,6 +61,10 @@ public class ClimberSubsystem extends SubsystemBase {
 
     // Set the follow motor to brake mode //
     m_climberFollow.setIdleMode(IdleMode.kBrake);
+
+    // Enable soft limits for the follow motor //
+    m_climberFollow.enableSoftLimit(SoftLimitDirection.kForward, true);
+    m_climberFollow.enableSoftLimit(SoftLimitDirection.kReverse, true);
 
     // Set the follow motor's soft limit to prevent the climber from going too far down //
     m_climberFollow.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.STARTING_LIMIT);
