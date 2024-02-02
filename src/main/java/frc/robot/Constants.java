@@ -58,6 +58,7 @@ public final class Constants {
     public static final int RPM_LIMIT = 3000;
     public static final double SECONDARY_CURRENT_LIMIT = 40.0;
     public static final double RAMP_RATE_IN_SEC = 0.25; // Ramp rate in seconds
+    public static final int BEAM_BREAK_DIGITAL_CHANNEL = 0;
   }
 
   /** Uptake Subsystem Constants */

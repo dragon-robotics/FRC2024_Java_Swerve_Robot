@@ -9,12 +9,13 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import frc.robot.Constants.IntakeConstants;
-
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
   
   private final CANSparkMax m_intake = new CANSparkMax(IntakeConstants.MOTOR_ID, MotorType.kBrushless);
+  DigitalInput m_beamBreak = new DigitalInput(IntakeConstants.BEAM_BREAK_DIGITAL_CHANNEL);
 
   /**
    * Creates a new IntakeSubsystem.
@@ -41,6 +42,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // Set motor ramp rate to 0.25 seconds //
     m_intake.setOpenLoopRampRate(IntakeConstants.RAMP_RATE_IN_SEC);
+  }
+
+  /**
+   * Get the state of the beam break sensor
+    * @return true if the beam break sensor is broken, false if it is not
+   */
+  public boolean getBeamBreak() {
+    return m_beamBreak.get();
   }
 
   /**
