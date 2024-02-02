@@ -25,26 +25,6 @@ public class UptakeSubsystem extends SubsystemBase {
    * Creates a new UptakeSubsystem.
    */
   public UptakeSubsystem() {
-<<<<<<< HEAD
-    m_uptakeLead.restoreFactoryDefaults();
-    m_uptakeFollow.restoreFactoryDefaults();
-
-    m_uptakeFollow.follow(m_uptakeLead);
-
-    m_uptakeLead.set(0);
-  }
-
-  public void setSpeedFoward100() {
-    m_uptakeLead.set(1);
-  }
-
-  public void setSpeedReverse100() {
-    m_uptakeLead.set(-1);
-  }
-
-  public void setSpeed0() {
-    m_uptakeLead.set(0);
-=======
 
     /* Lead motor settings */
 
@@ -93,6 +73,9 @@ public class UptakeSubsystem extends SubsystemBase {
 
     // Make the follow motor follow the lead motor //
     m_uptakeFollow.follow(m_uptakeLead, true);
+
+    // Set the motors initially to 0 speed //
+    m_uptakeLead.set(0.0);
   }
 
   /**
@@ -169,6 +152,5 @@ public class UptakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
->>>>>>> 3e597ae8979ddf503e96d5984514b3dd49843bfa
   }
 }
