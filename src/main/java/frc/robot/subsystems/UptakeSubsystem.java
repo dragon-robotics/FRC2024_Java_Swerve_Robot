@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.UptakeConstants;
 
@@ -16,6 +17,9 @@ public class UptakeSubsystem extends SubsystemBase {
   
   private final CANSparkMax m_uptakeLead = new CANSparkMax(UptakeConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
   private final CANSparkMax m_uptakeFollow = new CANSparkMax(UptakeConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
+
+  private final DigitalInput m_topBeamBreak = new DigitalInput(UptakeConstants.TOP_BEAM_BREAK_DIGITAL_CHANNEL);
+  private final DigitalInput m_bottomBeamBreak = new DigitalInput(UptakeConstants.BOTTOM_BEAM_BREAK_DIGITAL_CHANNEL);
 
   /**
    * Creates a new UptakeSubsystem.
@@ -69,6 +73,22 @@ public class UptakeSubsystem extends SubsystemBase {
 
     // Make the follow motor follow the lead motor //
     m_uptakeFollow.follow(m_uptakeLead, true);
+  }
+
+  /**
+   * Get the state of the top beam break sensor
+   * @return true if the top beam break sensor is broken, false if it is not
+   */
+  public boolean getTopBeamBreak() {
+    return m_topBeamBreak.get();
+  }
+
+  /**
+   * Get the state of the bottom beam break sensor
+   * @return true if the bottom beam break sensor is broken, false if it is not
+   */
+  public boolean getBottomBeamBreak() {
+    return m_bottomBeamBreak.get();
   }
 
   /**
