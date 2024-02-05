@@ -26,7 +26,7 @@ public class UptakeSubsystem extends SubsystemBase {
    */
   public UptakeSubsystem() {
 
-    /* Lead motor settings */
+    // #region Lead motor settings
 
     // Restore lead motor to factory default //
     m_uptakeLead.restoreFactoryDefaults();
@@ -49,7 +49,10 @@ public class UptakeSubsystem extends SubsystemBase {
     // Set lead motor ramp rate to 0.25 seconds //
     m_uptakeLead.setOpenLoopRampRate(UptakeConstants.RAMP_RATE_IN_SEC);
 
-    /* Follower motor settings */
+    // #endregion
+
+    // #region Follow motor settings
+
     // Restore follow motor to factory default //
     m_uptakeFollow.restoreFactoryDefaults();
 
@@ -74,9 +77,24 @@ public class UptakeSubsystem extends SubsystemBase {
     // Make the follow motor follow the lead motor //
     m_uptakeFollow.follow(m_uptakeLead, true);
 
+    // #endregion
+
     // Set the motors initially to 0 speed //
     m_uptakeLead.set(0.0);
   }
+
+  public void setSpeedForward100() {
+    m_uptakeLead.set(1);
+  }
+
+  public void setSpeedReverse100() {
+    m_uptakeLead.set(-1);
+  }
+
+  public void setSpeed0() {
+    m_uptakeLead.set(0);
+  }
+
 
   /**
    * Get the state of the top beam break sensor

@@ -21,7 +21,7 @@ public class UptakeForward100Command extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_uptakeSubsystem.setSpeedFoward100();
+    m_uptakeSubsystem.setSpeedForward100();
   }
 
   // Called once the command ends or is interrupted.
