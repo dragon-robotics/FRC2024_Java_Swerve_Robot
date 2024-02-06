@@ -9,11 +9,16 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AmpConstants;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterAndAmpRevSmartMotionSubsystem extends SubsystemBase {
+
+  // Create New Tab for Shooter and Amp subsystems //
+  ShuffleboardTab shooterAndAmpTab = Shuffleboard.getTab("Shooter and Amp");
 
   // Shooter motor controllers //
   private static final CANSparkMax m_shooterLead = new CANSparkMax(ShooterConstants.TOP_MOTOR_ID, MotorType.kBrushless);
@@ -26,7 +31,6 @@ public class ShooterAndAmpRevSmartMotionSubsystem extends SubsystemBase {
   private static final CANSparkMax m_ampFollow = new CANSparkMax(AmpConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
   private static final SparkPIDController m_ampLeadController = m_shooterLead.getPIDController();
   // private static final SparkPIDController m_ampFollowController = m_shooterFollow.getPIDController();
-
 
   /** Creates a new ShooterAndAmpRevSmartMotionSubsystem. */
   public ShooterAndAmpRevSmartMotionSubsystem() {
@@ -77,20 +81,83 @@ public class ShooterAndAmpRevSmartMotionSubsystem extends SubsystemBase {
     m_shooterLeadController.setIZone(ShooterConstants.IZ);
     m_shooterLeadController.setOutputRange(ShooterConstants.MIN_OUTPUT, ShooterConstants.MAX_OUTPUT);
 
-    m_shooterLeadController.setReference(0, ControlType.kSmartVelocity);
-
     // Set the lead shooter to 0 RPM //
     m_shooterLead.set(0);
 
-
-    // PID Controller settings for the amp
+    // PID Controller settings for the amp //
     m_ampLeadController.setP(AmpConstants.P);
     m_ampLeadController.setI(AmpConstants.I);
     m_ampLeadController.setD(AmpConstants.D);
     m_ampLeadController.setFF(AmpConstants.F);
+    m_ampLeadController.setIZone(AmpConstants.IZ);
 
-
+    // Set the lead amp to 0 RPM //
+    m_ampLead.set(0);
   }
+
+  //#region Shooter Test Methods //
+
+  /**
+   * Set the shooter RPM
+   * @param rpm
+   */
+  public void setShooterRPM(double rpm) {
+    m_shooterLeadController.setReference(rpm, ControlType.kVelocity);
+  }
+
+  /**
+   * Get the shooter RPM
+   * @return
+   */
+  public double getShooterRPM() {
+    return m_shooterLead.getEncoder().getVelocity();
+  }
+
+  /**
+   * Set the shooter percent output
+   * @param percentOutput
+   */
+  public void setShooterPercentOutput(double percentOutput) {
+    m_shooterLead.set(percentOutput);
+  }
+
+  /**
+   * Set the shooter P variable
+   * @return
+   */
+  public void setShooterP(double p){
+    m_shooterLeadController.setP(p);
+  }
+
+  /**
+   * Set the shooter I variable
+   * @return
+   */
+  public void setShooterI(double i){
+    m_shooterLeadController.setI(i);
+  }
+
+  /**
+   * Set the shooter D variable
+   * @return
+   */
+  public void setShooterD(double d){
+    m_shooterLeadController.setD(d);
+  }
+
+  /**
+   * Set the shooter F variable
+   * @return
+   */
+  public void setShooterF(double f){
+    m_shooterLeadController.setFF(f);
+  }
+
+  //#endregion //
+
+  //#region Amp Test Methods //
+
+  //#endregion //
 
   @Override
   public void periodic() {
