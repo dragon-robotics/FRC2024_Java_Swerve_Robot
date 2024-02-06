@@ -95,7 +95,6 @@ public class UptakeSubsystem extends SubsystemBase {
     m_uptakeLead.set(0);
   }
 
-
   /**
    * Get the state of the top beam break sensor
    * @return true if the top beam break sensor is broken, false if it is not
