@@ -10,12 +10,20 @@ import com.revrobotics.CANSparkBase.IdleMode;
 
 import frc.robot.Constants.IntakeConstants;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
-  
+
+  // Create New Tab for Shooter and Amp subsystems //
+  private final ShuffleboardTab m_intakShuffleboardTab = Shuffleboard.getTab("Intake");
+
+  // Intake Motor Controller //
   private final CANSparkMax m_intake = new CANSparkMax(IntakeConstants.MOTOR_ID, MotorType.kBrushless);
-  private final DigitalInput m_beamBreak = new DigitalInput(IntakeConstants.BEAM_BREAK_DIGITAL_CHANNEL);
+
+  // Intake Beambreak Sensor //
+  private final DigitalInput m_intakeBeamBreak = new DigitalInput(IntakeConstants.BEAM_BREAK_DIGITAL_CHANNEL);
 
   /**
    * Creates a new IntakeSubsystem.
@@ -61,7 +69,7 @@ public class IntakeSubsystem extends SubsystemBase {
     * @return true if the beam break sensor is broken, false if it is not
    */
   public boolean getBeamBreak() {
-    return m_beamBreak.get();
+    return m_intakeBeamBreak.get();
   }
 
   /**

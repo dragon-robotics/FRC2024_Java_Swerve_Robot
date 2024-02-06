@@ -9,6 +9,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,19 +19,22 @@ import frc.robot.Constants.ShooterConstants;
 public class ShooterAndAmpRevSmartMotionSubsystem extends SubsystemBase {
 
   // Create New Tab for Shooter and Amp subsystems //
-  ShuffleboardTab shooterAndAmpTab = Shuffleboard.getTab("Shooter and Amp");
+  private final ShuffleboardTab m_shooterAndAmpShuffleboardTab = Shuffleboard.getTab("Shooter and Amp");
 
-  // Shooter motor controllers //
-  private static final CANSparkMax m_shooterLead = new CANSparkMax(ShooterConstants.TOP_MOTOR_ID, MotorType.kBrushless);
-  private static final CANSparkMax m_shooterFollow = new CANSparkMax(ShooterConstants.BOTTOM_MOTOR_ID, MotorType.kBrushless);
-  private static final SparkPIDController m_shooterLeadController = m_shooterLead.getPIDController();
-  // private static final SparkPIDController m_shooterFollowController = m_shooterFollow.getPIDController();
+  // Shooter Motor Controllers //
+  private final CANSparkMax m_shooterLead = new CANSparkMax(ShooterConstants.TOP_MOTOR_ID, MotorType.kBrushless);
+  private final CANSparkMax m_shooterFollow = new CANSparkMax(ShooterConstants.BOTTOM_MOTOR_ID, MotorType.kBrushless);
+  private final SparkPIDController m_shooterLeadController = m_shooterLead.getPIDController();
+  // private final SparkPIDController m_shooterFollowController = m_shooterFollow.getPIDController();
 
-  // Amp motor controllers //
-  private static final CANSparkMax m_ampLead = new CANSparkMax(AmpConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
-  private static final CANSparkMax m_ampFollow = new CANSparkMax(AmpConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
-  private static final SparkPIDController m_ampLeadController = m_shooterLead.getPIDController();
-  // private static final SparkPIDController m_ampFollowController = m_shooterFollow.getPIDController();
+  // Amp Motor Controllers //
+  private final CANSparkMax m_ampLead = new CANSparkMax(AmpConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
+  private final CANSparkMax m_ampFollow = new CANSparkMax(AmpConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
+  private final SparkPIDController m_ampLeadController = m_shooterLead.getPIDController();
+  // private final SparkPIDController m_ampFollowController = m_shooterFollow.getPIDController();
+
+  // Shooter Beambreak Sensor //
+  private final DigitalInput m_shooterAndAmpBeamBreak = new DigitalInput(ShooterConstants.BEAM_BREAK_DIGITAL_CHANNEL);
 
   /** Creates a new ShooterAndAmpRevSmartMotionSubsystem. */
   public ShooterAndAmpRevSmartMotionSubsystem() {
