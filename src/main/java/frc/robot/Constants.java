@@ -85,11 +85,11 @@ public final class Constants {
     public static final double SECONDARY_CURRENT_LIMIT = 60.0;
     public static final double RAMP_RATE_IN_SEC = 0.25; // Ramp rate in seconds
 
-    public static final double P = 0.0001;
-    public static final double I = 0.0001;
-    public static final double D = 0.0001;
-    public static final double F = 0.0001;
-    public static final double IZ = 0.0001;
+    public static final double P = 0.0;
+    public static final double I = 0.0;
+    public static final double D = 0.0;
+    public static final double F = 0.0;
+    public static final double IZ = 0.0;
     public static final double MIN_OUTPUT = -0.2;
     public static final double MAX_OUTPUT = 0.8;
 
@@ -106,11 +106,11 @@ public final class Constants {
     public static final int STALL_CURRENT_LIMIT = 40;
     public static final double SECONDARY_CURRENT_LIMIT = 60.0;
 
-    public static final double P = 0.0001;
-    public static final double I = 0.0001;
-    public static final double D = 0.0001;
-    public static final double F = 0.0001;
-    public static final double IZ = 0.0001;
+    public static final double P = 0.0;
+    public static final double I = 0.0;
+    public static final double D = 0.0;
+    public static final double F = 0.0;
+    public static final double IZ = 0.0;
 
     /* Desired absolute encoder setpoint for moving shooter and amp mechanism (to be tuned later using absolute encoder) */
     public static final double INITIAL_SETPOINT = 0.0;
