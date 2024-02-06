@@ -70,9 +70,9 @@ public class IntakeSubsystem extends SubsystemBase {
    */
   public void setIntake(boolean intake) {
     if (intake) {
-      m_intake.set(1.0);
+      m_intake.set(0.3);
     } else {
-      m_intake.set(-1.0);
+      m_intake.set(-0.3);
     }
   } 
 
