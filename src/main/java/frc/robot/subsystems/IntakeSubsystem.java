@@ -9,7 +9,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import frc.robot.Constants.GeneralConstants.RobotMode;
+import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.IntakeConstants;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -17,8 +19,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-  // Create New Tab for Shooter and Amp subsystems //
+  // Create new Shuffleboard tab for the intake subsystem //
   private final ShuffleboardTab m_intakShuffleboardTab = Shuffleboard.getTab("Intake");
+  private GenericEntry m_intakePowerPercentageEntry = null;
+  private GenericEntry m_intakePowerVoltageEntry = null;
+  private GenericEntry m_intakePowerCurrentEntry = null;
+  private GenericEntry m_intakePowerTemperatureEntry = null;
+  private GenericEntry m_intakePowerRPMEntry = null;
 
   // Intake Motor Controller //
   private final CANSparkMax m_intake = new CANSparkMax(IntakeConstants.MOTOR_ID, MotorType.kBrushless);
@@ -29,7 +36,7 @@ public class IntakeSubsystem extends SubsystemBase {
   /**
    * Creates a new IntakeSubsystem.
    */
-  public IntakeSubsystem(RobotMode mode) {
+  public IntakeSubsystem() {
     // Restore motor to factory default //
     m_intake.restoreFactoryDefaults();
 
@@ -51,6 +58,15 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // Set motor ramp rate to 0.25 seconds //
     m_intake.setOpenLoopRampRate(IntakeConstants.RAMP_RATE_IN_SEC);
+
+    // Create Shuffleboard entries for the IntakeSubsystem if the robot is in test mode //
+    if (GeneralConstants.CURRENT_MODE == RobotMode.TEST) {
+      m_intakePowerPercentageEntry = m_intakShuffleboardTab.add("Intake Power Percentage", m_intake.getAppliedOutput()).getEntry();
+      m_intakePowerVoltageEntry = m_intakShuffleboardTab.add("Intake Power Voltage", m_intake.getBusVoltage()).getEntry();
+      m_intakePowerCurrentEntry = m_intakShuffleboardTab.add("Intake Power Current", m_intake.getOutputCurrent()).getEntry();
+      m_intakePowerTemperatureEntry = m_intakShuffleboardTab.add("Intake Power Temperature", m_intake.getMotorTemperature()).getEntry();
+      m_intakePowerRPMEntry = m_intakShuffleboardTab.add("Intake Power RPM", m_intake.getEncoder().getVelocity()).getEntry();
+    }
   }
 
   public void setSpeedForward100() {
@@ -131,5 +147,12 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if(GeneralConstants.CURRENT_MODE == RobotMode.TEST) {
+      m_intakePowerPercentageEntry.setDouble(m_intake.getAppliedOutput());
+      m_intakePowerVoltageEntry.setDouble(m_intake.getBusVoltage());
+      m_intakePowerCurrentEntry.setDouble(m_intake.getOutputCurrent());
+      m_intakePowerTemperatureEntry.setDouble(m_intake.getMotorTemperature());
+      m_intakePowerRPMEntry.setDouble(m_intake.getEncoder().getVelocity());
+    }
   }
 }

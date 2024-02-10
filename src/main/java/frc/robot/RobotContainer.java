@@ -45,11 +45,11 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final SwerveDriveSubsystem m_swerveDriveSubsystem = new SwerveDriveSubsystem();
 
-  public final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem(GeneralConstants.CURRENT_MODE);
-  public final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem(GeneralConstants.CURRENT_MODE);
-  public final ShooterSmartVelocitySubsystem m_shooterSmartVelocitySubsystem = new ShooterSmartVelocitySubsystem(GeneralConstants.CURRENT_MODE);
-  public final AmpSmartMotionSubsystem m_ampSmartMotionSubsystem = new AmpSmartMotionSubsystem(GeneralConstants.CURRENT_MODE);
-  public final UptakeSubsystem m_uptakeSubsystem = new UptakeSubsystem(GeneralConstants.CURRENT_MODE);
+  public final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
+  public final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  public final ShooterSmartVelocitySubsystem m_shooterSmartVelocitySubsystem = new ShooterSmartVelocitySubsystem();
+  public final AmpSmartMotionSubsystem m_ampSmartMotionSubsystem = new AmpSmartMotionSubsystem();
+  public final UptakeSubsystem m_uptakeSubsystem = new UptakeSubsystem();
 
   // Define Driver and Operator controllers //
   private final CommandXboxController m_driverController =

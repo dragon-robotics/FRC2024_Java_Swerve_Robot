@@ -8,18 +8,30 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.UptakeConstants;
 import frc.robot.Constants.GeneralConstants.RobotMode;
 
 public class UptakeSubsystem extends SubsystemBase {
   /** Creates a new UptakeSubsystem. */
   
-// Create New Tab for Shooter and Amp subsystems //
+// Create new Shuffleboard tab for the uptake subsystem //
   private final ShuffleboardTab m_uptakeShuffleboardTab = Shuffleboard.getTab("Uptake");
+  private GenericEntry m_uptakeLeadPowerPercentageEntry = null;
+  private GenericEntry m_uptakeLeadPowerVoltageEntry = null;
+  private GenericEntry m_uptakeLeadPowerCurrentEntry = null;
+  private GenericEntry m_uptakeLeadPowerTemperatureEntry = null;
+  private GenericEntry m_uptakeLeadPowerRPMEntry = null;
+  private GenericEntry m_uptakeFollowPowerPercentageEntry = null;
+  private GenericEntry m_uptakeFollowPowerVoltageEntry = null;
+  private GenericEntry m_uptakeFollowPowerCurrentEntry = null;
+  private GenericEntry m_uptakeFollowPowerTemperatureEntry = null;
+  private GenericEntry m_uptakeFollowPowerRPMEntry = null;
 
   private final CANSparkMax m_uptakeLead = new CANSparkMax(UptakeConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
   private final CANSparkMax m_uptakeFollow = new CANSparkMax(UptakeConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
@@ -30,7 +42,7 @@ public class UptakeSubsystem extends SubsystemBase {
   /**
    * Creates a new UptakeSubsystem.
    */
-  public UptakeSubsystem(RobotMode mode) {
+  public UptakeSubsystem() {
 
     // #region Lead motor settings
 
@@ -87,6 +99,21 @@ public class UptakeSubsystem extends SubsystemBase {
 
     // Set the motors initially to 0 speed //
     m_uptakeLead.set(0.0);
+
+    // Create Shuffleboard entries for the UptakeSubsystem if the robot is in test mode //
+    if (GeneralConstants.CURRENT_MODE == RobotMode.TEST) {
+      m_uptakeLeadPowerPercentageEntry = m_uptakeShuffleboardTab.add("Uptake Lead Power Percentage", m_uptakeLead.getAppliedOutput()).getEntry();
+      m_uptakeLeadPowerVoltageEntry = m_uptakeShuffleboardTab.add("Uptake Lead Power Voltage", m_uptakeLead.getBusVoltage()).getEntry();
+      m_uptakeLeadPowerCurrentEntry = m_uptakeShuffleboardTab.add("Uptake Lead Power Current", m_uptakeLead.getOutputCurrent()).getEntry();
+      m_uptakeLeadPowerTemperatureEntry = m_uptakeShuffleboardTab.add("Uptake Lead Power Temperature", m_uptakeLead.getMotorTemperature()).getEntry();
+      m_uptakeLeadPowerRPMEntry = m_uptakeShuffleboardTab.add("Uptake Lead Power RPM", m_uptakeLead.getEncoder().getVelocity()).getEntry();
+
+      m_uptakeFollowPowerPercentageEntry = m_uptakeShuffleboardTab.add("Uptake Follow Power Percentage", m_uptakeFollow.getAppliedOutput()).getEntry();
+      m_uptakeFollowPowerVoltageEntry = m_uptakeShuffleboardTab.add("Uptake Follow Power Voltage", m_uptakeFollow.getBusVoltage()).getEntry();
+      m_uptakeFollowPowerCurrentEntry = m_uptakeShuffleboardTab.add("Uptake Follow Power Current", m_uptakeFollow.getOutputCurrent()).getEntry();
+      m_uptakeFollowPowerTemperatureEntry = m_uptakeShuffleboardTab.add("Uptake Follow Power Temperature", m_uptakeFollow.getMotorTemperature()).getEntry();
+      m_uptakeFollowPowerRPMEntry = m_uptakeShuffleboardTab.add("Uptake Follow Power RPM", m_uptakeFollow.getEncoder().getVelocity()).getEntry();
+    }
   }
 
   public void setSpeedForward100() {
@@ -175,5 +202,18 @@ public class UptakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (GeneralConstants.CURRENT_MODE == RobotMode.TEST) {
+      m_uptakeLeadPowerPercentageEntry.setDouble(m_uptakeLead.getAppliedOutput());
+      m_uptakeLeadPowerVoltageEntry.setDouble(m_uptakeLead.getBusVoltage());
+      m_uptakeLeadPowerCurrentEntry.setDouble(m_uptakeLead.getOutputCurrent());
+      m_uptakeLeadPowerTemperatureEntry.setDouble(m_uptakeLead.getMotorTemperature());
+      m_uptakeLeadPowerRPMEntry.setDouble(m_uptakeLead.getEncoder().getVelocity());
+
+      m_uptakeFollowPowerPercentageEntry.setDouble(m_uptakeFollow.getAppliedOutput());
+      m_uptakeFollowPowerVoltageEntry.setDouble(m_uptakeFollow.getBusVoltage());
+      m_uptakeFollowPowerCurrentEntry.setDouble(m_uptakeFollow.getOutputCurrent());
+      m_uptakeFollowPowerTemperatureEntry.setDouble(m_uptakeFollow.getMotorTemperature());
+      m_uptakeFollowPowerRPMEntry.setDouble(m_uptakeFollow.getEncoder().getVelocity());
+    }
   }
 }

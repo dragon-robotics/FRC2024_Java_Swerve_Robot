@@ -9,17 +9,29 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.GeneralConstants.RobotMode;
+import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSmartVelocitySubsystem extends SubsystemBase {
 
-  // Create New Tab for Shooter and Amp subsystems //
+  // Create new Shuffleboard tab for shooter subsystem //
   private final ShuffleboardTab m_shooterShuffleboardTab = Shuffleboard.getTab("Shooter");
+  private GenericEntry m_shooterLeadPowerPercentageEntry = null;
+  private GenericEntry m_shooterLeadPowerVoltageEntry = null;
+  private GenericEntry m_shooterLeadPowerCurrentEntry = null;
+  private GenericEntry m_shooterLeadPowerTemperatureEntry = null;
+  private GenericEntry m_shooterLeadPowerRPMEntry = null;
+  private GenericEntry m_shooterFollowPowerPercentageEntry = null;
+  private GenericEntry m_shooterFollowPowerVoltageEntry = null;
+  private GenericEntry m_shooterFollowPowerCurrentEntry = null;
+  private GenericEntry m_shooterFollowPowerTemperatureEntry = null;
+  private GenericEntry m_shooterFollowPowerRPMEntry = null;
 
   // Shooter Motor Controllers //
   private final CANSparkMax m_shooterLead = new CANSparkMax(ShooterConstants.TOP_MOTOR_ID, MotorType.kBrushless);
@@ -31,7 +43,7 @@ public class ShooterSmartVelocitySubsystem extends SubsystemBase {
   private final DigitalInput m_shooterBeamBreak = new DigitalInput(ShooterConstants.BEAM_BREAK_DIGITAL_CHANNEL);
 
   /** Creates a new ShooterAndAmpRevSmartMotionSubsystem. */
-  public ShooterSmartVelocitySubsystem(RobotMode mode) {
+  public ShooterSmartVelocitySubsystem() {
 
     // Restore motors to factory defaults //
     m_shooterLead.restoreFactoryDefaults();
@@ -70,6 +82,21 @@ public class ShooterSmartVelocitySubsystem extends SubsystemBase {
 
     // Set the lead shooter to 0 RPM //
     m_shooterLead.set(0);
+
+    // Create Shuffleboard entries for the ShooterSubsystem if the robot is in test mode //
+    if (GeneralConstants.CURRENT_MODE == RobotMode.TEST) {
+      m_shooterLeadPowerPercentageEntry = m_shooterShuffleboardTab.add("Shooter Lead Power Percentage", m_shooterLead.getAppliedOutput()).getEntry();
+      m_shooterLeadPowerVoltageEntry = m_shooterShuffleboardTab.add("Shooter Lead Power Voltage", m_shooterLead.getBusVoltage()).getEntry();
+      m_shooterLeadPowerCurrentEntry = m_shooterShuffleboardTab.add("Shooter Lead Power Current", m_shooterLead.getOutputCurrent()).getEntry();
+      m_shooterLeadPowerTemperatureEntry = m_shooterShuffleboardTab.add("Shooter Lead Power Temperature", m_shooterLead.getMotorTemperature()).getEntry();
+      m_shooterLeadPowerRPMEntry = m_shooterShuffleboardTab.add("Shooter Lead Power RPM", m_shooterLead.getEncoder().getVelocity()).getEntry();
+
+      m_shooterFollowPowerPercentageEntry = m_shooterShuffleboardTab.add("Shooter Follow Power Percentage", m_shooterFollow.getAppliedOutput()).getEntry();
+      m_shooterFollowPowerVoltageEntry = m_shooterShuffleboardTab.add("Shooter Follow Power Voltage", m_shooterFollow.getBusVoltage()).getEntry();
+      m_shooterFollowPowerCurrentEntry = m_shooterShuffleboardTab.add("Shooter Follow Power Current", m_shooterFollow.getOutputCurrent()).getEntry();
+      m_shooterFollowPowerTemperatureEntry = m_shooterShuffleboardTab.add("Shooter Follow Power Temperature", m_shooterFollow.getMotorTemperature()).getEntry();
+      m_shooterFollowPowerRPMEntry = m_shooterShuffleboardTab.add("Shooter Follow Power RPM", m_shooterFollow.getEncoder().getVelocity()).getEntry();
+    }
   }
 
   //#region Shooter Test Methods //
@@ -135,5 +162,18 @@ public class ShooterSmartVelocitySubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (GeneralConstants.CURRENT_MODE == RobotMode.TEST) {
+      m_shooterLeadPowerPercentageEntry.setDouble(m_shooterLead.getAppliedOutput());
+      m_shooterLeadPowerVoltageEntry.setDouble(m_shooterLead.getBusVoltage());
+      m_shooterLeadPowerCurrentEntry.setDouble(m_shooterLead.getOutputCurrent());
+      m_shooterLeadPowerTemperatureEntry.setDouble(m_shooterLead.getMotorTemperature());
+      m_shooterLeadPowerRPMEntry.setDouble(m_shooterLead.getEncoder().getVelocity());
+
+      m_shooterFollowPowerPercentageEntry.setDouble(m_shooterFollow.getAppliedOutput());
+      m_shooterFollowPowerVoltageEntry.setDouble(m_shooterFollow.getBusVoltage());
+      m_shooterFollowPowerCurrentEntry.setDouble(m_shooterFollow.getOutputCurrent());
+      m_shooterFollowPowerTemperatureEntry.setDouble(m_shooterFollow.getMotorTemperature());
+      m_shooterFollowPowerRPMEntry.setDouble(m_shooterFollow.getEncoder().getVelocity());
+    }
   }
 }

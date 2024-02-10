@@ -9,17 +9,34 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.GeneralConstants.RobotMode;
 
 public class ClimberSubsystem extends SubsystemBase {
+
+  // Create new Shuffleboard tab for the climber subsystem //
+  private final ShuffleboardTab m_climberShuffleboardTab = Shuffleboard.getTab("Climber");
+  private GenericEntry m_climberLeadPowerPercentageEntry = null;
+  private GenericEntry m_climberLeadPowerVoltageEntry = null;
+  private GenericEntry m_climberLeadPowerCurrentEntry = null;
+  private GenericEntry m_climberLeadPowerTemperatureEntry = null;
+  private GenericEntry m_climberLeadPositionEntry = null;
+  private GenericEntry m_climberFollowPowerPercentageEntry = null;
+  private GenericEntry m_climberFollowPowerVoltageEntry = null;
+  private GenericEntry m_climberFollowPowerCurrentEntry = null;
+  private GenericEntry m_climberFollowPowerTemperatureEntry = null;
+  private GenericEntry m_climberFollowPositionEntry = null;
   
   private final CANSparkMax m_climberLead = new CANSparkMax(ClimberConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
   private final CANSparkMax m_climberFollow = new CANSparkMax(ClimberConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
   
   /** Creates a new ClimberSubsystem. */
-  public ClimberSubsystem(RobotMode mode) {
+  public ClimberSubsystem() {
 
     /* Lead motor settings */
     // Restore lead motor to factory default //
@@ -75,6 +92,24 @@ public class ClimberSubsystem extends SubsystemBase {
 
     // Set the follow motor to follow the lead motor //
     m_climberFollow.follow(m_climberLead, true);
+
+    // Set the motors initially to 0 speed //
+    m_climberLead.set(0);
+
+    // Create Shuffleboard entries for the ClimberSubsystem if the robot is in test mode //
+    if (GeneralConstants.CURRENT_MODE == RobotMode.TEST) {
+      m_climberLeadPowerPercentageEntry = m_climberShuffleboardTab.add("Climber Lead Power Percentage", m_climberLead.getAppliedOutput()).getEntry();
+      m_climberLeadPowerVoltageEntry = m_climberShuffleboardTab.add("Climber Lead Power Voltage", m_climberLead.getBusVoltage()).getEntry();
+      m_climberLeadPowerCurrentEntry = m_climberShuffleboardTab.add("Climber Lead Power Current", m_climberLead.getOutputCurrent()).getEntry();
+      m_climberLeadPowerTemperatureEntry = m_climberShuffleboardTab.add("Climber Lead Power Temperature", m_climberLead.getMotorTemperature()).getEntry();
+      m_climberLeadPositionEntry = m_climberShuffleboardTab.add("Climber Lead Position", m_climberLead.getEncoder().getPosition()).getEntry();
+
+      m_climberFollowPowerPercentageEntry = m_climberShuffleboardTab.add("Climber Follow Power Percentage", m_climberFollow.getAppliedOutput()).getEntry();
+      m_climberFollowPowerVoltageEntry = m_climberShuffleboardTab.add("Climber Follow Power Voltage", m_climberFollow.getBusVoltage()).getEntry();
+      m_climberFollowPowerCurrentEntry = m_climberShuffleboardTab.add("Climber Follow Power Current", m_climberFollow.getOutputCurrent()).getEntry();
+      m_climberFollowPowerTemperatureEntry = m_climberShuffleboardTab.add("Climber Follow Power Temperature", m_climberFollow.getMotorTemperature()).getEntry();
+      m_climberFollowPositionEntry = m_climberShuffleboardTab.add("Climber Follow Position", m_climberFollow.getEncoder().getPosition()).getEntry();
+    }
   }
 
   /**
@@ -92,5 +127,18 @@ public class ClimberSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (GeneralConstants.CURRENT_MODE == RobotMode.TEST) {
+      m_climberLeadPowerPercentageEntry.setDouble(m_climberLead.getAppliedOutput());
+      m_climberLeadPowerVoltageEntry.setDouble(m_climberLead.getBusVoltage());
+      m_climberLeadPowerCurrentEntry.setDouble(m_climberLead.getOutputCurrent());
+      m_climberLeadPowerTemperatureEntry.setDouble(m_climberLead.getMotorTemperature());
+      m_climberLeadPositionEntry.setDouble(m_climberLead.getEncoder().getPosition());
+
+      m_climberFollowPowerPercentageEntry.setDouble(m_climberFollow.getAppliedOutput());
+      m_climberFollowPowerVoltageEntry.setDouble(m_climberFollow.getBusVoltage());
+      m_climberFollowPowerCurrentEntry.setDouble(m_climberFollow.getOutputCurrent());
+      m_climberFollowPowerTemperatureEntry.setDouble(m_climberFollow.getMotorTemperature());
+      m_climberFollowPositionEntry.setDouble(m_climberFollow.getEncoder().getPosition());
+    }
   }
 }
