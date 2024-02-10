@@ -43,18 +43,6 @@ public class IntakeSubsystem extends SubsystemBase {
     m_intake.setOpenLoopRampRate(IntakeConstants.RAMP_RATE_IN_SEC);
   }
 
-<<<<<<< HEAD
-  public void setSpeedForward100() {
-    m_intakeLead.set(1);
-  }
-
-  public void setSpeedReverse100() {
-    m_intakeLead.set(-1);
-  }
-
-  public void setSpeed0() {
-    m_intakeLead.set(0);
-=======
   /**
    * Set the intake to intake or outtake
    * @param intake true to intake, false to outtake
@@ -113,6 +101,5 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
->>>>>>> 3e597ae8979ddf503e96d5984514b3dd49843bfa
   }
 }

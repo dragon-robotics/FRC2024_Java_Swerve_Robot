@@ -4,11 +4,16 @@
 
 package frc.robot;
 
+import frc.robot.Constants.KitBotConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.KitBotVariableCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.KitBotSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
+import frc.robot.commands.KitBotVariableCommand;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -17,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -31,7 +37,10 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // The robot's subsystems and commands are defined here...
-  public final SwerveDriveSubsystem m_swerveDriveSubsystem = new SwerveDriveSubsystem();
+  // public final SwerveDriveSubsystem m_swerveDriveSubsystem = new SwerveDriveSubsystem();
+
+  public final KitBotSubsystem m_kitBotSubsystem = new KitBotSubsystem();
+  public final LEDSubsystem m_ledSubsystem = new LEDSubsystem();
 
   // Define Driver and Operator controllers //
   private final CommandXboxController m_driverController =
@@ -40,7 +49,7 @@ public class RobotContainer {
   private final CommandXboxController m_operatorController =
       new CommandXboxController(OperatorConstants.kOperatorControllerPort);
 
-  private final SendableChooser<Command> autoChooser;
+  // private final SendableChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -48,8 +57,8 @@ public class RobotContainer {
     configureBindings();
 
     // Init Auto Chooser //
-    autoChooser = AutoBuilder.buildAutoChooser("OnePieceExit");
-    SmartDashboard.putData("OnePieceExit", autoChooser);
+    // autoChooser = AutoBuilder.buildAutoChooser("OnePieceExit");
+    // SmartDashboard.putData("OnePieceExit", autoChooser);
 
 
     // Register Named Commands //
@@ -68,13 +77,19 @@ public class RobotContainer {
   private void configureBindings() {
 
     // Set default teleop command to drive //
-    m_swerveDriveSubsystem.setDefaultCommand(
-      m_swerveDriveSubsystem.drive(
-        () -> -m_driverController.getLeftY(),   // Translation
-        () -> -m_driverController.getLeftX(),   // Strafe
-        () -> -m_driverController.getRightX()   // Rotation
-      )
+    // m_swerveDriveSubsystem.setDefaultCommand(
+    //   m_swerveDriveSubsystem.drive(
+    //     () -> -m_driverController.getLeftY(),   // Translation
+    //     () -> -m_driverController.getLeftX(),   // Strafe
+    //     () -> -m_driverController.getRightX()   // Rotation
+    //   )
+    // );
+
+    m_kitBotSubsystem.setDefaultCommand(
+      new KitBotVariableCommand(m_kitBotSubsystem, () -> -m_operatorController.getLeftY(), () -> -m_operatorController.getRightX())
     );
+
+
 
     // m_swerveDriveSubsystem.setDefaultCommand(
     //   m_swerveDriveSubsystem.driveHeading(
@@ -83,10 +98,19 @@ public class RobotContainer {
     //     () -> -m_driverController.getRightX(),  // X component of angle
     //     () -> -m_driverController.getRightY()   // Y component of angle
     //   )
+
     // );
 
+    // m_operatorController.a().whileTrue(Commands.run(() -> m_kitBotSubsystem.shootADummy()));
+    // m_operatorController.b().whileTrue(Commands.run(() -> m_kitBotSubsystem.shootBDummy()));
+    // m_operatorController.x().whileTrue(Commands.run(() -> m_kitBotSubsystem.shootXDummy()));
+    // m_operatorController.y().whileTrue(Commands.run(() -> m_kitBotSubsystem.shootYDummy()));
+
+    m_operatorController.a().whileTrue(Commands.run(() -> m_kitBotSubsystem.armExtendoForward()));
+    m_operatorController.b().whileTrue(Commands.run(() -> m_kitBotSubsystem.armExtendoBackward()));
+
     // Use the "Back" button to reset the Gyro orientation //
-    m_driverController.a().onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.zeroGyro()));
+    // m_driverController.a().onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.zeroGyro()));
 
     // // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)
@@ -105,6 +129,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     // return Autos.exampleAuto(m_exampleSubsystem);
-    return autoChooser.getSelected();
+    // return autoChooser.getSelected();
+    return null;
   }
 }

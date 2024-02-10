@@ -115,7 +115,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     // Lock Robot Pose //
-    m_robotContainer.m_swerveDriveSubsystem.lock();
+    // m_robotContainer.m_swerveDriveSubsystem.lock();
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */

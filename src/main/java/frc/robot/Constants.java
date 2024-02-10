@@ -85,6 +85,25 @@ public final class Constants {
     public static final double DESIRED_SHOOTER_RPM = 4000;
   }
 
+  public static class KitBotConstants {
+    public static final int KITBOT_LEADER_ID_A = 1;
+    public static final int KITBOT_FOLLOWER_ID_A = 5; 
+
+    public static final int KITBOT_LEADER_ID_B = 6;
+    public static final int KITBOT_FOLLOWER_ID_B = 7;
+
+    public static final double K_P = 0;
+    public static final double K_I = 0;
+    public static final double K_D = 0;
+    public static final double K_IZ = 0;
+    public static final double K_FF = 0;
+    public static final double K_MAX_OUTPUT = 0.69;
+    public static final double K_MIN_OUTPUT = -0.69;
+    public static final double MAX_RPM = 4000;
+
+
+  }
+
   public static class AmpConstants {
     public static final int AMP_LEFT_MOTOR_ID = 5;
     public static final int AMP_RIGHT_MOTOR_ID = 6;
