@@ -43,9 +43,9 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // The robot's subsystems and commands are defined here...
-  public final SwerveDriveSubsystem m_swerveDriveSubsystem = new SwerveDriveSubsystem();
+  // public final SwerveDriveSubsystem m_swerveDriveSubsystem = new SwerveDriveSubsystem();
 
-  public final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
+  // public final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   public final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   public final ShooterSmartVelocitySubsystem m_shooterSmartVelocitySubsystem = new ShooterSmartVelocitySubsystem();
   public final AmpSmartMotionSubsystem m_ampSmartMotionSubsystem = new AmpSmartMotionSubsystem();
@@ -58,19 +58,19 @@ public class RobotContainer {
   private final CommandXboxController m_operatorController =
       new CommandXboxController(OperatorConstants.OPERATOR_PORT);
 
-  private final SendableChooser<Command> autoChooser;
+  // private final SendableChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
 
-    // Init Auto Chooser //
-    autoChooser = AutoBuilder.buildAutoChooser("OnePieceExit");
-    SmartDashboard.putData("OnePieceExit", autoChooser);
+    // // Init Auto Chooser //
+    // autoChooser = AutoBuilder.buildAutoChooser("OnePieceExit");
+    // SmartDashboard.putData("OnePieceExit", autoChooser);
 
-    // Register Named Commands //
-    NamedCommands.registerCommand("OnePieceExit", getAutonomousCommand());
+    // // Register Named Commands //
+    // NamedCommands.registerCommand("OnePieceExit", getAutonomousCommand());
   }
 
   /**
@@ -84,14 +84,14 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    // Set default teleop command to drive //
-    m_swerveDriveSubsystem.setDefaultCommand(
-      m_swerveDriveSubsystem.drive(
-        () -> -m_driverController.getLeftY(),   // Translation
-        () -> -m_driverController.getLeftX(),   // Strafe
-        () -> -m_driverController.getRightX()   // Rotation
-      )
-    );
+    // // Set default teleop command to drive //
+    // m_swerveDriveSubsystem.setDefaultCommand(
+    //   m_swerveDriveSubsystem.drive(
+    //     () -> -m_driverController.getLeftY(),   // Translation
+    //     () -> -m_driverController.getLeftX(),   // Strafe
+    //     () -> -m_driverController.getRightX()   // Rotation
+    //   )
+    // );
 
     // m_swerveDriveSubsystem.setDefaultCommand(
     //   m_swerveDriveSubsystem.driveHeading(
@@ -103,15 +103,15 @@ public class RobotContainer {
     // );
 
     if (GeneralConstants.CURRENT_MODE == RobotMode.TEST){
-      m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
+      // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
       m_intakeSubsystem.setDefaultCommand(new TestIntake(m_intakeSubsystem));
       m_shooterSmartVelocitySubsystem.setDefaultCommand(new TestShooter(m_shooterSmartVelocitySubsystem));
-      m_ampSmartMotionSubsystem.setDefaultCommand(new TestAmpSetpoints(m_ampSmartMotionSubsystem));
+      m_ampSmartMotionSubsystem.setDefaultCommand(new TestAmpSetpoints(m_ampSmartMotionSubsystem, () -> -m_operatorController.getLeftY()));
       m_uptakeSubsystem.setDefaultCommand(new TestUptake(m_uptakeSubsystem));
     }
 
     // Use the "A" button to reset the Gyro orientation //
-    m_driverController.a().onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.zeroGyro()));
+    // m_driverController.a().onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.zeroGyro()));
 
     // // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)
@@ -130,6 +130,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     // return Autos.exampleAuto(m_exampleSubsystem);
-    return autoChooser.getSelected();
+    // return autoChooser.getSelected();
+    return null;
   }
 }

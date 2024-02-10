@@ -35,7 +35,7 @@ public final class Constants {
   public static final class GeneralConstants {
 
     // Robot mode
-    public static final RobotMode CURRENT_MODE = RobotMode.COMP;
+    public static final RobotMode CURRENT_MODE = RobotMode.TEST;
   
     public static enum RobotMode {
       /** Running on test mode */
@@ -47,7 +47,7 @@ public final class Constants {
 
   /** Intake Subsystem Constants */
   public static class IntakeConstants {
-    public static final int MOTOR_ID = 0;
+    public static final int MOTOR_ID = 1;
     
     public static final double NOMINAL_VOLTAGE = 8.0;
     public static final int STALL_CURRENT_LIMIT = 20;
@@ -61,8 +61,8 @@ public final class Constants {
 
   /** Uptake Subsystem Constants */
   public static class UptakeConstants {
-    public static final int LEFT_MOTOR_ID = 1;
-    public static final int RIGHT_MOTOR_ID = 2;
+    public static final int LEFT_MOTOR_ID = 3;
+    public static final int RIGHT_MOTOR_ID = 4;
     
     public static final double NOMINAL_VOLTAGE = 8.0;
     public static final int STALL_CURRENT_LIMIT = 20;
@@ -76,8 +76,8 @@ public final class Constants {
 
   /** ShooterAndAmp Subsystem Constants */
   public static class ShooterConstants {
-    public static final int TOP_MOTOR_ID = 3;
-    public static final int BOTTOM_MOTOR_ID = 4;
+    public static final int TOP_MOTOR_ID = 5;
+    public static final int BOTTOM_MOTOR_ID = 6;
 
     public static final double NOMINAL_VOLTAGE = 10.0;
     public static final int STALL_CURRENT_LIMIT = 40;
@@ -101,8 +101,8 @@ public final class Constants {
   }
 
   public static class AmpConstants {
-    public static final int LEFT_MOTOR_ID = 5;
-    public static final int RIGHT_MOTOR_ID = 6;
+    public static final int LEFT_MOTOR_ID = 7;
+    public static final int RIGHT_MOTOR_ID = 10;
 
     public static final double NOMINAL_VOLTAGE = 10.0;
     public static final int STALL_CURRENT_LIMIT = 40;
@@ -122,8 +122,8 @@ public final class Constants {
 
   /** Climber Subsystem Constants */
   public static class ClimberConstants {
-    public static final int LEFT_MOTOR_ID = 7;
-    public static final int RIGHT_MOTOR_ID = 8;
+    public static final int LEFT_MOTOR_ID = 11;
+    public static final int RIGHT_MOTOR_ID = 12;
 
     public static final double NOMINAL_VOLTAGE = 10.0;
     public static final int STALL_CURRENT_LIMIT = 40;

@@ -98,17 +98,17 @@ public class ClimberSubsystem extends SubsystemBase {
 
     // Create Shuffleboard entries for the ClimberSubsystem if the robot is in test mode //
     if (GeneralConstants.CURRENT_MODE == RobotMode.TEST) {
-      m_climberLeadPowerPercentageEntry = m_climberShuffleboardTab.add("Climber Lead Power Percentage", m_climberLead.getAppliedOutput()).getEntry();
-      m_climberLeadPowerVoltageEntry = m_climberShuffleboardTab.add("Climber Lead Power Voltage", m_climberLead.getBusVoltage()).getEntry();
-      m_climberLeadPowerCurrentEntry = m_climberShuffleboardTab.add("Climber Lead Power Current", m_climberLead.getOutputCurrent()).getEntry();
-      m_climberLeadPowerTemperatureEntry = m_climberShuffleboardTab.add("Climber Lead Power Temperature", m_climberLead.getMotorTemperature()).getEntry();
-      m_climberLeadPositionEntry = m_climberShuffleboardTab.add("Climber Lead Position", m_climberLead.getEncoder().getPosition()).getEntry();
+      m_climberLeadPowerPercentageEntry = m_climberShuffleboardTab.add("Climber Lead Power Percentage Reading", m_climberLead.getAppliedOutput()).getEntry();
+      m_climberLeadPowerVoltageEntry = m_climberShuffleboardTab.add("Climber Lead Power Voltage Reading", m_climberLead.getBusVoltage()).getEntry();
+      m_climberLeadPowerCurrentEntry = m_climberShuffleboardTab.add("Climber Lead Power Current Reading", m_climberLead.getOutputCurrent()).getEntry();
+      m_climberLeadPowerTemperatureEntry = m_climberShuffleboardTab.add("Climber Lead Power Temperature Reading", m_climberLead.getMotorTemperature()).getEntry();
+      m_climberLeadPositionEntry = m_climberShuffleboardTab.add("Climber Lead Position Reading", m_climberLead.getEncoder().getPosition()).getEntry();
 
-      m_climberFollowPowerPercentageEntry = m_climberShuffleboardTab.add("Climber Follow Power Percentage", m_climberFollow.getAppliedOutput()).getEntry();
-      m_climberFollowPowerVoltageEntry = m_climberShuffleboardTab.add("Climber Follow Power Voltage", m_climberFollow.getBusVoltage()).getEntry();
-      m_climberFollowPowerCurrentEntry = m_climberShuffleboardTab.add("Climber Follow Power Current", m_climberFollow.getOutputCurrent()).getEntry();
-      m_climberFollowPowerTemperatureEntry = m_climberShuffleboardTab.add("Climber Follow Power Temperature", m_climberFollow.getMotorTemperature()).getEntry();
-      m_climberFollowPositionEntry = m_climberShuffleboardTab.add("Climber Follow Position", m_climberFollow.getEncoder().getPosition()).getEntry();
+      m_climberFollowPowerPercentageEntry = m_climberShuffleboardTab.add("Climber Follow Power Percentage Reading", m_climberFollow.getAppliedOutput()).getEntry();
+      m_climberFollowPowerVoltageEntry = m_climberShuffleboardTab.add("Climber Follow Power Voltage Reading", m_climberFollow.getBusVoltage()).getEntry();
+      m_climberFollowPowerCurrentEntry = m_climberShuffleboardTab.add("Climber Follow Power Current Reading", m_climberFollow.getOutputCurrent()).getEntry();
+      m_climberFollowPowerTemperatureEntry = m_climberShuffleboardTab.add("Climber Follow Power Temperature Reading", m_climberFollow.getMotorTemperature()).getEntry();
+      m_climberFollowPositionEntry = m_climberShuffleboardTab.add("Climber Follow Position Reading", m_climberFollow.getEncoder().getPosition()).getEntry();
     }
   }
 

@@ -24,7 +24,15 @@ public class TestIntake extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    // Limit Power to 70% //
+    double speed = m_intake.m_intakePowerPercentageSetEntry.getDouble(0);
+    if (speed < -0.7)
+      speed = -0.7;
+    else if (speed > 0.7)
+      speed = 0.7;
+    m_intake.set(speed);
+  }
 
   // Called once the command ends or is interrupted.
   @Override

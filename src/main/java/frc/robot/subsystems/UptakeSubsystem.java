@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,6 +33,8 @@ public class UptakeSubsystem extends SubsystemBase {
   private GenericEntry m_uptakeFollowPowerCurrentEntry = null;
   private GenericEntry m_uptakeFollowPowerTemperatureEntry = null;
   private GenericEntry m_uptakeFollowPowerRPMEntry = null;
+
+  public GenericEntry m_uptakeLeadPowerPercentageSetEntry = null;
 
   private final CANSparkMax m_uptakeLead = new CANSparkMax(UptakeConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
   private final CANSparkMax m_uptakeFollow = new CANSparkMax(UptakeConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
@@ -102,17 +105,22 @@ public class UptakeSubsystem extends SubsystemBase {
 
     // Create Shuffleboard entries for the UptakeSubsystem if the robot is in test mode //
     if (GeneralConstants.CURRENT_MODE == RobotMode.TEST) {
-      m_uptakeLeadPowerPercentageEntry = m_uptakeShuffleboardTab.add("Uptake Lead Power Percentage", m_uptakeLead.getAppliedOutput()).getEntry();
-      m_uptakeLeadPowerVoltageEntry = m_uptakeShuffleboardTab.add("Uptake Lead Power Voltage", m_uptakeLead.getBusVoltage()).getEntry();
-      m_uptakeLeadPowerCurrentEntry = m_uptakeShuffleboardTab.add("Uptake Lead Power Current", m_uptakeLead.getOutputCurrent()).getEntry();
-      m_uptakeLeadPowerTemperatureEntry = m_uptakeShuffleboardTab.add("Uptake Lead Power Temperature", m_uptakeLead.getMotorTemperature()).getEntry();
-      m_uptakeLeadPowerRPMEntry = m_uptakeShuffleboardTab.add("Uptake Lead Power RPM", m_uptakeLead.getEncoder().getVelocity()).getEntry();
+      m_uptakeLeadPowerPercentageEntry = m_uptakeShuffleboardTab.add("Uptake Lead Power Percentage Reading", m_uptakeLead.getAppliedOutput()).getEntry();
+      m_uptakeLeadPowerVoltageEntry = m_uptakeShuffleboardTab.add("Uptake Lead Power Voltage Reading", m_uptakeLead.getBusVoltage()).getEntry();
+      m_uptakeLeadPowerCurrentEntry = m_uptakeShuffleboardTab.add("Uptake Lead Power Current Reading", m_uptakeLead.getOutputCurrent()).getEntry();
+      m_uptakeLeadPowerTemperatureEntry = m_uptakeShuffleboardTab.add("Uptake Lead Power Temperature Reading", m_uptakeLead.getMotorTemperature()).getEntry();
+      m_uptakeLeadPowerRPMEntry = m_uptakeShuffleboardTab.add("Uptake Lead Power RPM Reading", m_uptakeLead.getEncoder().getVelocity()).getEntry();
 
-      m_uptakeFollowPowerPercentageEntry = m_uptakeShuffleboardTab.add("Uptake Follow Power Percentage", m_uptakeFollow.getAppliedOutput()).getEntry();
-      m_uptakeFollowPowerVoltageEntry = m_uptakeShuffleboardTab.add("Uptake Follow Power Voltage", m_uptakeFollow.getBusVoltage()).getEntry();
-      m_uptakeFollowPowerCurrentEntry = m_uptakeShuffleboardTab.add("Uptake Follow Power Current", m_uptakeFollow.getOutputCurrent()).getEntry();
-      m_uptakeFollowPowerTemperatureEntry = m_uptakeShuffleboardTab.add("Uptake Follow Power Temperature", m_uptakeFollow.getMotorTemperature()).getEntry();
-      m_uptakeFollowPowerRPMEntry = m_uptakeShuffleboardTab.add("Uptake Follow Power RPM", m_uptakeFollow.getEncoder().getVelocity()).getEntry();
+      m_uptakeFollowPowerPercentageEntry = m_uptakeShuffleboardTab.add("Uptake Follow Power Percentage Reading", m_uptakeFollow.getAppliedOutput()).getEntry();
+      m_uptakeFollowPowerVoltageEntry = m_uptakeShuffleboardTab.add("Uptake Follow Power Voltage Reading", m_uptakeFollow.getBusVoltage()).getEntry();
+      m_uptakeFollowPowerCurrentEntry = m_uptakeShuffleboardTab.add("Uptake Follow Power Current Reading", m_uptakeFollow.getOutputCurrent()).getEntry();
+      m_uptakeFollowPowerTemperatureEntry = m_uptakeShuffleboardTab.add("Uptake Follow Power Temperature Reading", m_uptakeFollow.getMotorTemperature()).getEntry();
+      m_uptakeFollowPowerRPMEntry = m_uptakeShuffleboardTab.add("Uptake Follow Power RPM Reading", m_uptakeFollow.getEncoder().getVelocity()).getEntry();
+
+      m_uptakeLeadPowerPercentageSetEntry
+        = m_uptakeShuffleboardTab.add("Uptake Lead Power Percentage Setting", 0)
+          .withWidget(BuiltInWidgets.kNumberSlider)
+          .getEntry();
     }
   }
 

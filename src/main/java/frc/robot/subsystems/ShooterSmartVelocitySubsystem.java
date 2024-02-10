@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,6 +33,8 @@ public class ShooterSmartVelocitySubsystem extends SubsystemBase {
   private GenericEntry m_shooterFollowPowerCurrentEntry = null;
   private GenericEntry m_shooterFollowPowerTemperatureEntry = null;
   private GenericEntry m_shooterFollowPowerRPMEntry = null;
+
+  public GenericEntry m_shooterLeadPowerPercentageSetEntry = null;
 
   // Shooter Motor Controllers //
   private final CANSparkMax m_shooterLead = new CANSparkMax(ShooterConstants.TOP_MOTOR_ID, MotorType.kBrushless);
@@ -85,21 +88,30 @@ public class ShooterSmartVelocitySubsystem extends SubsystemBase {
 
     // Create Shuffleboard entries for the ShooterSubsystem if the robot is in test mode //
     if (GeneralConstants.CURRENT_MODE == RobotMode.TEST) {
-      m_shooterLeadPowerPercentageEntry = m_shooterShuffleboardTab.add("Shooter Lead Power Percentage", m_shooterLead.getAppliedOutput()).getEntry();
-      m_shooterLeadPowerVoltageEntry = m_shooterShuffleboardTab.add("Shooter Lead Power Voltage", m_shooterLead.getBusVoltage()).getEntry();
-      m_shooterLeadPowerCurrentEntry = m_shooterShuffleboardTab.add("Shooter Lead Power Current", m_shooterLead.getOutputCurrent()).getEntry();
-      m_shooterLeadPowerTemperatureEntry = m_shooterShuffleboardTab.add("Shooter Lead Power Temperature", m_shooterLead.getMotorTemperature()).getEntry();
-      m_shooterLeadPowerRPMEntry = m_shooterShuffleboardTab.add("Shooter Lead Power RPM", m_shooterLead.getEncoder().getVelocity()).getEntry();
+      m_shooterLeadPowerPercentageEntry = m_shooterShuffleboardTab.add("Shooter Lead Power Percentage Reading", m_shooterLead.getAppliedOutput()).getEntry();
+      m_shooterLeadPowerVoltageEntry = m_shooterShuffleboardTab.add("Shooter Lead Power Voltage Reading", m_shooterLead.getBusVoltage()).getEntry();
+      m_shooterLeadPowerCurrentEntry = m_shooterShuffleboardTab.add("Shooter Lead Power Current Reading", m_shooterLead.getOutputCurrent()).getEntry();
+      m_shooterLeadPowerTemperatureEntry = m_shooterShuffleboardTab.add("Shooter Lead Power Temperature Reading", m_shooterLead.getMotorTemperature()).getEntry();
+      m_shooterLeadPowerRPMEntry = m_shooterShuffleboardTab.add("Shooter Lead Power RPM Reading", m_shooterLead.getEncoder().getVelocity()).getEntry();
 
-      m_shooterFollowPowerPercentageEntry = m_shooterShuffleboardTab.add("Shooter Follow Power Percentage", m_shooterFollow.getAppliedOutput()).getEntry();
-      m_shooterFollowPowerVoltageEntry = m_shooterShuffleboardTab.add("Shooter Follow Power Voltage", m_shooterFollow.getBusVoltage()).getEntry();
-      m_shooterFollowPowerCurrentEntry = m_shooterShuffleboardTab.add("Shooter Follow Power Current", m_shooterFollow.getOutputCurrent()).getEntry();
-      m_shooterFollowPowerTemperatureEntry = m_shooterShuffleboardTab.add("Shooter Follow Power Temperature", m_shooterFollow.getMotorTemperature()).getEntry();
-      m_shooterFollowPowerRPMEntry = m_shooterShuffleboardTab.add("Shooter Follow Power RPM", m_shooterFollow.getEncoder().getVelocity()).getEntry();
+      m_shooterFollowPowerPercentageEntry = m_shooterShuffleboardTab.add("Shooter Follow Power Percentage Reading", m_shooterFollow.getAppliedOutput()).getEntry();
+      m_shooterFollowPowerVoltageEntry = m_shooterShuffleboardTab.add("Shooter Follow Power Voltage Reading", m_shooterFollow.getBusVoltage()).getEntry();
+      m_shooterFollowPowerCurrentEntry = m_shooterShuffleboardTab.add("Shooter Follow Power Current Reading", m_shooterFollow.getOutputCurrent()).getEntry();
+      m_shooterFollowPowerTemperatureEntry = m_shooterShuffleboardTab.add("Shooter Follow Power Temperature Reading", m_shooterFollow.getMotorTemperature()).getEntry();
+      m_shooterFollowPowerRPMEntry = m_shooterShuffleboardTab.add("Shooter Follow Power RPM Reading", m_shooterFollow.getEncoder().getVelocity()).getEntry();
+
+      m_shooterLeadPowerPercentageSetEntry
+        = m_shooterShuffleboardTab.add("Shooter Lead Power Percentage Setting", 0)
+          .withWidget(BuiltInWidgets.kNumberSlider)
+          .getEntry();
     }
   }
 
   //#region Shooter Test Methods //
+
+  public void set(double speed) {
+    m_shooterLead.set(speed);
+  }
 
   /**
    * Set the shooter RPM

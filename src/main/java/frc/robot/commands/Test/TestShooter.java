@@ -24,7 +24,14 @@ public class TestShooter extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    double speed = m_shooter.m_shooterLeadPowerPercentageSetEntry.getDouble(0);
+    if (speed < -0.7)
+      speed = -0.7;
+    else if (speed > 0.7)
+      speed = 0.7; 
+    m_shooter.set(speed);
+  }
 
   // Called once the command ends or is interrupted.
   @Override

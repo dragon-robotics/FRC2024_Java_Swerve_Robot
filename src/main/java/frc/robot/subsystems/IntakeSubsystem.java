@@ -13,6 +13,7 @@ import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.IntakeConstants;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,6 +27,8 @@ public class IntakeSubsystem extends SubsystemBase {
   private GenericEntry m_intakePowerCurrentEntry = null;
   private GenericEntry m_intakePowerTemperatureEntry = null;
   private GenericEntry m_intakePowerRPMEntry = null;
+
+  public GenericEntry m_intakePowerPercentageSetEntry = null;
 
   // Intake Motor Controller //
   private final CANSparkMax m_intake = new CANSparkMax(IntakeConstants.MOTOR_ID, MotorType.kBrushless);
@@ -61,11 +64,16 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // Create Shuffleboard entries for the IntakeSubsystem if the robot is in test mode //
     if (GeneralConstants.CURRENT_MODE == RobotMode.TEST) {
-      m_intakePowerPercentageEntry = m_intakShuffleboardTab.add("Intake Power Percentage", m_intake.getAppliedOutput()).getEntry();
-      m_intakePowerVoltageEntry = m_intakShuffleboardTab.add("Intake Power Voltage", m_intake.getBusVoltage()).getEntry();
-      m_intakePowerCurrentEntry = m_intakShuffleboardTab.add("Intake Power Current", m_intake.getOutputCurrent()).getEntry();
-      m_intakePowerTemperatureEntry = m_intakShuffleboardTab.add("Intake Power Temperature", m_intake.getMotorTemperature()).getEntry();
-      m_intakePowerRPMEntry = m_intakShuffleboardTab.add("Intake Power RPM", m_intake.getEncoder().getVelocity()).getEntry();
+      m_intakePowerPercentageEntry = m_intakShuffleboardTab.add("Intake Power Percentage Reading", m_intake.getAppliedOutput()).getEntry();
+      m_intakePowerVoltageEntry = m_intakShuffleboardTab.add("Intake Power Voltage Reading", m_intake.getBusVoltage()).getEntry();
+      m_intakePowerCurrentEntry = m_intakShuffleboardTab.add("Intake Power Current Reading", m_intake.getOutputCurrent()).getEntry();
+      m_intakePowerTemperatureEntry = m_intakShuffleboardTab.add("Intake Power Temperature Reading", m_intake.getMotorTemperature()).getEntry();
+      m_intakePowerRPMEntry = m_intakShuffleboardTab.add("Intake Power RPM Reading", m_intake.getEncoder().getVelocity()).getEntry();
+
+      m_intakePowerPercentageSetEntry
+        = m_intakShuffleboardTab.add("Intake Power Percentage Setting", 0)
+          .withWidget(BuiltInWidgets.kNumberSlider)
+          .getEntry();
     }
   }
 

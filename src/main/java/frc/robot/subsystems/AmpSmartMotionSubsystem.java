@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,9 +34,12 @@ public class AmpSmartMotionSubsystem extends SubsystemBase {
   private GenericEntry m_ampFollowPowerTemperatureEntry = null;
   private GenericEntry m_ampFollowPositionEntry = null;
 
+  // Setting Entries //
+  public GenericEntry m_ampLeadPowerPercentageSetEntry = null;
+
   // Amp Motor Controllers //
   private final CANSparkMax m_ampLead = new CANSparkMax(AmpConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
-  private final CANSparkMax m_ampFollow = new CANSparkMax(AmpConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
+  // private final CANSparkMax m_ampFollow = new CANSparkMax(AmpConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
   private final SparkPIDController m_ampLeadController = m_ampLead.getPIDController();
   // private final SparkPIDController m_ampFollowController = m_shooterFollow.getPIDController();
   
@@ -43,23 +47,23 @@ public class AmpSmartMotionSubsystem extends SubsystemBase {
 
     // Restore motors to factory defaults //
     m_ampLead.restoreFactoryDefaults();
-    m_ampFollow.restoreFactoryDefaults();
+    // m_ampFollow.restoreFactoryDefaults();
 
     // Enable Voltage Compensation //
     m_ampLead.enableVoltageCompensation(AmpConstants.NOMINAL_VOLTAGE);
-    m_ampFollow.enableVoltageCompensation(AmpConstants.NOMINAL_VOLTAGE);
+    // m_ampFollow.enableVoltageCompensation(AmpConstants.NOMINAL_VOLTAGE);
 
     // Set the smart current limits for the motors //
     m_ampLead.setSmartCurrentLimit(AmpConstants.STALL_CURRENT_LIMIT);
-    m_ampFollow.setSmartCurrentLimit(AmpConstants.STALL_CURRENT_LIMIT);
+    // m_ampFollow.setSmartCurrentLimit(AmpConstants.STALL_CURRENT_LIMIT);
 
     // Set the secondary current limits for the motors //
     m_ampLead.setSecondaryCurrentLimit(AmpConstants.SECONDARY_CURRENT_LIMIT);
-    m_ampFollow.setSecondaryCurrentLimit(AmpConstants.SECONDARY_CURRENT_LIMIT);
+    // m_ampFollow.setSecondaryCurrentLimit(AmpConstants.SECONDARY_CURRENT_LIMIT);
 
     // Set the motor controllers to brake mode //
     m_ampLead.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    m_ampFollow.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    // m_ampFollow.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     // PID Controller settings for the amp //
     m_ampLeadController.setP(AmpConstants.P);
@@ -72,21 +76,26 @@ public class AmpSmartMotionSubsystem extends SubsystemBase {
     m_ampLead.set(0);
 
     // Set the motor followers //
-    m_ampFollow.follow(m_ampLead, true);
+    // m_ampFollow.follow(m_ampLead, true);
 
     // Create Shuffleboard entries for the AmpSubsystem if the robot is in test mode //
     if (GeneralConstants.CURRENT_MODE == RobotMode.TEST) {
-      m_ampLeadPowerPercentageEntry = m_ampShuffleboardTab.add("Amp Lead Power Percentage", m_ampLead.getAppliedOutput()).getEntry();
-      m_ampLeadPowerVoltageEntry = m_ampShuffleboardTab.add("Amp Lead Power Voltage", m_ampLead.getBusVoltage()).getEntry();
-      m_ampLeadPowerCurrentEntry = m_ampShuffleboardTab.add("Amp Lead Power Current", m_ampLead.getOutputCurrent()).getEntry();
-      m_ampLeadPowerTemperatureEntry = m_ampShuffleboardTab.add("Amp Lead Power Temperature", m_ampLead.getMotorTemperature()).getEntry();
-      m_ampLeadPositionEntry = m_ampShuffleboardTab.add("Amp Lead Position", m_ampLead.getEncoder().getPosition()).getEntry();
+      m_ampLeadPowerPercentageEntry = m_ampShuffleboardTab.add("Amp Lead Power Percentage Reading", m_ampLead.getAppliedOutput()).getEntry();
+      m_ampLeadPowerVoltageEntry = m_ampShuffleboardTab.add("Amp Lead Power Voltage Reading", m_ampLead.getBusVoltage()).getEntry();
+      m_ampLeadPowerCurrentEntry = m_ampShuffleboardTab.add("Amp Lead Power Current Reading", m_ampLead.getOutputCurrent()).getEntry();
+      m_ampLeadPowerTemperatureEntry = m_ampShuffleboardTab.add("Amp Lead Power Temperature Reading", m_ampLead.getMotorTemperature()).getEntry();
+      m_ampLeadPositionEntry = m_ampShuffleboardTab.add("Amp Lead Position Reading", m_ampLead.getEncoder().getPosition()).getEntry();
 
-      m_ampFollowPowerPercentageEntry = m_ampShuffleboardTab.add("Amp Follow Power Percentage", m_ampFollow.getAppliedOutput()).getEntry();
-      m_ampFollowPowerVoltageEntry = m_ampShuffleboardTab.add("Amp Follow Power Voltage", m_ampFollow.getBusVoltage()).getEntry();
-      m_ampFollowPowerCurrentEntry = m_ampShuffleboardTab.add("Amp Follow Power Current", m_ampFollow.getOutputCurrent()).getEntry();
-      m_ampFollowPowerTemperatureEntry = m_ampShuffleboardTab.add("Amp Follow Power Temperature", m_ampFollow.getMotorTemperature()).getEntry();
-      m_ampFollowPositionEntry = m_ampShuffleboardTab.add("Amp Follow Position", m_ampFollow.getEncoder().getPosition()).getEntry();
+      // m_ampFollowPowerPercentageEntry = m_ampShuffleboardTab.add("Amp Follow Power Percentage Reading", m_ampFollow.getAppliedOutput()).getEntry();
+      // m_ampFollowPowerVoltageEntry = m_ampShuffleboardTab.add("Amp Follow Power Voltage Reading", m_ampFollow.getBusVoltage()).getEntry();
+      // m_ampFollowPowerCurrentEntry = m_ampShuffleboardTab.add("Amp Follow Power Current Reading", m_ampFollow.getOutputCurrent()).getEntry();
+      // m_ampFollowPowerTemperatureEntry = m_ampShuffleboardTab.add("Amp Follow Power Temperature Reading", m_ampFollow.getMotorTemperature()).getEntry();
+      // m_ampFollowPositionEntry = m_ampShuffleboardTab.add("Amp Follow Position Reading", m_ampFollow.getEncoder().getPosition()).getEntry();
+
+      m_ampLeadPowerPercentageSetEntry
+        = m_ampShuffleboardTab.add("Amp Lead Power Percentage Setting", false)
+          .withWidget(BuiltInWidgets.kToggleButton)
+          .getEntry();
     }
   }
 
@@ -112,11 +121,11 @@ public class AmpSmartMotionSubsystem extends SubsystemBase {
       m_ampLeadPowerTemperatureEntry.setDouble(m_ampLead.getMotorTemperature());
       m_ampLeadPositionEntry.setDouble(m_ampLead.getEncoder().getPosition());
 
-      m_ampFollowPowerPercentageEntry.setDouble(m_ampFollow.getAppliedOutput());
-      m_ampFollowPowerVoltageEntry.setDouble(m_ampFollow.getBusVoltage());
-      m_ampFollowPowerCurrentEntry.setDouble(m_ampFollow.getOutputCurrent());
-      m_ampFollowPowerTemperatureEntry.setDouble(m_ampFollow.getMotorTemperature());
-      m_ampFollowPositionEntry.setDouble(m_ampFollow.getEncoder().getPosition());
+      // m_ampFollowPowerPercentageEntry.setDouble(m_ampFollow.getAppliedOutput());
+      // m_ampFollowPowerVoltageEntry.setDouble(m_ampFollow.getBusVoltage());
+      // m_ampFollowPowerCurrentEntry.setDouble(m_ampFollow.getOutputCurrent());
+      // m_ampFollowPowerTemperatureEntry.setDouble(m_ampFollow.getMotorTemperature());
+      // m_ampFollowPositionEntry.setDouble(m_ampFollow.getEncoder().getPosition());
     }
   }
 }
