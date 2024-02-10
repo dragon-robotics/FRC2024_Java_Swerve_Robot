@@ -30,32 +30,19 @@ public final class Constants {
   //   REPLAY
   // }
 
-  public static final Mode CURRENT_MODE = Mode.COMP;
-
-  public static enum Mode {
-    /** Running on test mode */
-    TEST,
-    /** Running on competition mode */
-    COMP
-  }
-
-    /** General robot constants */
+  
+  /** General robot constants */
   public static final class GeneralConstants {
-    // Enable or disable competition mode
-    public static final boolean tuningMode = true;
 
-    // Joystick axis deadband for the swerve drive
-    public static final double swerveDeadband = 0.1;
-
-    public static final double voltageComp = 10.0;
-
-    // Hold time on motor brakes when disabled
-    public static final double wheelLockTime = 10;
-
-    public static final double robotMass = (148 - 20.3) * 0.453592;
-    public static final double chassisMass = robotMass;
-    public static final Translation3d chassisCG = new Translation3d(0, 0, Units.inchesToMeters(8));
-    public static final double loopTime = 0.13;
+    // Robot mode
+    public static final RobotMode CURRENT_MODE = RobotMode.COMP;
+  
+    public static enum RobotMode {
+      /** Running on test mode */
+      TEST,
+      /** Running on competition mode */
+      COMP
+    }
   }
 
   /** Intake Subsystem Constants */
@@ -158,12 +145,20 @@ public final class Constants {
     public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(WHEEL_DIAMETER_INCHES);
     public static final double MAX_SPEED_FEET_PER_SECOND = 12.5; // 12.5 feet per second
     public static final double MAX_SPEED_METERS_PER_SECOND = Units.feetToMeters(MAX_SPEED_FEET_PER_SECOND); // 12.5 feet per second
+
+    public static final double ROBOT_MASS = (148 - 20.3) * 0.453592;
+    public static final double CHASSIS_MASS = ROBOT_MASS;
+    public static final Translation3d CHASSIS_CG = new Translation3d(0, 0, Units.inchesToMeters(8));
+    public static final double LOOP_TIME = 0.13;
+
+    // Hold time on motor brakes when disabled
+    public static final double WHEEL_LOCK_TIME = 10;
   }
 
   public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-    public static final int kOperatorControllerPort = 1;
-    public static final int kOperatorButtonControllerPort = 2;
+    public static final int DRIVER_PORT = 0;
+    public static final int OPERATOR_PORT = 1;
+    public static final int OPERATOR_BUTTON_PORT = 2;
   }
 
   public static class CustomButtonBoxConstants {
