@@ -144,15 +144,15 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         double translationVal =
             translationLimiter.calculate(
                 MathUtil.applyDeadband(
-                    translation, Constants.GeneralConstants.swerveDeadband));
+                    translation, Constants.SwerveConstants.SWERVE_DEADBAND));
         double strafeVal =
             strafeLimiter.calculate(
                 MathUtil.applyDeadband(
-                    strafe, Constants.GeneralConstants.swerveDeadband));
+                    strafe, Constants.SwerveConstants.SWERVE_DEADBAND));
         double rotationVal =
             rotationLimiter.calculate(
                 MathUtil.applyDeadband(
-                    rotation, Constants.GeneralConstants.swerveDeadband));
+                    rotation, Constants.SwerveConstants.SWERVE_DEADBAND));
 
         drive(
             new Translation2d(translationVal,strafeVal).times(SwerveConstants.MAX_SPEED_METERS_PER_SECOND),
@@ -183,11 +183,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
       double translationVal =
           translationLimiter.calculate(
               MathUtil.applyDeadband(
-                  translation, Constants.GeneralConstants.swerveDeadband));
+                  translation, Constants.SwerveConstants.SWERVE_DEADBAND));
       double strafeVal =
           strafeLimiter.calculate(
               MathUtil.applyDeadband(
-                  strafe, Constants.GeneralConstants.swerveDeadband));
+                  strafe, Constants.SwerveConstants.SWERVE_DEADBAND));
 
       ChassisSpeeds desiredSpeeds
           = swerve.swerveController.getTargetSpeeds(
