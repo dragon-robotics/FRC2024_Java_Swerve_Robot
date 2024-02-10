@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.UptakeConstants;
+import frc.robot.Constants.GeneralConstants.RobotMode;
 
 public class UptakeSubsystem extends SubsystemBase {
   /** Creates a new UptakeSubsystem. */
@@ -29,7 +30,7 @@ public class UptakeSubsystem extends SubsystemBase {
   /**
    * Creates a new UptakeSubsystem.
    */
-  public UptakeSubsystem() {
+  public UptakeSubsystem(RobotMode mode) {
 
     // #region Lead motor settings
 

@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.IntakeConstants;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -28,7 +29,7 @@ public class IntakeSubsystem extends SubsystemBase {
   /**
    * Creates a new IntakeSubsystem.
    */
-  public IntakeSubsystem() {
+  public IntakeSubsystem(RobotMode mode) {
     // Restore motor to factory default //
     m_intake.restoreFactoryDefaults();
 

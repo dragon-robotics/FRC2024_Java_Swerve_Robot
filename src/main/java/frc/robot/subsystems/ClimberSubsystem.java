@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkBase.SoftLimitDirection;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.GeneralConstants.RobotMode;
 
 public class ClimberSubsystem extends SubsystemBase {
   
@@ -18,7 +19,7 @@ public class ClimberSubsystem extends SubsystemBase {
   private final CANSparkMax m_climberFollow = new CANSparkMax(ClimberConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
   
   /** Creates a new ClimberSubsystem. */
-  public ClimberSubsystem() {
+  public ClimberSubsystem(RobotMode mode) {
 
     /* Lead motor settings */
     // Restore lead motor to factory default //

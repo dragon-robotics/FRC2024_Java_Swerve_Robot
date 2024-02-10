@@ -4,11 +4,23 @@
 
 package frc.robot;
 
+import frc.robot.Constants.GeneralConstants;
+import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.Test.TestAmpSetpoints;
+import frc.robot.commands.Test.TestClimber;
+import frc.robot.commands.Test.TestIntake;
+import frc.robot.commands.Test.TestShooter;
+import frc.robot.commands.Test.TestUptake;
+import frc.robot.subsystems.AmpSmartMotionSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSmartVelocitySubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
+import frc.robot.subsystems.UptakeSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -33,12 +45,18 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final SwerveDriveSubsystem m_swerveDriveSubsystem = new SwerveDriveSubsystem();
 
+  public final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem(GeneralConstants.CURRENT_MODE);
+  public final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem(GeneralConstants.CURRENT_MODE);
+  public final ShooterSmartVelocitySubsystem m_shooterSmartVelocitySubsystem = new ShooterSmartVelocitySubsystem(GeneralConstants.CURRENT_MODE);
+  public final AmpSmartMotionSubsystem m_ampSmartMotionSubsystem = new AmpSmartMotionSubsystem(GeneralConstants.CURRENT_MODE);
+  public final UptakeSubsystem m_uptakeSubsystem = new UptakeSubsystem(GeneralConstants.CURRENT_MODE);
+
   // Define Driver and Operator controllers //
   private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+      new CommandXboxController(OperatorConstants.DRIVER_PORT);
 
   private final CommandXboxController m_operatorController =
-      new CommandXboxController(OperatorConstants.kOperatorControllerPort);
+      new CommandXboxController(OperatorConstants.OPERATOR_PORT);
 
   private final SendableChooser<Command> autoChooser;
 
@@ -50,7 +68,6 @@ public class RobotContainer {
     // Init Auto Chooser //
     autoChooser = AutoBuilder.buildAutoChooser("OnePieceExit");
     SmartDashboard.putData("OnePieceExit", autoChooser);
-
 
     // Register Named Commands //
     NamedCommands.registerCommand("OnePieceExit", getAutonomousCommand());
@@ -85,7 +102,15 @@ public class RobotContainer {
     //   )
     // );
 
-    // Use the "Back" button to reset the Gyro orientation //
+    if (GeneralConstants.CURRENT_MODE == RobotMode.TEST){
+      m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
+      m_intakeSubsystem.setDefaultCommand(new TestIntake(m_intakeSubsystem));
+      m_shooterSmartVelocitySubsystem.setDefaultCommand(new TestShooter(m_shooterSmartVelocitySubsystem));
+      m_ampSmartMotionSubsystem.setDefaultCommand(new TestAmpSetpoints(m_ampSmartMotionSubsystem));
+      m_uptakeSubsystem.setDefaultCommand(new TestUptake(m_uptakeSubsystem));
+    }
+
+    // Use the "A" button to reset the Gyro orientation //
     m_driverController.a().onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.zeroGyro()));
 
     // // Schedule `ExampleCommand` when `exampleCondition` changes to `true`

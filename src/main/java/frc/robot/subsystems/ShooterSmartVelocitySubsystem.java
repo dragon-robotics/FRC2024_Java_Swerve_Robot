@@ -13,13 +13,13 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.AmpConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.GeneralConstants.RobotMode;
 
-public class ShooterAndAmpRevSmartMotionSubsystem extends SubsystemBase {
+public class ShooterSmartVelocitySubsystem extends SubsystemBase {
 
   // Create New Tab for Shooter and Amp subsystems //
-  private final ShuffleboardTab m_shooterAndAmpShuffleboardTab = Shuffleboard.getTab("Shooter and Amp");
+  private final ShuffleboardTab m_shooterShuffleboardTab = Shuffleboard.getTab("Shooter");
 
   // Shooter Motor Controllers //
   private final CANSparkMax m_shooterLead = new CANSparkMax(ShooterConstants.TOP_MOTOR_ID, MotorType.kBrushless);
@@ -27,51 +27,34 @@ public class ShooterAndAmpRevSmartMotionSubsystem extends SubsystemBase {
   private final SparkPIDController m_shooterLeadController = m_shooterLead.getPIDController();
   // private final SparkPIDController m_shooterFollowController = m_shooterFollow.getPIDController();
 
-  // Amp Motor Controllers //
-  private final CANSparkMax m_ampLead = new CANSparkMax(AmpConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
-  private final CANSparkMax m_ampFollow = new CANSparkMax(AmpConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
-  private final SparkPIDController m_ampLeadController = m_shooterLead.getPIDController();
-  // private final SparkPIDController m_ampFollowController = m_shooterFollow.getPIDController();
-
   // Shooter Beambreak Sensor //
-  private final DigitalInput m_shooterAndAmpBeamBreak = new DigitalInput(ShooterConstants.BEAM_BREAK_DIGITAL_CHANNEL);
+  private final DigitalInput m_shooterBeamBreak = new DigitalInput(ShooterConstants.BEAM_BREAK_DIGITAL_CHANNEL);
 
   /** Creates a new ShooterAndAmpRevSmartMotionSubsystem. */
-  public ShooterAndAmpRevSmartMotionSubsystem() {
+  public ShooterSmartVelocitySubsystem(RobotMode mode) {
 
     // Restore motors to factory defaults //
     m_shooterLead.restoreFactoryDefaults();
     m_shooterFollow.restoreFactoryDefaults();
-    m_ampLead.restoreFactoryDefaults();
-    m_ampFollow.restoreFactoryDefaults();
 
     // Enable Voltage Compensation //
     m_shooterLead.enableVoltageCompensation(ShooterConstants.NOMINAL_VOLTAGE);
     m_shooterFollow.enableVoltageCompensation(ShooterConstants.NOMINAL_VOLTAGE);
-    m_ampLead.enableVoltageCompensation(AmpConstants.NOMINAL_VOLTAGE);
-    m_ampFollow.enableVoltageCompensation(AmpConstants.NOMINAL_VOLTAGE);
 
     // Set the smart current limits for the motors //
     m_shooterLead.setSmartCurrentLimit(ShooterConstants.STALL_CURRENT_LIMIT, ShooterConstants.FREE_CURRENT_LIMIT);
     m_shooterFollow.setSmartCurrentLimit(ShooterConstants.STALL_CURRENT_LIMIT, ShooterConstants.FREE_CURRENT_LIMIT);
-    m_ampLead.setSmartCurrentLimit(AmpConstants.STALL_CURRENT_LIMIT);
-    m_ampFollow.setSmartCurrentLimit(AmpConstants.STALL_CURRENT_LIMIT);
 
     // Set the secondary current limits for the motors //
     m_shooterLead.setSecondaryCurrentLimit(ShooterConstants.SECONDARY_CURRENT_LIMIT);
     m_shooterFollow.setSecondaryCurrentLimit(ShooterConstants.SECONDARY_CURRENT_LIMIT);
-    m_ampLead.setSecondaryCurrentLimit(AmpConstants.SECONDARY_CURRENT_LIMIT);
-    m_ampFollow.setSecondaryCurrentLimit(AmpConstants.SECONDARY_CURRENT_LIMIT);
 
     // Set the motor controllers to brake mode //
     m_shooterLead.setIdleMode(CANSparkMax.IdleMode.kCoast);
     m_shooterFollow.setIdleMode(CANSparkMax.IdleMode.kCoast);
-    m_ampLead.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    m_ampFollow.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     // Set the follower motor to follow the lead motor //
     m_shooterFollow.follow(m_shooterLead);
-    m_ampFollow.follow(m_ampLead);
 
     // Set the motor controllers to ramp at a certain rate //
     m_shooterLead.setOpenLoopRampRate(ShooterConstants.RAMP_RATE_IN_SEC);
@@ -87,16 +70,6 @@ public class ShooterAndAmpRevSmartMotionSubsystem extends SubsystemBase {
 
     // Set the lead shooter to 0 RPM //
     m_shooterLead.set(0);
-
-    // PID Controller settings for the amp //
-    m_ampLeadController.setP(AmpConstants.P);
-    m_ampLeadController.setI(AmpConstants.I);
-    m_ampLeadController.setD(AmpConstants.D);
-    m_ampLeadController.setFF(AmpConstants.F);
-    m_ampLeadController.setIZone(AmpConstants.IZ);
-
-    // Set the lead amp to 0 RPM //
-    m_ampLead.set(0);
   }
 
   //#region Shooter Test Methods //
@@ -156,10 +129,6 @@ public class ShooterAndAmpRevSmartMotionSubsystem extends SubsystemBase {
   public void setShooterF(double f){
     m_shooterLeadController.setFF(f);
   }
-
-  //#endregion //
-
-  //#region Amp Test Methods //
 
   //#endregion //
 
