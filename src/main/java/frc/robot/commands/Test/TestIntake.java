@@ -4,18 +4,22 @@
 
 package frc.robot.commands.Test;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class TestIntake extends Command {
   private final IntakeSubsystem m_intake;
+  private final DoubleSupplier m_speedSupplier;
 
   /** Creates a new TestIntake. */
-  public TestIntake(IntakeSubsystem intake) {
+  public TestIntake(IntakeSubsystem intake, DoubleSupplier speedSupplier) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
 
     m_intake = intake;
+    m_speedSupplier = speedSupplier;
   }
 
   // Called when the command is initially scheduled.
@@ -26,7 +30,7 @@ public class TestIntake extends Command {
   @Override
   public void execute() {
     // Limit Power to 70% //
-    double speed = m_intake.m_intakePowerPercentageSetEntry.getDouble(0);
+    double speed = m_speedSupplier.getAsDouble();
     if (speed < -0.7)
       speed = -0.7;
     else if (speed > 0.7)
