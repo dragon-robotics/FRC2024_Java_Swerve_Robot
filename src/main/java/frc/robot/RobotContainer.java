@@ -5,7 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.GeneralConstants;
-import frc.robot.Constants.GeneralConstants.RobotMode;
+// import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
@@ -15,6 +15,7 @@ import frc.robot.commands.Test.TestIntake;
 import frc.robot.commands.Test.TestShooter;
 import frc.robot.commands.Test.TestUptake;
 import frc.robot.subsystems.AmpSmartMotionSubsystem;
+import frc.robot.subsystems.BeamBreakSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -50,13 +51,14 @@ public class RobotContainer {
   public final ShooterSmartVelocitySubsystem m_shooterSmartVelocitySubsystem = new ShooterSmartVelocitySubsystem();
   public final AmpSmartMotionSubsystem m_ampSmartMotionSubsystem = new AmpSmartMotionSubsystem();
   public final UptakeSubsystem m_uptakeSubsystem = new UptakeSubsystem();
+  public final BeamBreakSubsystem m_beamBreakSubsystem = new BeamBreakSubsystem();
 
   // Define Driver and Operator controllers //
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.DRIVER_PORT);
+  // private final CommandXboxController m_driverController =
+  //     new CommandXboxController(OperatorConstants.DRIVER_PORT);
 
-  private final CommandXboxController m_operatorController =
-      new CommandXboxController(OperatorConstants.OPERATOR_PORT);
+  // private final CommandXboxController m_operatorController =
+  //     new CommandXboxController(OperatorConstants.OPERATOR_PORT);
 
   // private final SendableChooser<Command> autoChooser;
 
@@ -102,13 +104,13 @@ public class RobotContainer {
     //   )
     // );
 
-    if (GeneralConstants.CURRENT_MODE == RobotMode.TEST){
-      // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
-      m_intakeSubsystem.setDefaultCommand(new TestIntake(m_intakeSubsystem));
-      m_shooterSmartVelocitySubsystem.setDefaultCommand(new TestShooter(m_shooterSmartVelocitySubsystem));
-      m_ampSmartMotionSubsystem.setDefaultCommand(new TestAmpSetpoints(m_ampSmartMotionSubsystem, () -> -m_operatorController.getLeftY()));
-      m_uptakeSubsystem.setDefaultCommand(new TestUptake(m_uptakeSubsystem));
-    }
+    // if (GeneralConstants.CURRENT_MODE == RobotMode.TEST){
+    //   // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
+    //   m_intakeSubsystem.setDefaultCommand(new TestIntake(m_intakeSubsystem));
+    //   m_shooterSmartVelocitySubsystem.setDefaultCommand(new TestShooter(m_shooterSmartVelocitySubsystem));
+    //   // m_ampSmartMotionSubsystem.setDefaultCommand(new TestAmpSetpoints(m_ampSmartMotionSubsystem, () -> -m_operatorController.getLeftY()));
+    //   m_uptakeSubsystem.setDefaultCommand(new TestUptake(m_uptakeSubsystem));
+    // }
 
     // Use the "A" button to reset the Gyro orientation //
     // m_driverController.a().onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.zeroGyro()));
