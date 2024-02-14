@@ -81,6 +81,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
           );
 
       swerve.setHeadingCorrection(true);
+      swerve.setCosineCompensator(true);
 
       // Configure the AutoBuilder //
       setupPathPlanner();

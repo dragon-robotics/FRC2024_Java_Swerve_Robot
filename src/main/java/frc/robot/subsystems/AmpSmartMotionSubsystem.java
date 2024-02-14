@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -35,13 +36,14 @@ public class AmpSmartMotionSubsystem extends SubsystemBase {
   private GenericEntry m_ampFollowPositionEntry = null;
 
   // Setting Entries //
-  public GenericEntry m_ampLeadPowerPercentageSetEntry = null;
+  public GenericEntry m_setAmpLeadPowerPercentageEntry = null;
 
   // Amp Motor Controllers //
   private final CANSparkMax m_ampLead = new CANSparkMax(AmpConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
   // private final CANSparkMax m_ampFollow = new CANSparkMax(AmpConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
   private final SparkPIDController m_ampLeadController = m_ampLead.getPIDController();
   // private final SparkPIDController m_ampFollowController = m_shooterFollow.getPIDController();
+  private final SparkAbsoluteEncoder m_ampAbsEncoder = m_ampLead.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
   
   public AmpSmartMotionSubsystem() {
 
@@ -65,12 +67,21 @@ public class AmpSmartMotionSubsystem extends SubsystemBase {
     m_ampLead.setIdleMode(CANSparkMax.IdleMode.kBrake);
     // m_ampFollow.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
+    // Initialize the absolute encoder to 0//
+    m_ampAbsEncoder.setZeroOffset(0.0);
+
     // PID Controller settings for the amp //
     m_ampLeadController.setP(AmpConstants.P);
     m_ampLeadController.setI(AmpConstants.I);
     m_ampLeadController.setD(AmpConstants.D);
     m_ampLeadController.setFF(AmpConstants.F);
     m_ampLeadController.setIZone(AmpConstants.IZ);
+    m_ampLeadController.setOutputRange(AmpConstants.MIN_OUTPUT, AmpConstants.MAX_OUTPUT);
+
+    m_ampLeadController.setSmartMotionMaxVelocity(AmpConstants.SMART_MOTION_MAX_VELOCITY, AmpConstants.SMART_MOTION_SLOT);
+    m_ampLeadController.setSmartMotionMinOutputVelocity(AmpConstants.SMART_MOTION_MIN_OUTPUT_VELOCITY, AmpConstants.SMART_MOTION_SLOT);
+    m_ampLeadController.setSmartMotionMaxAccel(AmpConstants.SMART_MOTION_MAX_ACCEL, AmpConstants.SMART_MOTION_SLOT);
+    m_ampLeadController.setSmartMotionAllowedClosedLoopError(AmpConstants.SMART_MOTION_ALLOWED_ERROR, AmpConstants.SMART_MOTION_SLOT);
 
     // Set the lead amp to 0 RPM //
     m_ampLead.set(0);
@@ -92,7 +103,7 @@ public class AmpSmartMotionSubsystem extends SubsystemBase {
       // m_ampFollowPowerTemperatureEntry = m_ampShuffleboardTab.add("Amp Follow Power Temperature Reading", m_ampFollow.getMotorTemperature()).getEntry();
       // m_ampFollowPositionEntry = m_ampShuffleboardTab.add("Amp Follow Position Reading", m_ampFollow.getEncoder().getPosition()).getEntry();
 
-      m_ampLeadPowerPercentageSetEntry
+      m_setAmpLeadPowerPercentageEntry
         = m_ampShuffleboardTab.add("Amp Lead Power Percentage Setting", false)
           .withWidget(BuiltInWidgets.kToggleButton)
           .getEntry();
@@ -102,7 +113,7 @@ public class AmpSmartMotionSubsystem extends SubsystemBase {
   //#region Amp Test Methods //
   
   public void setAmpSpeed(double speed) {
-    m_ampLead.set(speed * 0.3);
+    m_ampLead.set(speed);
   }
 
   public void setAmpPosition(double position) {
@@ -110,6 +121,14 @@ public class AmpSmartMotionSubsystem extends SubsystemBase {
   }
 
   //#endregion
+
+  /**
+   * Get the current position of the amp
+   * @return
+   */
+  public double getAmpPosition() {
+    return m_ampAbsEncoder.getPosition();
+  }
 
   @Override
   public void periodic() {

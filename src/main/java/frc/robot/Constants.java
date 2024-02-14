@@ -113,6 +113,14 @@ public final class Constants {
     public static final double D = 0.0;
     public static final double F = 0.0;
     public static final double IZ = 0.0;
+    public static final double MIN_OUTPUT = -0.2;
+    public static final double MAX_OUTPUT = 0.2;
+
+    public static final int SMART_MOTION_SLOT = 0;
+    public static final int SMART_MOTION_MAX_VELOCITY = 2000;
+    public static final int SMART_MOTION_MIN_OUTPUT_VELOCITY = 0;
+    public static final int SMART_MOTION_MAX_ACCEL = 1500;
+    public static final int SMART_MOTION_ALLOWED_ERROR = 10;
 
     /* Desired absolute encoder setpoint for moving shooter and amp mechanism (to be tuned later using absolute encoder) */
     public static final double INITIAL_SETPOINT = 0.0;

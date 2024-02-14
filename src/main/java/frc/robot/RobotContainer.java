@@ -26,6 +26,9 @@ import frc.robot.subsystems.UptakeSubsystem;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -61,6 +64,14 @@ public class RobotContainer {
   //     new CommandXboxController(OperatorConstants.OPERATOR_PORT);
 
   // private final SendableChooser<Command> autoChooser;
+
+  // Create all the shuffleboard tab for testing //
+  public ShuffleboardTab m_testShuffleboardTab = null;
+  public ShuffleboardTab m_intakeShuffleboardTab = null;
+  public ShuffleboardTab m_uptakeShuffleboardTab = null;
+  public ShuffleboardTab m_shooterShuffleboardTab = null;
+  public ShuffleboardTab m_ampShuffleboardTab = null;
+  public ShuffleboardTab m_climberShuffleboardTab = null;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -104,13 +115,19 @@ public class RobotContainer {
     //   )
     // );
 
-    // if (GeneralConstants.CURRENT_MODE == RobotMode.TEST){
-    //   // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
-    //   m_intakeSubsystem.setDefaultCommand(new TestIntake(m_intakeSubsystem));
-    //   m_shooterSmartVelocitySubsystem.setDefaultCommand(new TestShooter(m_shooterSmartVelocitySubsystem));
-    //   // m_ampSmartMotionSubsystem.setDefaultCommand(new TestAmpSetpoints(m_ampSmartMotionSubsystem, () -> -m_operatorController.getLeftY()));
-    //   m_uptakeSubsystem.setDefaultCommand(new TestUptake(m_uptakeSubsystem));
-    // }
+    if (GeneralConstants.CURRENT_MODE == RobotMode.TEST){
+      // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
+      m_intakeSubsystem.setDefaultCommand(new TestIntake(m_intakeSubsystem, () -> -m_operatorController.getRightY()));
+      m_uptakeSubsystem.setDefaultCommand(new TestUptake(m_uptakeSubsystem, () -> -m_operatorController.getLeftY()));
+      m_ampSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(0.0), m_ampSmartMotionSubsystem));
+      m_shooterSmartVelocitySubsystem.setDefaultCommand(new TestShooter(m_shooterSmartVelocitySubsystem, () -> -m_operatorController.getRightTriggerAxis(), () -> -m_operatorController.getLeftTriggerAxis()));
+
+      m_operatorController.a()
+          .onTrue(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(0.2), m_ampSmartMotionSubsystem));
+
+      m_operatorController.b()
+          .onTrue(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(-0.2), m_ampSmartMotionSubsystem));
+    }
 
     // Use the "A" button to reset the Gyro orientation //
     // m_driverController.a().onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.zeroGyro()));

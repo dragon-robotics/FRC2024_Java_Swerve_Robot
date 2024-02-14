@@ -4,18 +4,27 @@
 
 package frc.robot.commands.Test;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSmartVelocitySubsystem;
 
 public class TestShooter extends Command {
   private final ShooterSmartVelocitySubsystem m_shooter;
+  private final DoubleSupplier m_forwardSpeedSupplier;
+  private final DoubleSupplier m_reverseSpeedSupplier;
 
   /** Creates a new TestShooter. */
-  public TestShooter(ShooterSmartVelocitySubsystem shooter) {
+  public TestShooter(
+      ShooterSmartVelocitySubsystem shooter,
+      DoubleSupplier forwardSpeedSupplier,
+      DoubleSupplier reverseSpeedSupplier) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
 
     m_shooter = shooter;
+    m_forwardSpeedSupplier = forwardSpeedSupplier;
+    m_reverseSpeedSupplier = reverseSpeedSupplier;
   }
 
   // Called when the command is initially scheduled.
@@ -25,7 +34,9 @@ public class TestShooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = m_shooter.m_shooterLeadPowerPercentageSetEntry.getDouble(0);
+    double forwardSpeed = m_forwardSpeedSupplier.getAsDouble();
+    double reverseSpeed = -m_reverseSpeedSupplier.getAsDouble();
+    double speed = forwardSpeed + reverseSpeed;
     if (speed < -0.7)
       speed = -0.7;
     else if (speed > 0.7)
