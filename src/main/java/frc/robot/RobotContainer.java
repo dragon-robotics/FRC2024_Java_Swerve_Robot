@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.GeneralConstants;
+import frc.robot.Constants.GeneralConstants.RobotMode;
 // import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
@@ -57,11 +58,11 @@ public class RobotContainer {
   public final BeamBreakSubsystem m_beamBreakSubsystem = new BeamBreakSubsystem();
 
   // Define Driver and Operator controllers //
-  // private final CommandXboxController m_driverController =
-  //     new CommandXboxController(OperatorConstants.DRIVER_PORT);
+  private final CommandXboxController m_driverController =
+      new CommandXboxController(OperatorConstants.DRIVER_PORT);
 
-  // private final CommandXboxController m_operatorController =
-  //     new CommandXboxController(OperatorConstants.OPERATOR_PORT);
+  private final CommandXboxController m_operatorController =
+      new CommandXboxController(OperatorConstants.OPERATOR_PORT);
 
   // private final SendableChooser<Command> autoChooser;
 
