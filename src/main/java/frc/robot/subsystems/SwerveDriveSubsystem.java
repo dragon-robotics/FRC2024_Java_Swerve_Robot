@@ -20,9 +20,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.SwerveConstants;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -37,6 +39,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   private final SlewRateLimiter translationLimiter = new SlewRateLimiter(SwerveConstants.MAX_SPEED_METERS_PER_SECOND);
   private final SlewRateLimiter strafeLimiter = new SlewRateLimiter(SwerveConstants.MAX_SPEED_METERS_PER_SECOND);
   private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(SwerveConstants.MAX_SPEED_METERS_PER_SECOND);
+
+  // LED Controller //
+  private final Spark m_ledController = new Spark(ShooterConstants.LED_CHANNEL);
 
   /** Creates a new SwerveDriveSubsystem. */
   public SwerveDriveSubsystem() {
@@ -249,6 +254,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
 
     swerve.drive(targetSpeeds);
+  }
+
+  public void setLED(double value) {
+    m_ledController.set(value);
   }
 
   @Override
