@@ -34,7 +34,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private final CANSparkMax m_intake = new CANSparkMax(IntakeConstants.MOTOR_ID, MotorType.kBrushless);
 
   // Intake Beambreak Sensor //
-  private final DigitalInput m_intakeBeamBreak = new DigitalInput(IntakeConstants.BEAM_BREAK_DIGITAL_CHANNEL);
+  // private final DigitalInput m_intakeBeamBreak = new DigitalInput(IntakeConstants.BEAM_BREAK_DIGITAL_CHANNEL);
 
   /**
    * Creates a new IntakeSubsystem.
@@ -89,13 +89,13 @@ public class IntakeSubsystem extends SubsystemBase {
     m_intake.set(0);
   }
 
-  /**
-   * Get the state of the beam break sensor
-    * @return true if the beam break sensor is broken, false if it is not
-   */
-  public boolean getBeamBreak() {
-    return m_intakeBeamBreak.get();
-  }
+  // /**
+  //  * Get the state of the beam break sensor
+  //   * @return true if the beam break sensor is broken, false if it is not
+  //  */
+  // public boolean getBeamBreak() {
+  //   return m_intakeBeamBreak.get();
+  // }
 
   /**
    * Set the intake to intake or outtake

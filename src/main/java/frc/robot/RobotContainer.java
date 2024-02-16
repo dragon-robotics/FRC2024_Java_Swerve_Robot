@@ -124,10 +124,10 @@ public class RobotContainer {
       m_shooterSmartVelocitySubsystem.setDefaultCommand(new TestShooter(m_shooterSmartVelocitySubsystem, () -> -m_operatorController.getRightTriggerAxis(), () -> -m_operatorController.getLeftTriggerAxis()));
 
       m_operatorController.a()
-          .onTrue(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(0.2), m_ampSmartMotionSubsystem));
+          .whileTrue(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(0.1), m_ampSmartMotionSubsystem));
 
       m_operatorController.b()
-          .onTrue(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(-0.2), m_ampSmartMotionSubsystem));
+          .whileTrue(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(-0.1), m_ampSmartMotionSubsystem));
     }
 
     // Use the "A" button to reset the Gyro orientation //

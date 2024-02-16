@@ -29,12 +29,11 @@ public class TestUptake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Limit Power to 70% //
     double speed = m_speedSupplier.getAsDouble();
-    if (speed < -0.7)
-      speed = -0.7;
-    else if (speed > 0.7)
-      speed = 0.7;
+    // if (speed < -0.9)
+    //   speed = -0.9;
+    // else if (speed > 0.9)
+    //   speed = 0.9;
     m_uptake.set(speed);
   }
 
