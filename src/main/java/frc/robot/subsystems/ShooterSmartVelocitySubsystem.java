@@ -43,7 +43,7 @@ public class ShooterSmartVelocitySubsystem extends SubsystemBase {
   // private final SparkPIDController m_shooterFollowController = m_shooterFollow.getPIDController();
 
   // Shooter Beambreak Sensor //
-  private final DigitalInput m_shooterBeamBreak = new DigitalInput(ShooterConstants.BEAM_BREAK_DIGITAL_CHANNEL);
+  // private final DigitalInput m_shooterBeamBreak = new DigitalInput(ShooterConstants.BEAM_BREAK_DIGITAL_CHANNEL);
 
   /** Creates a new ShooterAndAmpRevSmartMotionSubsystem. */
   public ShooterSmartVelocitySubsystem() {

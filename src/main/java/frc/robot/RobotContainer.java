@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.GeneralConstants;
+import frc.robot.Constants.GeneralConstants.RobotMode;
 // import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
@@ -57,11 +58,11 @@ public class RobotContainer {
   public final BeamBreakSubsystem m_beamBreakSubsystem = new BeamBreakSubsystem();
 
   // Define Driver and Operator controllers //
-  // private final CommandXboxController m_driverController =
-  //     new CommandXboxController(OperatorConstants.DRIVER_PORT);
+  private final CommandXboxController m_driverController =
+      new CommandXboxController(OperatorConstants.DRIVER_PORT);
 
-  // private final CommandXboxController m_operatorController =
-  //     new CommandXboxController(OperatorConstants.OPERATOR_PORT);
+  private final CommandXboxController m_operatorController =
+      new CommandXboxController(OperatorConstants.OPERATOR_PORT);
 
   // private final SendableChooser<Command> autoChooser;
 
@@ -123,10 +124,10 @@ public class RobotContainer {
       m_shooterSmartVelocitySubsystem.setDefaultCommand(new TestShooter(m_shooterSmartVelocitySubsystem, () -> -m_operatorController.getRightTriggerAxis(), () -> -m_operatorController.getLeftTriggerAxis()));
 
       m_operatorController.a()
-          .onTrue(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(0.2), m_ampSmartMotionSubsystem));
+          .whileTrue(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(0.1), m_ampSmartMotionSubsystem));
 
       m_operatorController.b()
-          .onTrue(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(-0.2), m_ampSmartMotionSubsystem));
+          .whileTrue(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(-0.1), m_ampSmartMotionSubsystem));
     }
 
     // Use the "A" button to reset the Gyro orientation //
