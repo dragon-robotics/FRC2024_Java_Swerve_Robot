@@ -196,8 +196,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
       ChassisSpeeds desiredSpeeds
           = swerve.swerveController.getTargetSpeeds(
-              translationVal * SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
-              strafeVal * SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
+              translationVal,
+              strafeVal,
               headingX,
               headingY,
               swerve.getYaw().getRadians(),

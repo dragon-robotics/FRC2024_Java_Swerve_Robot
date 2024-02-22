@@ -39,6 +39,8 @@ public class UptakeSubsystem extends SubsystemBase {
   private final CANSparkMax m_uptakeLead = new CANSparkMax(UptakeConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
   private final CANSparkMax m_uptakeFollow = new CANSparkMax(UptakeConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
 
+  // private final DigitalInput m_noteBeamBreak = new DigitalInput(UptakeConstants.NOTE_BEAM_BREAK_DIGITAL_CHANNEL);
+
   // private final DigitalInput m_topBeamBreak = new DigitalInput(UptakeConstants.TOP_BEAM_BREAK_DIGITAL_CHANNEL);
   // private final DigitalInput m_bottomBeamBreak = new DigitalInput(UptakeConstants.BOTTOM_BEAM_BREAK_DIGITAL_CHANNEL);
 
