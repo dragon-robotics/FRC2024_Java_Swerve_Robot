@@ -171,6 +171,13 @@ public class ShooterSmartVelocitySubsystem extends SubsystemBase {
 
   //#endregion //
 
+  /**
+   * Stop the shooter
+   */
+  public void stopShooter() {
+    m_shooterLead.set(0);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

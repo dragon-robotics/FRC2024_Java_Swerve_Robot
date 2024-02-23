@@ -120,6 +120,10 @@ public class AmpSmartMotionSubsystem extends SubsystemBase {
     m_ampLeadController.setReference(position, ControlType.kSmartMotion);
   }
 
+  public void stopAmp() {
+    m_ampLead.set(0);
+  }
+
   //#endregion
 
   /**
