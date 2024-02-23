@@ -128,6 +128,18 @@ public class RobotContainer {
 
       m_operatorController.b()
           .whileTrue(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(-0.1), m_ampSmartMotionSubsystem));
+    } else {
+      // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
+      m_intakeSubsystem.setDefaultCommand(Commands.run(() -> m_intakeSubsystem.stopIntake(), m_intakeSubsystem));
+      m_uptakeSubsystem.setDefaultCommand(Commands.run(() -> m_uptakeSubsystem.stopUptake(), m_uptakeSubsystem));
+      m_ampSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_ampSmartMotionSubsystem.stopAmp(), m_ampSmartMotionSubsystem));
+      m_shooterSmartVelocitySubsystem.setDefaultCommand(Commands.run(() -> m_shooterSmartVelocitySubsystem.stopShooter(), m_shooterSmartVelocitySubsystem));
+
+      m_operatorController.a()
+          .whileTrue(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(0.1), m_ampSmartMotionSubsystem));
+
+      m_operatorController.b()
+          .whileTrue(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(-0.1), m_ampSmartMotionSubsystem));
     }
 
     // Use the "A" button to reset the Gyro orientation //
