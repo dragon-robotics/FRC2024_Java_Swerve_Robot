@@ -6,20 +6,25 @@ package frc.robot.commands.Teleop;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class IntakeNoteToUptake extends ParallelDeadlineGroup {
-  /** Creates a new IntakeNoteToUptake. */
-  public IntakeNoteToUptake(IntakeSubsystem intake, UptakeSubsystem uptake, DoubleSupplier speed) {
+public class IntakeNoteToShooter extends SequentialCommandGroup {
+  /** Creates a new IntakeNoteToShooter. */
+  public IntakeNoteToShooter(
+    IntakeSubsystem intake,
+    UptakeSubsystem uptake,
+    ShooterSubsystem shooter,
+    DoubleSupplier speed) {
     // Add the deadline command in the super() call. Add other commands using
-    super(new MoveUptakeUntilNoteDetected(uptake, speed));
+    super(new MoveShooterUntilNoteDetected(shooter, speed));
     // addCommands().
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new MoveIntake(intake, speed));
+    addCommands(new MoveIntake(intake, speed), new MoveUptake(uptake, speed));
   }
 }

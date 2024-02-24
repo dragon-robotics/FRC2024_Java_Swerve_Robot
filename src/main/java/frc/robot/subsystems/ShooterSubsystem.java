@@ -19,7 +19,7 @@ import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.ShooterConstants;
 
-public class ShooterSmartVelocitySubsystem extends SubsystemBase {
+public class ShooterSubsystem extends SubsystemBase {
 
   // Create new Shuffleboard tab for shooter subsystem //
   private final ShuffleboardTab m_shooterShuffleboardTab = Shuffleboard.getTab("Shooter");
@@ -42,11 +42,11 @@ public class ShooterSmartVelocitySubsystem extends SubsystemBase {
   private final SparkPIDController m_shooterLeadController = m_shooterLead.getPIDController();
   // private final SparkPIDController m_shooterFollowController = m_shooterFollow.getPIDController();
 
-  // Shooter Beambreak Sensor //
-  // private final DigitalInput m_shooterBeamBreak = new DigitalInput(ShooterConstants.BEAM_BREAK_DIGITAL_CHANNEL);
+  // // Shooter Note Beambreak Sensor //
+  // private final DigitalInput m_noteBeamBreak = new DigitalInput(ShooterConstants.NOTE_BEAM_BREAK_DIGITAL_CHANNEL);
 
   /** Creates a new ShooterSmartVelocitySubsystem. */
-  public ShooterSmartVelocitySubsystem() {
+  public ShooterSubsystem() {
 
     // Restore motors to factory defaults //
     m_shooterLead.restoreFactoryDefaults();
@@ -170,6 +170,14 @@ public class ShooterSmartVelocitySubsystem extends SubsystemBase {
   }
 
   //#endregion //
+
+  // /**
+  //  * Determine if a note is detected by the shooter note beam break sensor
+  //  * @return true if a note is detected, false if not
+  //  */
+  // public boolean isNoteDetected() {
+  //   return m_noteBeamBreak.get();
+  // }
 
   /**
    * Stop the shooter

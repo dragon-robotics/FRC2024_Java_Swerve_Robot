@@ -56,7 +56,7 @@ public final class Constants {
     public static final double SECONDARY_CURRENT_LIMIT = 60.0;
     public static final double RAMP_RATE_IN_SEC = 0.25; // Ramp rate in seconds
     
-    public static final int BEAM_BREAK_DIGITAL_CHANNEL = 0;
+    // public static final int BEAM_BREAK_DIGITAL_CHANNEL = 0;
   }
 
   /** Uptake Subsystem Constants */
@@ -70,8 +70,7 @@ public final class Constants {
     public static final double SECONDARY_CURRENT_LIMIT = 60.0;
     public static final double RAMP_RATE_IN_SEC = 0.25; // Ramp rate in seconds
     
-    public static final int TOP_BEAM_BREAK_DIGITAL_CHANNEL = 1;
-    public static final int BOTTOM_BEAM_BREAK_DIGITAL_CHANNEL = 2;
+    public static final int NOTE_BEAM_BREAK_DIGITAL_CHANNEL = 0;
   }
 
   /** Shooter Subsystem Constants */
@@ -87,7 +86,7 @@ public final class Constants {
     public static final double SECONDARY_CURRENT_LIMIT = 60.0;
     public static final double RAMP_RATE_IN_SEC = 0.25; // Ramp rate in seconds
 
-    public static final int BEAM_BREAK_DIGITAL_CHANNEL = 3;
+    public static final int NOTE_BEAM_BREAK_DIGITAL_CHANNEL = 1;
 
     public static final double P = 0.0;
     public static final double I = 0.0;

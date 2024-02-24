@@ -39,10 +39,7 @@ public class UptakeSubsystem extends SubsystemBase {
   private final CANSparkMax m_uptakeLead = new CANSparkMax(UptakeConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
   private final CANSparkMax m_uptakeFollow = new CANSparkMax(UptakeConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
 
-  // private final DigitalInput m_noteBeamBreak = new DigitalInput(UptakeConstants.NOTE_BEAM_BREAK_DIGITAL_CHANNEL);
-
-  // private final DigitalInput m_topBeamBreak = new DigitalInput(UptakeConstants.TOP_BEAM_BREAK_DIGITAL_CHANNEL);
-  // private final DigitalInput m_bottomBeamBreak = new DigitalInput(UptakeConstants.BOTTOM_BEAM_BREAK_DIGITAL_CHANNEL);
+  private final DigitalInput m_noteBeamBreak = new DigitalInput(UptakeConstants.NOTE_BEAM_BREAK_DIGITAL_CHANNEL);
 
   /**
    * Creates a new UptakeSubsystem.
@@ -138,21 +135,13 @@ public class UptakeSubsystem extends SubsystemBase {
     m_uptakeLead.set(0);
   }
 
-  // /**
-  //  * Get the state of the top beam break sensor
-  //  * @return true if the top beam break sensor is broken, false if it is not
-  //  */
-  // public boolean getTopBeamBreak() {
-  //   return m_topBeamBreak.get();
-  // }
-
-  // /**
-  //  * Get the state of the bottom beam break sensor
-  //  * @return true if the bottom beam break sensor is broken, false if it is not
-  //  */
-  // public boolean getBottomBeamBreak() {
-  //   return m_bottomBeamBreak.get();
-  // }
+  /**
+   * Determine if a note is detected by the uptake note beam break sensor
+   * @return true if a note is detected, false if not
+   */
+  public boolean isNoteDetected() {
+    return m_noteBeamBreak.get();
+  }
 
   /**
    * Set the intake to uptake or downtake

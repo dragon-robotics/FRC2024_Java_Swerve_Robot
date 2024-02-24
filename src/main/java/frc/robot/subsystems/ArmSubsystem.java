@@ -19,7 +19,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.GeneralConstants.RobotMode;
 
-public class ArmSmartMotionSubsystem extends SubsystemBase {
+public class ArmSubsystem extends SubsystemBase {
   /** Creates a new ArmSmartMotionSubsystem. */
 
   // Create new Shuffleboard tab for the arm subsystem //
@@ -45,7 +45,7 @@ public class ArmSmartMotionSubsystem extends SubsystemBase {
   // private final SparkPIDController m_armFollowController = m_shooterFollow.getPIDController();
   private final SparkAbsoluteEncoder m_armAbsEncoder = m_armLead.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
   
-  public ArmSmartMotionSubsystem() {
+  public ArmSubsystem() {
 
     // Restore motors to factory defaults //
     m_armLead.restoreFactoryDefaults();

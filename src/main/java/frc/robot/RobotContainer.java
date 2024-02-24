@@ -15,12 +15,12 @@ import frc.robot.commands.Test.TestClimber;
 import frc.robot.commands.Test.TestIntake;
 import frc.robot.commands.Test.TestShooter;
 import frc.robot.commands.Test.TestUptake;
-import frc.robot.subsystems.ArmSmartMotionSubsystem;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.BeamBreakSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterSmartVelocitySubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
 
@@ -52,8 +52,8 @@ public class RobotContainer {
 
   // public final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   public final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-  public final ShooterSmartVelocitySubsystem m_shooterSmartVelocitySubsystem = new ShooterSmartVelocitySubsystem();
-  public final ArmSmartMotionSubsystem m_armSmartMotionSubsystem = new ArmSmartMotionSubsystem();
+  public final ShooterSubsystem m_shooterSmartVelocitySubsystem = new ShooterSubsystem();
+  public final ArmSubsystem m_armSmartMotionSubsystem = new ArmSubsystem();
   public final UptakeSubsystem m_uptakeSubsystem = new UptakeSubsystem();
   public final BeamBreakSubsystem m_beamBreakSubsystem = new BeamBreakSubsystem();
 
@@ -140,6 +140,16 @@ public class RobotContainer {
 
       m_operatorController.b()
           .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
+
+      // Intake to Uptake - User should hold the button //
+
+      // Intake Amp Sequence - User should hold the button //
+
+      // Prepare to Shoot Speaker - User should hold the button //
+
+      // Score Speaker - User should hold the button //
+
+      // Score Amp - User should hold the button //
     }
 
     // Use the "A" button to reset the Gyro orientation //
