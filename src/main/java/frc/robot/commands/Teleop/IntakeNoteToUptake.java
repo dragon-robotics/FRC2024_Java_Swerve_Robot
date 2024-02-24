@@ -13,9 +13,9 @@ import frc.robot.subsystems.UptakeSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class IntakeNote extends ParallelDeadlineGroup {
-  /** Creates a new IntakeNote. */
-  public IntakeNote(IntakeSubsystem intake, UptakeSubsystem uptake, DoubleSupplier speed) {
+public class IntakeNoteToUptake extends ParallelDeadlineGroup {
+  /** Creates a new IntakeNoteToUptake. */
+  public IntakeNoteToUptake(IntakeSubsystem intake, UptakeSubsystem uptake, DoubleSupplier speed) {
     // Add the deadline command in the super() call. Add other commands using
     // addCommands().
     super(new MoveUptake(uptake, speed));
