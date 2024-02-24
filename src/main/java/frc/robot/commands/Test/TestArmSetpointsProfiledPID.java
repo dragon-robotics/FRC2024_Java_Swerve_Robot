@@ -7,14 +7,14 @@ package frc.robot.commands.Test;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
-import frc.robot.subsystems.ArmSmartMotionSubsystem;
+import frc.robot.subsystems.ArmSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class TestArmSetpointsProfiledPID extends ProfiledPIDCommand {
   /** Creates a new TestArmSetpointsProfiledPID. */
-  public TestArmSetpointsProfiledPID(double targetPosition, ArmSmartMotionSubsystem amp) {
+  public TestArmSetpointsProfiledPID(double targetPosition, ArmSubsystem amp) {
     super(
         // The ProfiledPIDController used by the command
         new ProfiledPIDController(

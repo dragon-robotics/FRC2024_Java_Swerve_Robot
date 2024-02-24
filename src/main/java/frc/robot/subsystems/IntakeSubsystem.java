@@ -49,8 +49,7 @@ public class IntakeSubsystem extends SubsystemBase {
     // Set the motor to only use 20 amp stall limit, 10 amp free limit, and limit to 3k RPM //
     m_intake.setSmartCurrentLimit(
         IntakeConstants.STALL_CURRENT_LIMIT,
-        IntakeConstants.FREE_CURRENT_LIMIT,
-        IntakeConstants.RPM_LIMIT
+        IntakeConstants.FREE_CURRENT_LIMIT
     );
 
     // Set the motor's hard stop current limit to 40 amps //

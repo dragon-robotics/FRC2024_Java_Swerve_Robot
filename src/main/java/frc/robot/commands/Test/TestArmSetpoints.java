@@ -7,14 +7,14 @@ package frc.robot.commands.Test;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ArmSmartMotionSubsystem;
+import frc.robot.subsystems.ArmSubsystem;
 
 public class TestArmSetpoints extends Command {
-  private final ArmSmartMotionSubsystem m_arm;
+  private final ArmSubsystem m_arm;
   private final DoubleSupplier m_power;
 
   /** Creates a new TestArmSetpoints. */
-  public TestArmSetpoints(ArmSmartMotionSubsystem arm, DoubleSupplier power) {
+  public TestArmSetpoints(ArmSubsystem arm, DoubleSupplier power) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(arm);
 
