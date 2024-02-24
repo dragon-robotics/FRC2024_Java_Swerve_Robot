@@ -2,24 +2,26 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Test;
+package frc.robot.commands.Teleop;
 
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.AmpSmartMotionSubsystem;
+import frc.robot.subsystems.UptakeSubsystem;
 
-public class TestAmpSetpoints extends Command {
-  private final AmpSmartMotionSubsystem m_amp;
-  private final DoubleSupplier m_power;
+public class MoveUptake extends Command {
+  
+  private UptakeSubsystem m_uptake;
+  private DoubleSupplier m_speed;
 
-  /** Creates a new TestAmpSetpoints. */
-  public TestAmpSetpoints(AmpSmartMotionSubsystem amp, DoubleSupplier power) {
+  /** Creates a new MoveUptake. */
+  public MoveUptake(UptakeSubsystem uptake, DoubleSupplier speed) {
+
+    m_uptake = uptake;
+    m_speed = speed;
+
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(amp);
-
-    m_amp = amp;
-    m_power = power;
+    addRequirements(uptake);
   }
 
   // Called when the command is initially scheduled.
@@ -29,12 +31,7 @@ public class TestAmpSetpoints extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = m_power.getAsDouble();
-    if (m_power.getAsDouble() < -0.2)
-      speed = -0.2;
-    else if (m_power.getAsDouble() > 0.2)
-      speed = 0.2;
-    m_amp.setAmpSpeed(speed);
+    m_uptake.set(m_speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

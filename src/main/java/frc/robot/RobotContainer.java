@@ -10,17 +10,17 @@ import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.Test.TestAmpSetpoints;
+import frc.robot.commands.Test.TestArmSetpoints;
 import frc.robot.commands.Test.TestClimber;
 import frc.robot.commands.Test.TestIntake;
 import frc.robot.commands.Test.TestShooter;
 import frc.robot.commands.Test.TestUptake;
-import frc.robot.subsystems.AmpSmartMotionSubsystem;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.BeamBreakSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterSmartVelocitySubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
 
@@ -52,8 +52,8 @@ public class RobotContainer {
 
   // public final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   public final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-  public final ShooterSmartVelocitySubsystem m_shooterSmartVelocitySubsystem = new ShooterSmartVelocitySubsystem();
-  public final AmpSmartMotionSubsystem m_ampSmartMotionSubsystem = new AmpSmartMotionSubsystem();
+  public final ShooterSubsystem m_shooterSmartVelocitySubsystem = new ShooterSubsystem();
+  public final ArmSubsystem m_armSmartMotionSubsystem = new ArmSubsystem();
   public final UptakeSubsystem m_uptakeSubsystem = new UptakeSubsystem();
   public final BeamBreakSubsystem m_beamBreakSubsystem = new BeamBreakSubsystem();
 
@@ -120,14 +120,36 @@ public class RobotContainer {
       // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
       m_intakeSubsystem.setDefaultCommand(new TestIntake(m_intakeSubsystem, () -> -m_operatorController.getRightY()));
       m_uptakeSubsystem.setDefaultCommand(new TestUptake(m_uptakeSubsystem, () -> -m_operatorController.getLeftY()));
-      m_ampSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(0.0), m_ampSmartMotionSubsystem));
+      m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.0), m_armSmartMotionSubsystem));
       m_shooterSmartVelocitySubsystem.setDefaultCommand(new TestShooter(m_shooterSmartVelocitySubsystem, () -> -m_operatorController.getRightTriggerAxis(), () -> -m_operatorController.getLeftTriggerAxis()));
 
       m_operatorController.a()
-          .whileTrue(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(0.1), m_ampSmartMotionSubsystem));
+          .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.1), m_armSmartMotionSubsystem));
 
       m_operatorController.b()
-          .whileTrue(Commands.run(() -> m_ampSmartMotionSubsystem.setAmpSpeed(-0.1), m_ampSmartMotionSubsystem));
+          .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
+    } else {
+      // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
+      m_intakeSubsystem.setDefaultCommand(Commands.run(() -> m_intakeSubsystem.stopIntake(), m_intakeSubsystem));
+      m_uptakeSubsystem.setDefaultCommand(Commands.run(() -> m_uptakeSubsystem.stopUptake(), m_uptakeSubsystem));
+      m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
+      m_shooterSmartVelocitySubsystem.setDefaultCommand(Commands.run(() -> m_shooterSmartVelocitySubsystem.stopShooter(), m_shooterSmartVelocitySubsystem));
+
+      m_operatorController.a()
+          .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.1), m_armSmartMotionSubsystem));
+
+      m_operatorController.b()
+          .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
+
+      // Intake to Uptake - User should hold the button //
+
+      // Intake Amp Sequence - User should hold the button //
+
+      // Prepare to Shoot Speaker - User should hold the button //
+
+      // Score Speaker - User should hold the button //
+
+      // Score Amp - User should hold the button //
     }
 
     // Use the "A" button to reset the Gyro orientation //
