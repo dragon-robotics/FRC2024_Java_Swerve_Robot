@@ -45,7 +45,7 @@ public class ShooterSmartVelocitySubsystem extends SubsystemBase {
   // Shooter Beambreak Sensor //
   // private final DigitalInput m_shooterBeamBreak = new DigitalInput(ShooterConstants.BEAM_BREAK_DIGITAL_CHANNEL);
 
-  /** Creates a new ShooterAndAmpRevSmartMotionSubsystem. */
+  /** Creates a new ShooterSmartVelocitySubsystem. */
   public ShooterSmartVelocitySubsystem() {
 
     // Restore motors to factory defaults //

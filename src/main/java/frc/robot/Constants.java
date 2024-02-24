@@ -74,7 +74,7 @@ public final class Constants {
     public static final int BOTTOM_BEAM_BREAK_DIGITAL_CHANNEL = 2;
   }
 
-  /** ShooterAndAmp Subsystem Constants */
+  /** Shooter Subsystem Constants */
   public static class ShooterConstants {
     public static final int LED_CHANNEL = 0;
 
@@ -102,7 +102,7 @@ public final class Constants {
     public static final double MAX_RPM = 5000;
   }
 
-  public static class AmpConstants {
+  public static class ArmConstants {
     public static final int LEFT_MOTOR_ID = 7;
     public static final int RIGHT_MOTOR_ID = 9;
 

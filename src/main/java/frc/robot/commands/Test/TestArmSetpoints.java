@@ -7,18 +7,18 @@ package frc.robot.commands.Test;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.AmpSmartMotionSubsystem;
+import frc.robot.subsystems.ArmSmartMotionSubsystem;
 
-public class TestAmpSetpoints extends Command {
-  private final AmpSmartMotionSubsystem m_amp;
+public class TestArmSetpoints extends Command {
+  private final ArmSmartMotionSubsystem m_arm;
   private final DoubleSupplier m_power;
 
-  /** Creates a new TestAmpSetpoints. */
-  public TestAmpSetpoints(AmpSmartMotionSubsystem amp, DoubleSupplier power) {
+  /** Creates a new TestArmSetpoints. */
+  public TestArmSetpoints(ArmSmartMotionSubsystem arm, DoubleSupplier power) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(amp);
+    addRequirements(arm);
 
-    m_amp = amp;
+    m_arm = arm;
     m_power = power;
   }
 
@@ -34,7 +34,7 @@ public class TestAmpSetpoints extends Command {
       speed = -0.2;
     else if (m_power.getAsDouble() > 0.2)
       speed = 0.2;
-    m_amp.setAmpSpeed(speed);
+    m_arm.setArmSpeed(speed);
   }
 
   // Called once the command ends or is interrupted.
