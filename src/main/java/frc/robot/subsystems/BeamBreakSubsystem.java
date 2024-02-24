@@ -16,6 +16,6 @@ public class BeamBreakSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    System.out.println(beamBrake0.get());
+    // System.out.println(beamBrake0.get());
   }
 }
