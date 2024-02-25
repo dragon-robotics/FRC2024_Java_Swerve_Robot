@@ -11,6 +11,10 @@ import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.Teleop.MoveArmToInitialPosition;
+import frc.robot.commands.Teleop.MoveArmToShootPosition;
+import frc.robot.commands.Teleop.MoveIntakeAdjPercent;
+import frc.robot.commands.Teleop.MoveUptakeAdjPercent;
 import frc.robot.commands.Test.TestArmSetpoints;
 import frc.robot.commands.Test.TestClimber;
 import frc.robot.commands.Test.TestIntake;
@@ -59,19 +63,19 @@ public class RobotContainer {
   public final UptakeSubsystem m_uptakeSubsystem = new UptakeSubsystem();
   public final BeamBreakSubsystem m_beamBreakSubsystem = new BeamBreakSubsystem();
 
-  // // Define Driver and Operator controllers //
-  // private final CommandXboxController m_driverController =
-  //     new CommandXboxController(OperatorConstants.DRIVER_PORT);
+  // Define Driver and Operator controllers //
+  private final CommandXboxController m_driverController =
+      new CommandXboxController(OperatorConstants.DRIVER_PORT);
 
-  // private final CommandXboxController m_operatorController =
-  //     new CommandXboxController(OperatorConstants.OPERATOR_PORT);
+  private final CommandXboxController m_operatorController =
+      new CommandXboxController(OperatorConstants.OPERATOR_PORT);
 
-  // Define Driver and Operator controllers - Temporary fix for forgetting Xbox Controller //
-  private final CommandJoystick m_driverController =
-      new CommandJoystick(OperatorConstants.DRIVER_PORT);
+//   // Define Driver and Operator controllers - Temporary fix for forgetting Xbox Controller //
+//   private final CommandJoystick m_driverController =
+//       new CommandJoystick(OperatorConstants.DRIVER_PORT);
 
-  private final CommandJoystick m_operatorController =
-      new CommandJoystick(OperatorConstants.OPERATOR_PORT);
+//   private final CommandJoystick m_operatorController =
+//       new CommandJoystick(OperatorConstants.OPERATOR_PORT);
 
 
   // private final SendableChooser<Command> autoChooser;
@@ -110,14 +114,14 @@ public class RobotContainer {
 
     //#region Xbox Controller Bindings
 
-    // // Set default teleop command to drive //
-    // m_swerveDriveSubsystem.setDefaultCommand(
-    //   m_swerveDriveSubsystem.drive(
-    //     () -> -m_driverController.getLeftY(),   // Translation
-    //     () -> -m_driverController.getLeftX(),   // Strafe
-    //     () -> -m_driverController.getRightX()   // Rotation
-    //   )
-    // );
+    // Set default teleop command to drive //
+    m_swerveDriveSubsystem.setDefaultCommand(
+      m_swerveDriveSubsystem.drive(
+        () -> -m_driverController.getLeftY(),   // Translation
+        () -> -m_driverController.getLeftX(),   // Strafe
+        () -> -m_driverController.getRightX()   // Rotation
+      )
+    );
 
     // m_swerveDriveSubsystem.setDefaultCommand(
     //   m_swerveDriveSubsystem.driveHeading(
@@ -128,116 +132,52 @@ public class RobotContainer {
     //   )
     // );
 
-    // if (GeneralConstants.CURRENT_MODE == RobotMode.TEST){
-    //   // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
-    //   m_intakeSubsystem.setDefaultCommand(new TestIntake(m_intakeSubsystem, () -> -m_operatorController.getRightY()));
-    //   m_uptakeSubsystem.setDefaultCommand(new TestUptake(m_uptakeSubsystem, () -> -m_operatorController.getLeftY()));
-    //   m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.0), m_armSmartMotionSubsystem));
-    //   m_shooterSubsystem.setDefaultCommand(new TestShooter(m_shooterSubsystem, () -> -m_operatorController.getRightTriggerAxis(), () -> -m_operatorController.getLeftTriggerAxis()));
-
-    //   m_operatorController.a()
-    //       .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.1), m_armSmartMotionSubsystem));
-
-    //   m_operatorController.b()
-    //       .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
-    // } else {
-    //   // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
-    //   m_intakeSubsystem.setDefaultCommand(Commands.run(() -> m_intakeSubsystem.stopIntake(), m_intakeSubsystem));
-    //   m_uptakeSubsystem.setDefaultCommand(Commands.run(() -> m_uptakeSubsystem.stopUptake(), m_uptakeSubsystem));
-    //   m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
-    //   m_shooterSubsystem.setDefaultCommand(Commands.run(() -> m_shooterSubsystem.stopShooter(), m_shooterSubsystem));
-
-    //   m_operatorController.a()
-    //       .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.1), m_armSmartMotionSubsystem));
-
-    //   m_operatorController.b()
-    //       .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
-
-    //   // Intake to Uptake - User should hold the button //
-
-    //   // Intake Amp Sequence - User should hold the button //
-
-    //   // Prepare to Shoot Speaker - User should hold the button //
-
-    //   // Score Speaker - User should hold the button //
-
-    //   // Score Amp - User should hold the button //
-    // }
-
-    // Use the "A" button to reset the Gyro orientation //
-    // m_driverController.a().onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.zeroGyro()));
-
-    // // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(m_exampleSubsystem::exampleCondition)
-    //     .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    // // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // // cancelling on release.
-    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    //#endregion
-
-    //#region Joystick Bindings
-    
-    // // Set default teleop command to drive //
-    // m_swerveDriveSubsystem.setDefaultCommand(
-    //   m_swerveDriveSubsystem.drive(
-    //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_LEFT_Y),   // Translation
-    //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_LEFT_X),   // Strafe
-    //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_RIGHT_X)   // Rotation
-    //   )
-    // );
-
-    // m_swerveDriveSubsystem.setDefaultCommand(
-    //   m_swerveDriveSubsystem.driveHeading(
-    //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_LEFT_Y),   // Translation
-    //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_LEFT_X),   // Strafe
-    //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_RIGHT_Y),  // X component of angle
-    //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_RIGHT_Y)   // Y component of angle
-    //   )
-    // );
-
     if (GeneralConstants.CURRENT_MODE == RobotMode.TEST){
       // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
-      m_intakeSubsystem.setDefaultCommand(
-          new TestIntake(
-              m_intakeSubsystem,
-              () -> -m_operatorController.getRawAxis(JoystickConstants.STICK_RIGHT_Y)
-          )
-      );
+      m_intakeSubsystem.setDefaultCommand(new TestIntake(m_intakeSubsystem, () -> -m_operatorController.getRightY()));
+      m_uptakeSubsystem.setDefaultCommand(new TestUptake(m_uptakeSubsystem, () -> -m_operatorController.getLeftY()));
+      m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.0), m_armSmartMotionSubsystem));
+      m_shooterSubsystem.setDefaultCommand(new TestShooter(m_shooterSubsystem, () -> -m_operatorController.getRightTriggerAxis(), () -> -m_operatorController.getLeftTriggerAxis()));
 
-      m_uptakeSubsystem.setDefaultCommand(
-          new TestUptake(
-              m_uptakeSubsystem,
-              () -> -m_operatorController.getRawAxis(JoystickConstants.STICK_LEFT_Y)
-          )
-      );
-
-      m_armSmartMotionSubsystem.setDefaultCommand(
-          Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.0), m_armSmartMotionSubsystem));
-      m_shooterSubsystem.setDefaultCommand(
-          new TestShooter(
-              m_shooterSubsystem,
-              () -> -m_operatorController.getRawAxis(JoystickConstants.TRIGGER_RIGHT),
-              () -> -m_operatorController.getRawAxis(JoystickConstants.TRIGGER_LEFT)
-          )
-      );
-
-      m_operatorController.button(JoystickConstants.BTN_A)
+      m_operatorController.a()
           .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.1), m_armSmartMotionSubsystem));
 
-      m_operatorController.button(JoystickConstants.BTN_B)
+      m_operatorController.b()
           .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
     } else {
       // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
-      m_intakeSubsystem.setDefaultCommand(Commands.run(() -> m_intakeSubsystem.stopIntake(), m_intakeSubsystem));
-      m_uptakeSubsystem.setDefaultCommand(Commands.run(() -> m_uptakeSubsystem.stopUptake(), m_uptakeSubsystem));
-      m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
-      m_shooterSubsystem.setDefaultCommand(Commands.run(() -> m_shooterSubsystem.stopShooter(), m_shooterSubsystem));
+      m_intakeSubsystem.setDefaultCommand(
+        new MoveIntakeAdjPercent(
+          m_intakeSubsystem,
+          m_operatorController.a(),
+          m_operatorController.povUp(),
+          m_operatorController.povDown()
+        )
+      );
+      m_uptakeSubsystem.setDefaultCommand(
+        new MoveUptakeAdjPercent(
+          m_uptakeSubsystem,
+          m_operatorController.b(),
+          m_operatorController.povRight(),
+          m_operatorController.povLeft()
+        )
+      );
 
-      m_operatorController.button(JoystickConstants.BTN_A)
+      // m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
+      m_shooterSubsystem.setDefaultCommand(
+        Commands.run(() -> m_shooterSubsystem.set(-0.5), m_shooterSubsystem)
+      );
+
+      m_operatorController.x().onTrue(
+        new MoveArmToInitialPosition(m_armSmartMotionSubsystem));
+
+      m_operatorController.y().onTrue(
+        new MoveArmToShootPosition(m_armSmartMotionSubsystem));
+
+      m_operatorController.leftBumper()
           .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.1), m_armSmartMotionSubsystem));
 
-      m_operatorController.button(JoystickConstants.BTN_B)
+      m_operatorController.rightBumper()
           .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
 
       // Intake to Uptake - User should hold the button //
@@ -252,8 +192,96 @@ public class RobotContainer {
     }
 
     // Use the "A" button to reset the Gyro orientation //
-    m_driverController.button(JoystickConstants.BTN_A)
-        .onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.zeroGyro()));
+    m_driverController.a().onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.zeroGyro()));
+
+    // // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    // new Trigger(m_exampleSubsystem::exampleCondition)
+    //     .onTrue(new ExampleCommand(m_exampleSubsystem));
+
+    // // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // // cancelling on release.
+    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+
+    //#endregion
+
+    //#region Joystick Bindings
+    
+    // // // Set default teleop command to drive //
+    // // m_swerveDriveSubsystem.setDefaultCommand(
+    // //   m_swerveDriveSubsystem.drive(
+    // //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_LEFT_Y),   // Translation
+    // //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_LEFT_X),   // Strafe
+    // //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_RIGHT_X)   // Rotation
+    // //   )
+    // // );
+
+    // // m_swerveDriveSubsystem.setDefaultCommand(
+    // //   m_swerveDriveSubsystem.driveHeading(
+    // //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_LEFT_Y),   // Translation
+    // //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_LEFT_X),   // Strafe
+    // //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_RIGHT_Y),  // X component of angle
+    // //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_RIGHT_Y)   // Y component of angle
+    // //   )
+    // // );
+
+    // if (GeneralConstants.CURRENT_MODE == RobotMode.TEST){
+    //   // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
+    //   m_intakeSubsystem.setDefaultCommand(
+    //       new TestIntake(
+    //           m_intakeSubsystem,
+    //           () -> -m_operatorController.getRawAxis(JoystickConstants.STICK_RIGHT_Y)
+    //       )
+    //   );
+
+    //   m_uptakeSubsystem.setDefaultCommand(
+    //       new TestUptake(
+    //           m_uptakeSubsystem,
+    //           () -> -m_operatorController.getRawAxis(JoystickConstants.STICK_LEFT_Y)
+    //       )
+    //   );
+
+    //   m_armSmartMotionSubsystem.setDefaultCommand(
+    //       Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.0), m_armSmartMotionSubsystem));
+    //   m_shooterSubsystem.setDefaultCommand(
+    //       new TestShooter(
+    //           m_shooterSubsystem,
+    //           () -> -m_operatorController.getRawAxis(JoystickConstants.TRIGGER_RIGHT),
+    //           () -> -m_operatorController.getRawAxis(JoystickConstants.TRIGGER_LEFT)
+    //       )
+    //   );
+
+    //   m_operatorController.button(JoystickConstants.BTN_A)
+    //       .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.1), m_armSmartMotionSubsystem));
+
+    //   m_operatorController.button(JoystickConstants.BTN_B)
+    //       .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
+    // } else {
+    //   // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
+    //   m_intakeSubsystem.setDefaultCommand(Commands.run(() -> m_intakeSubsystem.stopIntake(), m_intakeSubsystem));
+    //   m_uptakeSubsystem.setDefaultCommand(Commands.run(() -> m_uptakeSubsystem.stopUptake(), m_uptakeSubsystem));
+    //   m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
+    //   m_shooterSubsystem.setDefaultCommand(Commands.run(() -> m_shooterSubsystem.stopShooter(), m_shooterSubsystem));
+
+    //   m_operatorController.button(JoystickConstants.BTN_A)
+    //       .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.1), m_armSmartMotionSubsystem));
+
+    //   m_operatorController.button(JoystickConstants.BTN_B)
+    //       .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
+
+    //   // Intake to Uptake - User should hold the button //
+
+    //   // Intake Amp Sequence - User should hold the button //
+
+    //   // Prepare to Shoot Speaker - User should hold the button //
+
+    //   // Score Speaker - User should hold the button //
+
+    //   // Score Amp - User should hold the button //
+    // }
+
+    // // Use the "A" button to reset the Gyro orientation //
+    // m_driverController.button(JoystickConstants.BTN_A)
+    //     .onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.zeroGyro()));
 
     //#endregion
   }

@@ -35,7 +35,7 @@ public final class Constants {
   public static final class GeneralConstants {
 
     // Robot mode
-    public static final RobotMode CURRENT_MODE = RobotMode.TEST;
+    public static final RobotMode CURRENT_MODE = RobotMode.COMP;
   
     public static enum RobotMode {
       /** Running on test mode */
@@ -50,8 +50,8 @@ public final class Constants {
     public static final int MOTOR_ID = 1;
     
     public static final double NOMINAL_VOLTAGE = 10.0;
-    public static final int STALL_CURRENT_LIMIT = 40;
-    public static final int FREE_CURRENT_LIMIT = 30;
+    public static final int STALL_CURRENT_LIMIT = 55;
+    public static final int FREE_CURRENT_LIMIT = 40;
     public static final double SECONDARY_CURRENT_LIMIT = 60.0;
     public static final double RAMP_RATE_IN_SEC = 0.25; // Ramp rate in seconds
     
@@ -64,8 +64,8 @@ public final class Constants {
     public static final int RIGHT_MOTOR_ID = 4;
     
     public static final double NOMINAL_VOLTAGE = 10.0;
-    public static final int STALL_CURRENT_LIMIT = 40;
-    public static final int FREE_CURRENT_LIMIT = 30;
+    public static final int STALL_CURRENT_LIMIT = 55;
+    public static final int FREE_CURRENT_LIMIT = 40;
     public static final double SECONDARY_CURRENT_LIMIT = 60.0;
     public static final double RAMP_RATE_IN_SEC = 0.25; // Ramp rate in seconds
     
@@ -81,7 +81,7 @@ public final class Constants {
 
     public static final double NOMINAL_VOLTAGE = 10.0;
     public static final int STALL_CURRENT_LIMIT = 55;
-    public static final int FREE_CURRENT_LIMIT = 30;
+    public static final int FREE_CURRENT_LIMIT = 40;
     public static final double SECONDARY_CURRENT_LIMIT = 60.0;
     public static final double RAMP_RATE_IN_SEC = 0.25; // Ramp rate in seconds
 
