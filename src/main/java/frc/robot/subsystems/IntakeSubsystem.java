@@ -151,6 +151,13 @@ public class IntakeSubsystem extends SubsystemBase {
     m_intake.set(0.0);
   }
 
+  /**
+   * Get the current of the intake motor
+   */
+  public double getCurrent() {
+    return m_intake.getOutputCurrent();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
