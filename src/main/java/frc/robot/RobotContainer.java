@@ -14,6 +14,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Teleop.MoveArmToInitialPosition;
 import frc.robot.commands.Teleop.MoveArmToShootPosition;
 import frc.robot.commands.Teleop.MoveIntakeAdjPercent;
+import frc.robot.commands.Teleop.MoveShooterAdjPercent;
 import frc.robot.commands.Teleop.MoveUptakeAdjPercent;
 import frc.robot.commands.Test.TestArmSetpoints;
 import frc.robot.commands.Test.TestClimber;
@@ -146,6 +147,8 @@ public class RobotContainer {
           .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
     } else {
       // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
+
+      // Set default intake command to increase and decrease in power //
       m_intakeSubsystem.setDefaultCommand(
         new MoveIntakeAdjPercent(
           m_intakeSubsystem,
@@ -154,6 +157,8 @@ public class RobotContainer {
           m_operatorController.povDown()
         )
       );
+
+      // Set default uptake command to increase and decrease in power //
       m_uptakeSubsystem.setDefaultCommand(
         new MoveUptakeAdjPercent(
           m_uptakeSubsystem,
@@ -163,11 +168,20 @@ public class RobotContainer {
         )
       );
 
-      // m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
-      m_shooterSubsystem.setDefaultCommand(
-        Commands.run(() -> m_shooterSubsystem.set(-0.5), m_shooterSubsystem)
-      );
+      // Set the shooter command to increase and decrease in power //
 
+
+      m_shooterSubsystem.setDefaultCommand(
+        new MoveShooterAdjPercent(
+          m_shooterSubsystem,
+          m_operatorController.back(),
+          m_operatorController.rightTrigger(),
+          m_operatorController.leftTrigger()
+          )
+          );
+      
+      // m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
+          
       m_operatorController.x().onTrue(
         new MoveArmToInitialPosition(m_armSmartMotionSubsystem));
 
