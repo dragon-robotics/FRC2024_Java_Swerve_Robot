@@ -169,16 +169,14 @@ public class RobotContainer {
       );
 
       // Set the shooter command to increase and decrease in power //
-
-
       m_shooterSubsystem.setDefaultCommand(
         new MoveShooterAdjPercent(
           m_shooterSubsystem,
           m_operatorController.back(),
           m_operatorController.rightTrigger(),
           m_operatorController.leftTrigger()
-          )
-          );
+        )
+      );
       
       // m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
           
