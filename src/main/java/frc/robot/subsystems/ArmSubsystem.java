@@ -9,6 +9,7 @@ import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -40,7 +41,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   // Arm Motor Controllers //
   private final CANSparkMax m_armLead = new CANSparkMax(ArmConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
-  // private final CANSparkMax m_armFollow = new CANSparkMax(ArmConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
+  private final CANSparkMax m_armFollow = new CANSparkMax(ArmConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
   private final SparkPIDController m_armLeadController = m_armLead.getPIDController();
   // private final SparkPIDController m_armFollowController = m_shooterFollow.getPIDController();
   private final SparkAbsoluteEncoder m_armAbsEncoder = m_armLead.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
@@ -107,6 +108,29 @@ public class ArmSubsystem extends SubsystemBase {
         = m_armShuffleboardTab.add("Arm Lead Power Percentage Setting", false)
           .withWidget(BuiltInWidgets.kToggleButton)
           .getEntry();
+    } else {
+      // Set the lead arm motor to read the absolute encoder position every 10ms //
+      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 10);
+
+      // Set status 1, 2, 3, 4, 6, and 7 to be 500ms for the arm motor
+      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
+      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 500);
+      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 500);
+      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus7, 500);
+
+      // Set the follow arm motor bandwidth to 200Hz (every 5ms) //
+      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
+
+      // Set status 1-7 to be 500ms for the follow arm motor
+      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
+      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 500);
+      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 500);
+      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 500);
+      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus7, 500);
     }
   }
 

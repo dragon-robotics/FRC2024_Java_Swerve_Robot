@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
@@ -109,6 +110,27 @@ public class ClimberSubsystem extends SubsystemBase {
       m_climberFollowPowerCurrentEntry = m_climberShuffleboardTab.add("Climber Follow Power Current Reading", m_climberFollow.getOutputCurrent()).getEntry();
       m_climberFollowPowerTemperatureEntry = m_climberShuffleboardTab.add("Climber Follow Power Temperature Reading", m_climberFollow.getMotorTemperature()).getEntry();
       m_climberFollowPositionEntry = m_climberShuffleboardTab.add("Climber Follow Position Reading", m_climberFollow.getEncoder().getPosition()).getEntry();
+    } else {
+      // Set status 1-7 to be 500ms for the lead climber motors
+      m_climberLead.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+      m_climberLead.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+      m_climberLead.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
+      m_climberLead.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 500);
+      m_climberLead.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 500);
+      m_climberLead.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 500);
+      m_climberLead.setPeriodicFramePeriod(PeriodicFrame.kStatus7, 500);
+
+      // Set the follow climber motor bandwidth to 200Hz (every 5ms) //
+      m_climberFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
+
+      // Set status 1-7 to be 500ms for the follow climber motors
+      m_climberFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+      m_climberFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+      m_climberFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
+      m_climberFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 500);
+      m_climberFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 500);
+      m_climberFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 500);
+      m_climberFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus7, 500);
     }
   }
 

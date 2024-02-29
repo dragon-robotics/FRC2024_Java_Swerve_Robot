@@ -7,10 +7,7 @@ package frc.robot;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.GeneralConstants.RobotMode;
-// import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Teleop.MoveArmToInitialPosition;
 import frc.robot.commands.Teleop.MoveArmToShootPosition;
 import frc.robot.commands.Teleop.MoveIntakeAdjPercent;
@@ -22,9 +19,7 @@ import frc.robot.commands.Test.TestIntake;
 import frc.robot.commands.Test.TestShooter;
 import frc.robot.commands.Test.TestUptake;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.BeamBreakSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
@@ -52,9 +47,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
-  // The robot's subsystems and commands are defined here...
   public final SwerveDriveSubsystem m_swerveDriveSubsystem = new SwerveDriveSubsystem();
 
   // public final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
@@ -62,7 +54,6 @@ public class RobotContainer {
   public final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
   public final ArmSubsystem m_armSmartMotionSubsystem = new ArmSubsystem();
   public final UptakeSubsystem m_uptakeSubsystem = new UptakeSubsystem();
-  public final BeamBreakSubsystem m_beamBreakSubsystem = new BeamBreakSubsystem();
 
   // Define Driver and Operator controllers //
   private final CommandXboxController m_driverController =
@@ -116,22 +107,22 @@ public class RobotContainer {
     //#region Xbox Controller Bindings
 
     // Set default teleop command to drive //
-    m_swerveDriveSubsystem.setDefaultCommand(
-      m_swerveDriveSubsystem.drive(
-        () -> -m_driverController.getLeftY(),   // Translation
-        () -> -m_driverController.getLeftX(),   // Strafe
-        () -> -m_driverController.getRightX()   // Rotation
-      )
-    );
-
     // m_swerveDriveSubsystem.setDefaultCommand(
-    //   m_swerveDriveSubsystem.driveHeading(
+    //   m_swerveDriveSubsystem.drive(
     //     () -> -m_driverController.getLeftY(),   // Translation
     //     () -> -m_driverController.getLeftX(),   // Strafe
-    //     () -> -m_driverController.getRightX(),  // X component of angle
-    //     () -> -m_driverController.getRightY()   // Y component of angle
+    //     () -> -m_driverController.getRightX()   // Rotation
     //   )
     // );
+
+    m_swerveDriveSubsystem.setDefaultCommand(
+      m_swerveDriveSubsystem.driveHeading(
+        () -> -m_driverController.getLeftY(),   // Translation
+        () -> -m_driverController.getLeftX(),   // Strafe
+        () -> -m_driverController.getRightX(),  // X component of angle
+        () -> -m_driverController.getRightY()   // Y component of angle
+      )
+    );
 
     if (GeneralConstants.CURRENT_MODE == RobotMode.TEST){
       // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));

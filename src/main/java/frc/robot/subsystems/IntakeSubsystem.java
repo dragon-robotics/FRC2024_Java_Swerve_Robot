@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 
@@ -73,19 +74,15 @@ public class IntakeSubsystem extends SubsystemBase {
         = m_intakShuffleboardTab.add("Intake Power Percentage Setting", 0)
           .withWidget(BuiltInWidgets.kNumberSlider)
           .getEntry();
+    } else {
+      // Set status 2, 3, 4, 5, 6, and 7 to be 500ms for the intake motor
+      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
+      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 500);
+      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 500);
+      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 500);
+      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus7, 500);
     }
-  }
-
-  public void setSpeedForward100() {
-    m_intake.set(1);
-  }
-
-  public void setSpeedReverse100() {
-    m_intake.set(-1);
-  }
-
-  public void setSpeed0() {
-    m_intake.set(0);
   }
 
   // /**
@@ -114,34 +111,6 @@ public class IntakeSubsystem extends SubsystemBase {
    */
   public void set(double speed) {
     m_intake.set(speed);
-  }
-
-  /**
-   * Set the intake to intake at 100% speed
-   */
-  public void intake100() {
-    m_intake.set(1.0);
-  }
-
-  /**
-   * Set the intake to intake at 40% speed
-   */
-  public void intake40() {
-    m_intake.set(0.4);
-  }
-
-  /**
-   * Set the intake to outtake at 100% speed
-   */
-  public void outtake100() {
-    m_intake.set(-1.0);
-  }
-
-  /**
-   * Set the intake to outtake at 40% speed
-   */
-  public void outtake40() {
-    m_intake.set(-0.4);
   }
 
   /**
