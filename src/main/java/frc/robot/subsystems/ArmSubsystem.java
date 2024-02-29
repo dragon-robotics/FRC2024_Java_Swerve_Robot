@@ -98,11 +98,11 @@ public class ArmSubsystem extends SubsystemBase {
       m_armLeadPowerTemperatureEntry = m_armShuffleboardTab.add("Arm Lead Power Temperature Reading", m_armLead.getMotorTemperature()).getEntry();
       m_armLeadPositionEntry = m_armShuffleboardTab.add("Arm Lead Position Reading", m_armLead.getEncoder().getPosition()).getEntry();
 
-      // m_armFollowPowerPercentageEntry = m_armShuffleboardTab.add("Arm Follow Power Percentage Reading", m_armFollow.getAppliedOutput()).getEntry();
-      // m_armFollowPowerVoltageEntry = m_armShuffleboardTab.add("Arm Follow Power Voltage Reading", m_armFollow.getBusVoltage()).getEntry();
-      // m_armFollowPowerCurrentEntry = m_armShuffleboardTab.add("Arm Follow Power Current Reading", m_armFollow.getOutputCurrent()).getEntry();
-      // m_armFollowPowerTemperatureEntry = m_armShuffleboardTab.add("Arm Follow Power Temperature Reading", m_armFollow.getMotorTemperature()).getEntry();
-      // m_armFollowPositionEntry = m_armShuffleboardTab.add("Arm Follow Position Reading", m_armFollow.getEncoder().getPosition()).getEntry();
+      m_armFollowPowerPercentageEntry = m_armShuffleboardTab.add("Arm Follow Power Percentage Reading", m_armFollow.getAppliedOutput()).getEntry();
+      m_armFollowPowerVoltageEntry = m_armShuffleboardTab.add("Arm Follow Power Voltage Reading", m_armFollow.getBusVoltage()).getEntry();
+      m_armFollowPowerCurrentEntry = m_armShuffleboardTab.add("Arm Follow Power Current Reading", m_armFollow.getOutputCurrent()).getEntry();
+      m_armFollowPowerTemperatureEntry = m_armShuffleboardTab.add("Arm Follow Power Temperature Reading", m_armFollow.getMotorTemperature()).getEntry();
+      m_armFollowPositionEntry = m_armShuffleboardTab.add("Arm Follow Position Reading", m_armFollow.getEncoder().getPosition()).getEntry();
 
       m_setArmLeadPowerPercentageEntry
         = m_armShuffleboardTab.add("Arm Lead Power Percentage Setting", false)
@@ -168,11 +168,11 @@ public class ArmSubsystem extends SubsystemBase {
       m_armLeadPowerTemperatureEntry.setDouble(m_armLead.getMotorTemperature());
       m_armLeadPositionEntry.setDouble(m_armLead.getEncoder().getPosition());
 
-      // m_armFollowPowerPercentageEntry.setDouble(m_armFollow.getAppliedOutput());
-      // m_armFollowPowerVoltageEntry.setDouble(m_armFollow.getBusVoltage());
-      // m_armFollowPowerCurrentEntry.setDouble(m_armFollow.getOutputCurrent());
-      // m_armFollowPowerTemperatureEntry.setDouble(m_armFollow.getMotorTemperature());
-      // m_armFollowPositionEntry.setDouble(m_armFollow.getEncoder().getPosition());
+      m_armFollowPowerPercentageEntry.setDouble(m_armFollow.getAppliedOutput());
+      m_armFollowPowerVoltageEntry.setDouble(m_armFollow.getBusVoltage());
+      m_armFollowPowerCurrentEntry.setDouble(m_armFollow.getOutputCurrent());
+      m_armFollowPowerTemperatureEntry.setDouble(m_armFollow.getMotorTemperature());
+      m_armFollowPositionEntry.setDouble(m_armFollow.getEncoder().getPosition());
     }
   }
 }

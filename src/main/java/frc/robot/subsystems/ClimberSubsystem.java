@@ -134,6 +134,13 @@ public class ClimberSubsystem extends SubsystemBase {
     }
   }
 
+  /** Set the climber to a specific speed
+   * @param speed the speed to set the climber to
+   */
+  public void set(double speed) {
+    m_climberLead.set(speed);
+  }
+
   /**
    * Set the climber to climb or descend
    * @param climb true to climb, false to descend
