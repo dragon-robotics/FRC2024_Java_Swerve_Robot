@@ -10,8 +10,12 @@ import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Teleop.MoveArmToInitialPosition;
 import frc.robot.commands.Teleop.MoveArmToShootPosition;
+import frc.robot.commands.Teleop.MoveIntake;
 import frc.robot.commands.Teleop.MoveIntakeAdjPercent;
+import frc.robot.commands.Teleop.MoveIntakeUntilNoteDetected;
+import frc.robot.commands.Teleop.MoveShooter;
 import frc.robot.commands.Teleop.MoveShooterAdjPercent;
+import frc.robot.commands.Teleop.MoveUptake;
 import frc.robot.commands.Teleop.MoveUptakeAdjPercent;
 import frc.robot.commands.Test.TestArmSetpoints;
 import frc.robot.commands.Test.TestClimber;
@@ -138,25 +142,6 @@ public class RobotContainer {
           .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
     } else {
 
-      // @TODOs
-      // // Operator
-      // RBump. MoveIntakeUntilNoteDetected
-      //   - Note travel distance depends on intake power
-      //   - apply a 0.1 second down for both intake and uptake at low percentage (20%) (if needed)
-      // A. PrimeUptakeShot
-      //   - Spin Uptake to (x%) power
-      // X. MoveIntake(100%) (Shoot using uptake)
-      //   - Move intake at 100%
-      // B. PrimeShooterShot
-      //   - Move intake and uptake until beambreak breaks at slow (x%)
-      //   - MoveArmToShooterPosition
-      //   - Spin up Shooter to (y)%
-      // Y. MoveUptake(100%) (Shoot using shooter)
-
-      // // Driver
-
-      // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
-
       // // Set default intake command to increase and decrease in power //
       // m_intakeSubsystem.setDefaultCommand(
       //   new MoveIntakeAdjPercent(
@@ -187,26 +172,76 @@ public class RobotContainer {
       //   )
       // );
       
-      // m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
+      // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
       
-      // Move Intake to 75% power //
-      m_operatorController.a().whileTrue(
-        new MoveIntake(m_intakeSubsystem, () -> -0.75));
+      // Set Default Command for Intake
+      m_intakeSubsystem.setDefaultCommand(
+        new MoveIntake(m_intakeSubsystem, () -> -m_operatorController.getRightY()));
+        
+      // Set Default Command for Uptake
+      m_uptakeSubsystem.setDefaultCommand(
+        new MoveIntake(m_intakeSubsystem, () -> -m_operatorController.getLeftY()));
+          
+      // Set Default Command for Arm
+      m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
 
-      m_operatorController.a().and().leftBumper().whileTrue(
-        new MoveIntake(m_intakeSubsystem, () -> -0.75));
+      m_operatorController.povUp().whileTrue(
+        Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
 
-      m_operatorController.x().onTrue(
-        new MoveArmToInitialPosition(m_armSmartMotionSubsystem));
+      m_operatorController.povDown().whileTrue(
+        Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.1), m_armSmartMotionSubsystem));
 
-      m_operatorController.y().onTrue(
-        new MoveArmToShootPosition(m_armSmartMotionSubsystem));
+      // Set Default Command for Shooter
+      m_shooterSubsystem.setDefaultCommand(
+        new TestShooter(
+            m_shooterSubsystem,
+            () -> -m_operatorController.getRightTriggerAxis(),
+            () -> -m_operatorController.getLeftTriggerAxis()));
 
-      m_operatorController.leftBumper()
-          .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.1), m_armSmartMotionSubsystem));
-
+      // @TODOs
+      // // Operator
+      
+      // RBump. MoveIntakeUntilNoteDetected
+      //   - Note travel distance depends on intake power
+      //   - apply a 0.1 second down for both intake and uptake at low percentage (20%) (if needed)
       m_operatorController.rightBumper()
-          .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
+          .onTrue(
+              new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.8)
+              .andThen(
+                  new MoveIntake(m_intakeSubsystem, () -> 0.2).withTimeout(0.1)
+              )
+          );
+      
+      // A. PrimeUptakeShot
+      //   - Spin Uptake to (x%) power
+      m_operatorController.a().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -1.0));
+
+      // X. MoveIntake(100%) (Shoot using uptake)
+      //   - Move intake at 100%
+      m_operatorController.x().whileTrue(new MoveIntake(m_intakeSubsystem, () -> -1.0));
+
+      // // B. PrimeShooterShot
+      // //   - Move intake and uptake until beambreak breaks at slow (x%)
+      // //   - MoveArmToShooterPosition
+      // //   - Spin up Shooter to (y)%
+      // m_operatorController.b().whileTrue(
+      //     new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.2)
+      //     .andThen(
+      //         new MoveUptake(m_uptakeSubsystem, () -> -0.2)
+      //     )
+      //     .andThen(
+      //         new MoveArmToShootPosition(m_armSmartMotionSubsystem)
+      //     )
+      //     .andThen(
+      //         new MoveShooter(m_shooterSubsystem, () -> -0.8)
+      //     )
+      // );
+
+      // Y. MoveUptake(50%) (Shoot using shooter)
+      m_operatorController.y().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -0.5));
+
+      // // Driver
+
 
       // Intake to Uptake - User should hold the button //
 
