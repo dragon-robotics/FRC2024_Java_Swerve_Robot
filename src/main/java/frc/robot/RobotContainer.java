@@ -137,40 +137,65 @@ public class RobotContainer {
       m_operatorController.b()
           .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
     } else {
+
+      // @TODOs
+      // // Operator
+      // RBump. MoveIntakeUntilNoteDetected
+      //   - Note travel distance depends on intake power
+      //   - apply a 0.1 second down for both intake and uptake at low percentage (20%) (if needed)
+      // A. PrimeUptakeShot
+      //   - Spin Uptake to (x%) power
+      // X. MoveIntake(100%) (Shoot using uptake)
+      //   - Move intake at 100%
+      // B. PrimeShooterShot
+      //   - Move intake and uptake until beambreak breaks at slow (x%)
+      //   - MoveArmToShooterPosition
+      //   - Spin up Shooter to (y)%
+      // Y. MoveUptake(100%) (Shoot using shooter)
+
+      // // Driver
+
       // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
 
-      // Set default intake command to increase and decrease in power //
-      m_intakeSubsystem.setDefaultCommand(
-        new MoveIntakeAdjPercent(
-          m_intakeSubsystem,
-          m_operatorController.a(),
-          m_operatorController.povUp(),
-          m_operatorController.povDown()
-        )
-      );
+      // // Set default intake command to increase and decrease in power //
+      // m_intakeSubsystem.setDefaultCommand(
+      //   new MoveIntakeAdjPercent(
+      //     m_intakeSubsystem,
+      //     m_operatorController.a(),
+      //     m_operatorController.povUp(),
+      //     m_operatorController.povDown()
+      //   )
+      // );
 
-      // Set default uptake command to increase and decrease in power //
-      m_uptakeSubsystem.setDefaultCommand(
-        new MoveUptakeAdjPercent(
-          m_uptakeSubsystem,
-          m_operatorController.b(),
-          m_operatorController.povRight(),
-          m_operatorController.povLeft()
-        )
-      );
+      // // Set default uptake command to increase and decrease in power //
+      // m_uptakeSubsystem.setDefaultCommand(
+      //   new MoveUptakeAdjPercent(
+      //     m_uptakeSubsystem,
+      //     m_operatorController.b(),
+      //     m_operatorController.povRight(),
+      //     m_operatorController.povLeft()
+      //   )
+      // );
 
-      // Set the shooter command to increase and decrease in power //
-      m_shooterSubsystem.setDefaultCommand(
-        new MoveShooterAdjPercent(
-          m_shooterSubsystem,
-          m_operatorController.back(),
-          m_operatorController.rightTrigger(),
-          m_operatorController.leftTrigger()
-        )
-      );
+      // // Set the shooter command to increase and decrease in power //
+      // m_shooterSubsystem.setDefaultCommand(
+      //   new MoveShooterAdjPercent(
+      //     m_shooterSubsystem,
+      //     m_operatorController.back(),
+      //     m_operatorController.rightTrigger(),
+      //     m_operatorController.leftTrigger()
+      //   )
+      // );
       
       // m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
-          
+      
+      // Move Intake to 75% power //
+      m_operatorController.a().whileTrue(
+        new MoveIntake(m_intakeSubsystem, () -> -0.75));
+
+      m_operatorController.a().and().leftBumper().whileTrue(
+        new MoveIntake(m_intakeSubsystem, () -> -0.75));
+
       m_operatorController.x().onTrue(
         new MoveArmToInitialPosition(m_armSmartMotionSubsystem));
 
