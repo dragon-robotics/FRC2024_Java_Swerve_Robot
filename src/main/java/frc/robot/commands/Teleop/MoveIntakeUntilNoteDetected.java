@@ -54,7 +54,7 @@ public class MoveIntakeUntilNoteDetected extends Command {
     if(System.currentTimeMillis() - m_startTime < 100)
       return false;
     else
-      System.out.println("Current: " + m_intake.getCurrent());
+      // System.out.println("Current: " + m_intake.getCurrent());
       return m_intake.getCurrent() > IntakeConstants.NOTE_DETECT_CURRENT_THRESHOLD;
   }
 }
