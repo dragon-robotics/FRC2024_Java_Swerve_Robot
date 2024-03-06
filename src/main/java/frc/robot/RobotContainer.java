@@ -187,10 +187,10 @@ public class RobotContainer {
       m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
 
       m_operatorController.povDown().whileTrue(
-        Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
+        Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.2), m_armSmartMotionSubsystem));
 
       m_operatorController.povUp().whileTrue(
-        Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.1), m_armSmartMotionSubsystem));
+        Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.2), m_armSmartMotionSubsystem));
 
       // Set Default Command for Shooter
       m_shooterSubsystem.setDefaultCommand(
