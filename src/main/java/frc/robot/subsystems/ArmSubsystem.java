@@ -50,23 +50,23 @@ public class ArmSubsystem extends SubsystemBase {
 
     // Restore motors to factory defaults //
     m_armLead.restoreFactoryDefaults();
-    // m_armFollow.restoreFactoryDefaults();
+    m_armFollow.restoreFactoryDefaults();
 
     // Enable Voltage Compensation //
     m_armLead.enableVoltageCompensation(ArmConstants.NOMINAL_VOLTAGE);
-    // m_armFollow.enableVoltageCompensation(ArmConstants.NOMINAL_VOLTAGE);
+    m_armFollow.enableVoltageCompensation(ArmConstants.NOMINAL_VOLTAGE);
 
     // Set the smart current limits for the motors //
     m_armLead.setSmartCurrentLimit(ArmConstants.STALL_CURRENT_LIMIT);
-    // m_armFollow.setSmartCurrentLimit(ArmConstants.STALL_CURRENT_LIMIT);
+    m_armFollow.setSmartCurrentLimit(ArmConstants.STALL_CURRENT_LIMIT);
 
     // Set the secondary current limits for the motors //
     m_armLead.setSecondaryCurrentLimit(ArmConstants.SECONDARY_CURRENT_LIMIT);
-    // m_armFollow.setSecondaryCurrentLimit(ArmConstants.SECONDARY_CURRENT_LIMIT);
+    m_armFollow.setSecondaryCurrentLimit(ArmConstants.SECONDARY_CURRENT_LIMIT);
 
     // Set the motor controllers to brake mode //
     m_armLead.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    // m_armFollow.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    m_armFollow.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     // Initialize the absolute encoder to 0//
     m_armAbsEncoder.setZeroOffset(0.0);
