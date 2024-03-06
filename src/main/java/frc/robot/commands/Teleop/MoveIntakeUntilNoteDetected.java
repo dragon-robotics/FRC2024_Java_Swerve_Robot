@@ -51,7 +51,7 @@ public class MoveIntakeUntilNoteDetected extends Command {
    */
   @Override
   public boolean isFinished() {
-    if(System.currentTimeMillis() - m_startTime < 250)
+    if(System.currentTimeMillis() - m_startTime < 100)
       return false;
     else
       System.out.println("Current: " + m_intake.getCurrent());

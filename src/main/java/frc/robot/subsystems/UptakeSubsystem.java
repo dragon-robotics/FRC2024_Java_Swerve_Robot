@@ -221,6 +221,8 @@ public class UptakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // System.out.println(isNoteDetected());
+
     // This method will be called once per scheduler run
     if (GeneralConstants.CURRENT_MODE == RobotMode.TEST) {
       m_uptakeLeadPowerPercentageEntry.setDouble(m_uptakeLead.getAppliedOutput());

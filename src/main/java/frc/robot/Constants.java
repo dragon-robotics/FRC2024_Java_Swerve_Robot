@@ -109,7 +109,7 @@ public final class Constants {
     public static final int STALL_CURRENT_LIMIT = 40;
     public static final double SECONDARY_CURRENT_LIMIT = 60.0;
 
-    public static final double P = 0.0;
+    public static final double P = 0.01;
     public static final double I = 0.0;
     public static final double D = 0.0;
     public static final double F = 0.0;
@@ -125,7 +125,7 @@ public final class Constants {
 
     /* Desired absolute encoder setpoint for moving shooter and amp mechanism (to be tuned later using absolute encoder) */
     public static final double INITIAL_SETPOINT = 0.0;
-    public static final double SHOOTER_SETPOINT = 0.0;
+    public static final double SHOOTER_SETPOINT = 0.1;
     public static final double AMP_SETPOINT = 0.0;
   }
 
