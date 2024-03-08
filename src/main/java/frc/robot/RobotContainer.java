@@ -200,13 +200,18 @@ public class RobotContainer {
             () -> -m_operatorController.getLeftTriggerAxis()));
 
       // @TODOs
-      // // Operator
+      // Operator
+      // @TODO fix the beam break not stopping the notes
+      // @TODO  Tune amp shot using the uptake using button b to shoot, POV left to 
+      //        increase power by 1 percent and POV right to decrease power by 1 percent+ 
+      // @TODO Tune rail gun setpoint for the shooter arm
+      // @TODO Tune amp setpoint for the shooter arm
       
       // RBump. MoveIntakeUntilNoteDetected
       //   - Note travel distance depends on intake power
       //   - apply a 0.1 second down for both intake and uptake at low percentage (20%) (if needed)
       m_operatorController.rightBumper()
-          .onTrue(
+          .whileTrue(
               new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.65)
               .andThen(
                   new MoveIntake(m_intakeSubsystem, () -> 0.65).withTimeout(0.25)
