@@ -17,7 +17,7 @@ import frc.robot.commands.Teleop.MoveShooter;
 import frc.robot.commands.Teleop.MoveShooterAdjPercent;
 import frc.robot.commands.Teleop.MoveUptake;
 import frc.robot.commands.Teleop.MoveUptakeAdjPercent;
-import frc.robot.commands.Teleop.MoveUptakeUntilNoteDetected;
+import frc.robot.commands.Teleop.MoveIntakeUptakeUntilNoteDetected;
 import frc.robot.commands.Test.TestArmSetpoints;
 import frc.robot.commands.Test.TestClimber;
 import frc.robot.commands.Test.TestIntake;
@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -217,6 +218,12 @@ public class RobotContainer {
                   new MoveIntake(m_intakeSubsystem, () -> 0.65).withTimeout(0.25)
               )
           );
+
+      m_operatorController.leftBumper().whileTrue(
+        new MoveIntakeUptakeUntilNoteDetected(
+          m_intakeSubsystem, m_uptakeSubsystem, () -> -0.6, () -> -0.3)
+        .andThen(new MoveUptake(m_uptakeSubsystem, () -> 0.3).withTimeout(0.15))
+      );
       
       // A. PrimeUptakeShot
       //   - Spin Uptake to (x%) power
@@ -226,20 +233,20 @@ public class RobotContainer {
       //   - Move intake at 100%
       m_operatorController.x().whileTrue(new MoveIntake(m_intakeSubsystem, () -> -1.0));
 
-      // B. PrimeShooterShot
-      //   - Move intake and uptake until beambreak breaks at slow (x%)
-      //   - MoveArmToShooterPosition
-      //   - Spin up Shooter to (y)%
-      m_operatorController.b().whileTrue(
-          new MoveArmToShootPosition(m_armSmartMotionSubsystem)
-              .alongWith(
-                  new MoveIntake(m_intakeSubsystem, () -> -0.3)
-                  .deadlineWith(new MoveUptakeUntilNoteDetected(m_uptakeSubsystem, () -> -0.3)))
-              // .alongWith(new MoveShooter(m_shooterSubsystem, () -> -0.8))
-      );
+      // // B. PrimeShooterShot
+      // //   - Move intake and uptake until beambreak breaks at slow (x%)
+      // //   - MoveArmToShooterPosition
+      // //   - Spin up Shooter to (y)%
+      // m_operatorController.b().whileTrue(
+      //     new MoveArmToShootPosition(m_armSmartMotionSubsystem)
+      //         .alongWith(
+      //             new MoveIntake(m_intakeSubsystem, () -> -0.3)
+      //             .deadlineWith(new MoveIntakeUptakeUntilNoteDetected(m_uptakeSubsystem, () -> -0.3)))
+      //         // .alongWith(new MoveShooter(m_shooterSubsystem, () -> -0.8))
+      // );
 
       // Y. MoveUptake(50%) (Shoot using shooter)
-      m_operatorController.y().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -0.5));
+      m_operatorController.y().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -0.4));
 
       // // Driver
 

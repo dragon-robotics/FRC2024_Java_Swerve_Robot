@@ -7,20 +7,30 @@ package frc.robot.commands.Teleop;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
 
-public class MoveUptakeUntilNoteDetected extends Command {
+public class MoveIntakeUptakeUntilNoteDetected extends Command {
 
+  private IntakeSubsystem m_intake;
   private UptakeSubsystem m_uptake;
-  private DoubleSupplier m_speed;
+  private DoubleSupplier m_intakeSpeed;
+  private DoubleSupplier m_uptakeSpeed;
 
   /** Creates a new MoveUptakeUntilNoteDetected. */
-  public MoveUptakeUntilNoteDetected(UptakeSubsystem uptake, DoubleSupplier speed) {
+  public MoveIntakeUptakeUntilNoteDetected(
+    IntakeSubsystem intake,
+    UptakeSubsystem uptake,
+    DoubleSupplier intakeSpeed,
+    DoubleSupplier uptakeSpeed) {
 
+    m_intake = intake;
     m_uptake = uptake;
-    m_speed = speed;
+    m_uptakeSpeed = uptakeSpeed;
+    m_intakeSpeed = intakeSpeed;
 
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(intake);
     addRequirements(uptake);
   }
 
@@ -31,7 +41,8 @@ public class MoveUptakeUntilNoteDetected extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_uptake.set(m_speed.getAsDouble());
+    m_intake.set(m_intakeSpeed.getAsDouble());
+    m_uptake.set(m_uptakeSpeed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
