@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.CustomButtonBoxConstants;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.GeneralConstants.RobotMode;
@@ -71,6 +72,9 @@ public class RobotContainer {
   private final CommandXboxController m_operatorController =
       new CommandXboxController(OperatorConstants.OPERATOR_PORT);
 
+  private final CommandJoystick m_operatorButtonBoxController =
+      new CommandJoystick(OperatorConstants.OPERATOR_BUTTON_PORT);
+
   private final Joystick m_testController =
       new Joystick(OperatorConstants.TEST_PORT);
 
@@ -126,8 +130,8 @@ public class RobotContainer {
       m_swerveDriveSubsystem.drive(
         () -> -m_driverController.getLeftY(),        // Translation
         () -> -m_driverController.getLeftX(),        // Strafe
-        () -> -m_driverController.getRightX() * 0.5, // Rotation
-        () -> -m_driverController.rightBumper()      // Half-Speed
+        () -> m_driverController.getRightX() * 0.5,  // Rotation
+        () -> m_driverController.rightBumper().getAsBoolean()  // Half-Speed
       )
     );
 
@@ -222,12 +226,49 @@ public class RobotContainer {
 
       // @TODOs
       // Operator
-      // @TODO fix the beam break not stopping the notes
-      // @TODO  Tune amp shot using the uptake using button b to shoot, POV left to 
-      //        increase power by 1 percent and POV right to decrease power by 1 percent+ 
-      // @TODO Tune rail gun setpoint for the shooter arm
+      // @TODO Tune handoff setpoint for the shooter arm
       // @TODO Tune amp setpoint for the shooter arm
       
+      // Intake using the button box //
+      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_2)
+          .whileTrue(
+              new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.65)
+              .andThen(
+                  new MoveIntake(m_intakeSubsystem, () -> 0.65).withTimeout(0.25)
+              )
+          );
+
+      // Score Note to amp from intake using the button box //
+      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_3)
+          .whileTrue(
+              new MoveArmToPos(m_armSmartMotionSubsystem, 0.15)
+              .andThen(
+                  new MoveIntakeUptakeUntilNoteDetected(
+                      m_intakeSubsystem, 
+                      m_uptakeSubsystem, 
+                      () -> - 0.6, 
+                      () -> -0.4)
+                  .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.2))
+                  .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, 0.3))
+                  .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.8))
+                  .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, 0.15))
+              )
+          );
+
+      // Ferry Note using the button box //
+      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_4)
+          .whileTrue(
+            new MoveArmToPos(m_armSmartMotionSubsystem, 0.15)
+            .andThen(
+              new MoveIntakeUptakeUntilNoteDetected(
+                m_intakeSubsystem, 
+                m_uptakeSubsystem, 
+                () -> - 0.6, 
+                () -> -0.4)
+              .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.8))
+            ) 
+          );
+
       // RBump. MoveIntakeUntilNoteDetected
       //   - Note travel distance depends on intake power
       //   - apply a 0.1 second down for both intake and uptake at low percentage (20%) (if needed)
