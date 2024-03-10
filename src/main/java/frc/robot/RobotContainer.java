@@ -124,9 +124,10 @@ public class RobotContainer {
     // Set default teleop command to drive //
     m_swerveDriveSubsystem.setDefaultCommand(
       m_swerveDriveSubsystem.drive(
-        () -> -m_driverController.getLeftY(),       // Translation
-        () -> -m_driverController.getLeftX(),       // Strafe
-        () -> -m_driverController.getRightX() * 0.5 // Rotation
+        () -> -m_driverController.getLeftY(),        // Translation
+        () -> -m_driverController.getLeftX(),        // Strafe
+        () -> -m_driverController.getRightX() * 0.5, // Rotation
+        () -> -m_driverController.rightBumper()      // Half-Speed
       )
     );
 

@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import java.io.File;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -139,20 +140,30 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   public Command drive(
     DoubleSupplier translationSup,
     DoubleSupplier strafeSup,
-    DoubleSupplier rotationSup
+    DoubleSupplier rotationSup,
+    BooleanSupplier halfSpeedSup
   ) {
     return run(() -> {
         double translation = translationSup.getAsDouble();
         double strafe = strafeSup.getAsDouble();
         double rotation = rotationSup.getAsDouble();
+        Boolean halfSpeed = halfSpeedSup.getAsBoolean();
+
+        // Apply half speed if the half speed button is pressed
+        if(halfSpeed)
+        {
+          translation *= 0.5;
+          strafe *= 0.5;
+        }
+
         double translationVal =
-            translationLimiter.calculate(
-                MathUtil.applyDeadband(
-                    translation, Constants.SwerveConstants.SWERVE_DEADBAND));
+          translationLimiter.calculate(
+            MathUtil.applyDeadband(
+              translation, Constants.SwerveConstants.SWERVE_DEADBAND));
         double strafeVal =
-            strafeLimiter.calculate(
-                MathUtil.applyDeadband(
-                    strafe, Constants.SwerveConstants.SWERVE_DEADBAND));
+          strafeLimiter.calculate(
+            MathUtil.applyDeadband(
+              strafe, Constants.SwerveConstants.SWERVE_DEADBAND));
         double rotationVal =
             rotationLimiter.calculate(
                 MathUtil.applyDeadband(
