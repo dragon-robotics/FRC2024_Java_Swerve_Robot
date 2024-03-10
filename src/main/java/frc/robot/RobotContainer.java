@@ -8,6 +8,7 @@ import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Teleop.MoveArmToPos;
 import frc.robot.commands.Teleop.MoveArmToInitialPosition;
 import frc.robot.commands.Teleop.MoveArmToShootPosition;
 import frc.robot.commands.Teleop.MoveIntake;
@@ -23,6 +24,7 @@ import frc.robot.commands.Test.TestClimber;
 import frc.robot.commands.Test.TestIntake;
 import frc.robot.commands.Test.TestShooter;
 import frc.robot.commands.Test.TestUptake;
+import frc.robot.commands.Test.TuneUptakeAmpShot;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -33,6 +35,7 @@ import frc.robot.subsystems.UptakeSubsystem;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -68,6 +71,12 @@ public class RobotContainer {
   private final CommandXboxController m_operatorController =
       new CommandXboxController(OperatorConstants.OPERATOR_PORT);
 
+  private final Joystick m_testController =
+      new Joystick(OperatorConstants.TEST_PORT);
+
+  private final CommandJoystick m_testCommandJoystick =
+      new CommandJoystick(OperatorConstants.TEST_PORT);
+
 //   // Define Driver and Operator controllers - Temporary fix for forgetting Xbox Controller //
 //   private final CommandJoystick m_driverController =
 //       new CommandJoystick(OperatorConstants.DRIVER_PORT);
@@ -76,7 +85,7 @@ public class RobotContainer {
 //       new CommandJoystick(OperatorConstants.OPERATOR_PORT);
 
 
-  // private final SendableChooser<Command> autoChooser;
+  private final SendableChooser<Command> autoChooser;
 
   // Create all the shuffleboard tab for testing //
   public ShuffleboardTab m_testShuffleboardTab = null;
@@ -91,9 +100,9 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
-    // // Init Auto Chooser //
-    // autoChooser = AutoBuilder.buildAutoChooser("OnePieceExit");
-    // SmartDashboard.putData("OnePieceExit", autoChooser);
+    // Init Auto Chooser //
+    autoChooser = AutoBuilder.buildAutoChooser("OnePieceExit");
+    SmartDashboard.putData("OnePieceExit", autoChooser);
 
     // // Register Named Commands //
     // NamedCommands.registerCommand("OnePieceExit", getAutonomousCommand());
@@ -115,9 +124,9 @@ public class RobotContainer {
     // Set default teleop command to drive //
     m_swerveDriveSubsystem.setDefaultCommand(
       m_swerveDriveSubsystem.drive(
-        () -> -m_driverController.getLeftY(),   // Translation
-        () -> -m_driverController.getLeftX(),   // Strafe
-        () -> -m_driverController.getRightX()   // Rotation
+        () -> -m_driverController.getLeftY(),       // Translation
+        () -> -m_driverController.getLeftX(),       // Strafe
+        () -> -m_driverController.getRightX() * 0.5 // Rotation
       )
     );
 
@@ -142,6 +151,7 @@ public class RobotContainer {
 
       m_operatorController.b()
           .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
+
     } else {
 
       // // Set default intake command to increase and decrease in power //
@@ -188,10 +198,10 @@ public class RobotContainer {
       m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
 
       m_operatorController.povDown().whileTrue(
-        Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.2), m_armSmartMotionSubsystem));
+        Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.5), m_armSmartMotionSubsystem));
 
       m_operatorController.povUp().whileTrue(
-        Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.2), m_armSmartMotionSubsystem));
+        Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.5), m_armSmartMotionSubsystem));
 
       // Set Default Command for Shooter
       m_shooterSubsystem.setDefaultCommand(
@@ -199,6 +209,15 @@ public class RobotContainer {
             m_shooterSubsystem,
             () -> -m_operatorController.getRightTriggerAxis(),
             () -> -m_operatorController.getLeftTriggerAxis()));
+
+      m_testCommandJoystick.button(JoystickConstants.BTN_Y)
+          .whileTrue(new TuneUptakeAmpShot(
+            m_uptakeSubsystem, 
+            () -> m_testController.getRawButtonPressed(JoystickConstants.BUMPER_LEFT),
+            () -> m_testController.getRawButtonPressed(JoystickConstants.BUMPER_RIGHT), 
+            () -> m_testController.getRawButtonPressed(JoystickConstants.BTN_A), 
+            () -> m_testController.getRawButtonPressed(JoystickConstants.BTN_B)
+          ));
 
       // @TODOs
       // Operator
@@ -237,16 +256,25 @@ public class RobotContainer {
       // //   - Move intake and uptake until beambreak breaks at slow (x%)
       // //   - MoveArmToShooterPosition
       // //   - Spin up Shooter to (y)%
-      // m_operatorController.b().whileTrue(
-      //     new MoveArmToShootPosition(m_armSmartMotionSubsystem)
-      //         .alongWith(
-      //             new MoveIntake(m_intakeSubsystem, () -> -0.3)
-      //             .deadlineWith(new MoveIntakeUptakeUntilNoteDetected(m_uptakeSubsystem, () -> -0.3)))
-      //         // .alongWith(new MoveShooter(m_shooterSubsystem, () -> -0.8))
-      // );
+      m_operatorController.b().whileTrue(
+          // new MoveIntakeUptakeUntilNoteDetected(
+          //   m_intakeSubsystem, 
+          //   m_uptakeSubsystem, 
+          //   () -> - 0.6, 
+          //   () -> -0.4)
+          //   .deadlineWith(
+          //     new MoveShooter(m_shooterSubsystem, () -> -0.2)
+          //   )
+          // new MoveArmToPos(m_armSmartMotionSubsystem, 0.15)
+          new MoveArmToShootPosition(m_armSmartMotionSubsystem)
+          // .alongWith(
+              //     new MoveIntake(m_intakeSubsystem, () -> -0.3)
+              //     .deadlineWith(new MoveIntakeUptakeUntilNoteDetected(m_uptakeSubsystem, () -> -0.3)))
+              // .alongWith(new MoveShooter(m_shooterSubsystem, () -> -0.8))
+      );
 
       // Y. MoveUptake(50%) (Shoot using shooter)
-      m_operatorController.y().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -0.4));
+      m_operatorController.y().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -0.43));
 
       // // Driver
 
@@ -363,9 +391,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    // return Autos.exampleAuto(m_exampleSubsystem);
-    // return autoChooser.getSelected();
-    return null;
+    return autoChooser.getSelected();
+    // return null;
   }
 }

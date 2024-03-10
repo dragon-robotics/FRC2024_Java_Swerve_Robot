@@ -67,17 +67,20 @@ public class ArmSubsystem extends SubsystemBase {
     // Set the motor controllers to brake mode //
     m_armLead.setIdleMode(CANSparkMax.IdleMode.kBrake);
     m_armFollow.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    
+    // Set the feedback device for the arm motor controller //
+    m_armLeadController.setFeedbackDevice(m_armAbsEncoder);
 
     // Initialize the absolute encoder to 0//
-    m_armAbsEncoder.setZeroOffset(0.0);
+    m_armAbsEncoder.setZeroOffset(0.567);
 
     // PID Controller settings for the arm //
-    m_armLeadController.setP(ArmConstants.P);
-    m_armLeadController.setI(ArmConstants.I);
-    m_armLeadController.setD(ArmConstants.D);
-    m_armLeadController.setFF(ArmConstants.F);
-    m_armLeadController.setIZone(ArmConstants.IZ);
-    m_armLeadController.setOutputRange(ArmConstants.MIN_OUTPUT, ArmConstants.MAX_OUTPUT);
+    m_armLeadController.setP(ArmConstants.P, ArmConstants.SMART_MOTION_SLOT);
+    m_armLeadController.setI(ArmConstants.I, ArmConstants.SMART_MOTION_SLOT);
+    m_armLeadController.setD(ArmConstants.D, ArmConstants.SMART_MOTION_SLOT);
+    m_armLeadController.setFF(ArmConstants.F, ArmConstants.SMART_MOTION_SLOT);
+    m_armLeadController.setIZone(ArmConstants.IZ, ArmConstants.SMART_MOTION_SLOT);
+    m_armLeadController.setOutputRange(ArmConstants.MIN_OUTPUT, ArmConstants.MAX_OUTPUT, ArmConstants.SMART_MOTION_SLOT);
 
     m_armLeadController.setSmartMotionMaxVelocity(ArmConstants.SMART_MOTION_MAX_VELOCITY, ArmConstants.SMART_MOTION_SLOT);
     m_armLeadController.setSmartMotionMinOutputVelocity(ArmConstants.SMART_MOTION_MIN_OUTPUT_VELOCITY, ArmConstants.SMART_MOTION_SLOT);
@@ -88,7 +91,7 @@ public class ArmSubsystem extends SubsystemBase {
     m_armLead.set(0);
 
     // Set the motor followers //
-    // m_armFollow.follow(m_armLead, true);
+    m_armFollow.follow(m_armLead, true);
 
     // Create Shuffleboard entries for the ArmSubsystem if the robot is in test mode //
     if (GeneralConstants.CURRENT_MODE == RobotMode.TEST) {
@@ -109,8 +112,8 @@ public class ArmSubsystem extends SubsystemBase {
           .withWidget(BuiltInWidgets.kToggleButton)
           .getEntry();
     } else {
-      // Set the lead arm motor to read the absolute encoder position every 10ms //
-      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 10);
+      // Set the lead arm motor to read the absolute encoder position every 5ms //
+      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 5);
 
       // Set status 1, 2, 3, 4, 6, and 7 to be 500ms for the arm motor
       m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
@@ -141,7 +144,16 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public void setArmPosition(double position) {
-    m_armLeadController.setReference(position, ControlType.kSmartMotion);
+    m_armLeadController.setReference(position, ControlType.kPosition);
+  }
+
+  public void setArmVoltage(double voltage) {
+    if (voltage < -2) {
+      voltage = -2;
+    } else if (voltage > 2) {
+      voltage = 2;
+    }
+    m_armLead.setVoltage(voltage);
   }
 
   public void stopArm() {
@@ -155,6 +167,7 @@ public class ArmSubsystem extends SubsystemBase {
    * @return
    */
   public double getArmPosition() {
+    System.out.println("Arm Position: " + m_armAbsEncoder.getPosition());
     return m_armAbsEncoder.getPosition();
   }
 

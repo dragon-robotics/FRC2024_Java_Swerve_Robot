@@ -20,11 +20,12 @@ public class MoveArmToShootPosition extends ProfiledPIDCommand {
         // The ProfiledPIDController used by the command
         new ProfiledPIDController(
             // The PID gains
-            0.1,
+            4,
             0,
             0,
             // The motion profile constraints
-            new TrapezoidProfile.Constraints(0.1, 0.1)),
+            new TrapezoidProfile.Constraints(0.1, 0.1)
+        ),
         // This should return the measurement
         () -> arm.getArmPosition(),
         // This should return the goal (can also be a constant)
@@ -32,9 +33,11 @@ public class MoveArmToShootPosition extends ProfiledPIDCommand {
         // This uses the output
         (output, setpoint) -> {
           // Use the output (and setpoint, if desired) here
-          arm.setArmPosition(setpoint.position);
+          System.err.println("Output: " + output + " Setpoint: " + setpoint.position);
+          // arm.setArmSpeed(-output);
         },
-        arm);
+        arm
+    );
 
     // Configure additional PID options by calling `getController` here.
     getController().setTolerance(0.05);
@@ -43,6 +46,9 @@ public class MoveArmToShootPosition extends ProfiledPIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return getController().atSetpoint();
+    // System.out.println("At setpoint?: " + getController().atGoal());
+    // System.out.println("The sepoint is: " + getController().getSetpoint().position);
+
+    return getController().atGoal();
   }
 }

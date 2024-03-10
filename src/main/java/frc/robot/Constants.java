@@ -109,13 +109,13 @@ public final class Constants {
     public static final int STALL_CURRENT_LIMIT = 40;
     public static final double SECONDARY_CURRENT_LIMIT = 60.0;
 
-    public static final double P = 0.01;
+    public static final double P = 1.0;
     public static final double I = 0.0;
     public static final double D = 0.0;
-    public static final double F = 0.0;
+    public static final double F = 0.156;
     public static final double IZ = 0.0;
-    public static final double MIN_OUTPUT = -0.2;
-    public static final double MAX_OUTPUT = 0.2;
+    public static final double MIN_OUTPUT = -0.3;
+    public static final double MAX_OUTPUT = 0.3;
 
     public static final int SMART_MOTION_SLOT = 0;
     public static final int SMART_MOTION_MAX_VELOCITY = 2000;
@@ -125,7 +125,7 @@ public final class Constants {
 
     /* Desired absolute encoder setpoint for moving shooter and amp mechanism (to be tuned later using absolute encoder) */
     public static final double INITIAL_SETPOINT = 0.0;
-    public static final double SHOOTER_SETPOINT = 0.1;
+    public static final double SHOOTER_SETPOINT = 0.15;
     public static final double AMP_SETPOINT = 0.0;
   }
 
@@ -273,6 +273,7 @@ public final class Constants {
     public static final int DRIVER_PORT = 0;
     public static final int OPERATOR_PORT = 1;
     public static final int OPERATOR_BUTTON_PORT = 2;
+    public static final int TEST_PORT = 3;
   }
 
   public static class CustomButtonBoxConstants {
