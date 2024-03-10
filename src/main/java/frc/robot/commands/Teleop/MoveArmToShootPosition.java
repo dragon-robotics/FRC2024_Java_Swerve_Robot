@@ -29,7 +29,7 @@ public class MoveArmToShootPosition extends ProfiledPIDCommand {
         // This should return the measurement
         () -> arm.getArmPosition(),
         // This should return the goal (can also be a constant)
-        () -> new TrapezoidProfile.State(ArmConstants.SHOOTER_SETPOINT, 0),
+        () -> new TrapezoidProfile.State(ArmConstants.SHOOTER_GOAL, 0),
         // This uses the output
         (output, setpoint) -> {
           // Use the output (and setpoint, if desired) here

@@ -242,6 +242,7 @@ public class RobotContainer {
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_3)
           .whileTrue(
               new MoveArmToPos(m_armSmartMotionSubsystem, 0.15)
+              .andThen(new WaitCommand(0.5))
               .andThen(
                   new MoveIntakeUptakeUntilNoteDetected(
                       m_intakeSubsystem, 
@@ -249,16 +250,20 @@ public class RobotContainer {
                       () -> - 0.6, 
                       () -> -0.4)
                   .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.2))
-                  .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, 0.3))
-                  .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.8))
-                  .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, 0.15))
               )
+              .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
+              .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, 0.305))
+              .andThen(new WaitCommand(0.5))
+              .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.3).withTimeout(0.5))
+              .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, 0.15))
           );
 
       // Ferry Note using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_4)
           .whileTrue(
             new MoveArmToPos(m_armSmartMotionSubsystem, 0.15)
+            .andThen(new WaitCommand(0.5))
+            .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.8).withTimeout(0.5))
             .andThen(
               new MoveIntakeUptakeUntilNoteDetected(
                 m_intakeSubsystem, 
@@ -267,6 +272,7 @@ public class RobotContainer {
                 () -> -0.4)
               .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.8))
             ) 
+            .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.8).withTimeout(1.0))
           );
 
       // RBump. MoveIntakeUntilNoteDetected
@@ -299,16 +305,16 @@ public class RobotContainer {
       // //   - MoveArmToShooterPosition
       // //   - Spin up Shooter to (y)%
       m_operatorController.b().whileTrue(
-          // new MoveIntakeUptakeUntilNoteDetected(
-          //   m_intakeSubsystem, 
-          //   m_uptakeSubsystem, 
-          //   () -> - 0.6, 
-          //   () -> -0.4)
-          //   .deadlineWith(
-          //     new MoveShooter(m_shooterSubsystem, () -> -0.2)
-          //   )
+          new MoveIntakeUptakeUntilNoteDetected(
+            m_intakeSubsystem, 
+            m_uptakeSubsystem, 
+            () -> - 0.6, 
+            () -> -0.4)
+            .deadlineWith(
+              new MoveShooter(m_shooterSubsystem, () -> -0.2)
+            )
           // new MoveArmToPos(m_armSmartMotionSubsystem, 0.15)
-          new MoveArmToShootPosition(m_armSmartMotionSubsystem)
+          // new MoveArmToShootPosition(m_armSmartMotionSubsystem)
           // .alongWith(
               //     new MoveIntake(m_intakeSubsystem, () -> -0.3)
               //     .deadlineWith(new MoveIntakeUptakeUntilNoteDetected(m_uptakeSubsystem, () -> -0.3)))
