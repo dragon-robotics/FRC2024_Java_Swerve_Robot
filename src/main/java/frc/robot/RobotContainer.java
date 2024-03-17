@@ -10,6 +10,7 @@ import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Teleop.MoveArmToPos;
+import frc.robot.commands.Teleop.HoldArmToPosition;
 import frc.robot.commands.Teleop.MoveArmToInitialPosition;
 import frc.robot.commands.Teleop.MoveArmToShootPosition;
 import frc.robot.commands.Teleop.MoveIntake;
@@ -44,6 +45,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -200,7 +202,8 @@ public class RobotContainer {
         new MoveUptake(m_uptakeSubsystem, () -> -m_operatorController.getLeftY()));
           
       // Set Default Command for Arm
-      m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
+      // m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
+      m_armSmartMotionSubsystem.setDefaultCommand(new HoldArmToPosition(m_armSmartMotionSubsystem));
 
       m_operatorController.povDown().whileTrue(
         Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.5), m_armSmartMotionSubsystem));
@@ -254,7 +257,7 @@ public class RobotContainer {
               .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
               .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, 0.305))
               .andThen(new WaitCommand(0.5))
-              .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.3).withTimeout(0.5))
+              .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.35).withTimeout(0.5))
               .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, 0.15))
           );
 
@@ -305,16 +308,16 @@ public class RobotContainer {
       // //   - MoveArmToShooterPosition
       // //   - Spin up Shooter to (y)%
       m_operatorController.b().whileTrue(
-          new MoveIntakeUptakeUntilNoteDetected(
-            m_intakeSubsystem, 
-            m_uptakeSubsystem, 
-            () -> - 0.6, 
-            () -> -0.4)
-            .deadlineWith(
-              new MoveShooter(m_shooterSubsystem, () -> -0.2)
-            )
+          // new MoveIntakeUptakeUntilNoteDetected(
+          //   m_intakeSubsystem, 
+          //   m_uptakeSubsystem, 
+          //   () -> - 0.6, 
+          //   () -> -0.4)
+          //   .deadlineWith(
+          //     new MoveShooter(m_shooterSubsystem, () -> -0.2)
+          //   )
           // new MoveArmToPos(m_armSmartMotionSubsystem, 0.15)
-          // new MoveArmToShootPosition(m_armSmartMotionSubsystem)
+          new MoveArmToShootPosition(m_armSmartMotionSubsystem)
           // .alongWith(
               //     new MoveIntake(m_intakeSubsystem, () -> -0.3)
               //     .deadlineWith(new MoveIntakeUptakeUntilNoteDetected(m_uptakeSubsystem, () -> -0.3)))

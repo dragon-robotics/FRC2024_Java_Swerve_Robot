@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.SwerveConstants;
 import swervelib.SwerveDrive;
@@ -51,8 +52,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      */
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
     // SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
-    // SwerveDriveTelemetry.verbosity = TelemetryVerbosity.NONE;
+    // SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.NONE;
     
     // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
     //  In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
@@ -152,6 +153,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Apply half speed if the half speed button is pressed
         if(halfSpeed)
         {
+          m_ledController.set(LEDConstants.TWINKLES_LAVA_PALETTE);
+
           translation *= 0.5;
           strafe *= 0.5;
         }

@@ -11,41 +11,32 @@ import frc.robot.subsystems.ArmSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class MoveArmToPos extends PIDCommand {
-  /** Creates a new MoveArmToHandoffPos. */
-  private ArmSubsystem m_arm;
-  private double m_reference;
+public class HoldArmToPosition extends PIDCommand {
+  /** Creates a new HoldArmToPosition. */
 
-  public MoveArmToPos(ArmSubsystem arm, double reference) {
+  public HoldArmToPosition(ArmSubsystem arm) {
     super(
         // The controller that the command will use
-        new PIDController(6, 0, 0),
+        new PIDController(1, 0, 0),
         // This should return the measurement
         () -> arm.getArmPosition(),
         // This should return the setpoint (can also be a constant)
-        () -> reference,
+        () -> arm.getLastSetpoint(),
         // This uses the output
         output -> {
           // Use the output here
-          System.out.println(output);
           arm.setArmSpeed(output);
         });
-    m_arm = arm;
-    m_reference = reference;
+
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(arm);
     // Configure additional PID options by calling `getController` here.
     getController().setTolerance(0.02);
-
-  }
-
-  @Override
-  public void end(boolean interrupted) {
-    m_arm.setLastSetpoint(m_reference);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return getController().atSetpoint();
+    return false;
   }
 }

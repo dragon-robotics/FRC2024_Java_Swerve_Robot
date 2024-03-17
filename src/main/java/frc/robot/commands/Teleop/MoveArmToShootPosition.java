@@ -15,16 +15,19 @@ import frc.robot.subsystems.ArmSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class MoveArmToShootPosition extends ProfiledPIDCommand {
   /** Creates a new MoveArmToShootPositionPID. */
+
+  private ArmSubsystem m_arm;
+
   public MoveArmToShootPosition(ArmSubsystem arm) {
     super(
         // The ProfiledPIDController used by the command
         new ProfiledPIDController(
             // The PID gains
-            4,
+            7,
             0,
             0,
             // The motion profile constraints
-            new TrapezoidProfile.Constraints(0.1, 0.1)
+            new TrapezoidProfile.Constraints(10, 20)
         ),
         // This should return the measurement
         () -> arm.getArmPosition(),
@@ -34,13 +37,19 @@ public class MoveArmToShootPosition extends ProfiledPIDCommand {
         (output, setpoint) -> {
           // Use the output (and setpoint, if desired) here
           System.err.println("Output: " + output + " Setpoint: " + setpoint.position);
-          // arm.setArmSpeed(-output);
+          arm.setArmSpeed(output);
         },
         arm
     );
-
+    
+    m_arm = arm;
     // Configure additional PID options by calling `getController` here.
-    getController().setTolerance(0.05);
+    getController().setTolerance(0.005);
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    m_arm.setLastSetpoint(getController().getGoal().position);
   }
 
   // Returns true when the command should end.
@@ -48,7 +57,7 @@ public class MoveArmToShootPosition extends ProfiledPIDCommand {
   public boolean isFinished() {
     // System.out.println("At setpoint?: " + getController().atGoal());
     // System.out.println("The sepoint is: " + getController().getSetpoint().position);
-
+    
     return getController().atGoal();
   }
 }

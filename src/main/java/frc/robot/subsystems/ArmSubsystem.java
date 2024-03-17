@@ -45,6 +45,8 @@ public class ArmSubsystem extends SubsystemBase {
   private final SparkPIDController m_armLeadController = m_armLead.getPIDController();
   // private final SparkPIDController m_armFollowController = m_shooterFollow.getPIDController();
   private final SparkAbsoluteEncoder m_armAbsEncoder = m_armLead.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+
+  private double lastSetpoint = 0.01;
   
   public ArmSubsystem() {
 
@@ -169,6 +171,14 @@ public class ArmSubsystem extends SubsystemBase {
   public double getArmPosition() {
     System.out.println("Arm Position: " + m_armAbsEncoder.getPosition());
     return m_armAbsEncoder.getPosition();
+  }
+
+  public void setLastSetpoint(double setpoint) {
+    lastSetpoint = setpoint;
+  }
+
+  public double getLastSetpoint() {
+    return lastSetpoint;
   }
 
   @Override
