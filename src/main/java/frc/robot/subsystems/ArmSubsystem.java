@@ -169,7 +169,7 @@ public class ArmSubsystem extends SubsystemBase {
    * @return
    */
   public double getArmPosition() {
-    System.out.println("Arm Position: " + m_armAbsEncoder.getPosition());
+    // System.out.println("Arm Position: " + m_armAbsEncoder.getPosition());
     return m_armAbsEncoder.getPosition();
   }
 

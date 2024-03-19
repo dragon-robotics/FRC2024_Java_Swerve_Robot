@@ -130,9 +130,9 @@ public class RobotContainer {
     // Set default teleop command to drive //
     m_swerveDriveSubsystem.setDefaultCommand(
       m_swerveDriveSubsystem.drive(
-        () -> -m_driverController.getLeftY(),        // Translation
-        () -> -m_driverController.getLeftX(),        // Strafe
-        () -> m_driverController.getRightX() * 0.5,  // Rotation
+        () -> -m_driverController.getLeftY(),   // Translation
+        () -> -m_driverController.getLeftX(),   // Strafe
+        () -> -m_driverController.getRightX(),  // Rotation
         () -> m_driverController.rightBumper().getAsBoolean()  // Half-Speed
       )
     );
@@ -267,7 +267,7 @@ public class RobotContainer {
               .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, 0.305))
               .andThen(new WaitCommand(0.5))
               .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.35).withTimeout(0.5))
-              .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, 0.15))
+              .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, 0.05))
           );
 
       // Ferry Note using the button box //
