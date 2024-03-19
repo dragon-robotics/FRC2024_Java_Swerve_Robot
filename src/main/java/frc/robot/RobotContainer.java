@@ -241,6 +241,15 @@ public class RobotContainer {
               )
           );
 
+      // // Intake and center + drive to note //
+      // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_12)
+      // .whileTrue(
+      //     new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.65)
+      //     .andThen(
+      //         new MoveIntake(m_intakeSubsystem, () -> 0.65).withTimeout(0.25)
+      //     )
+      // );
+
       // Score Note to amp from intake using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_3)
           .whileTrue(
