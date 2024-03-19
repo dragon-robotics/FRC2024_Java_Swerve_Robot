@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CustomButtonBoxConstants;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.JoystickConstants;
@@ -253,7 +254,7 @@ public class RobotContainer {
       // Score Note to amp from intake using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_3)
           .whileTrue(
-              new MoveArmToPos(m_armSmartMotionSubsystem, 0.15)
+              new MoveArmToPos(m_armSmartMotionSubsystem, ArmConstants.SHOOTER_GOAL)
               .andThen(new WaitCommand(0.5))
               .andThen(
                   new MoveIntakeUptakeUntilNoteDetected(
@@ -264,16 +265,16 @@ public class RobotContainer {
                   .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.2))
               )
               .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
-              .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, 0.305))
+              .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, ArmConstants.AMP_GOAL))
               .andThen(new WaitCommand(0.5))
               .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.35).withTimeout(0.5))
-              .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, 0.05))
+              .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, ArmConstants.INITIAL_GOAL))
           );
 
       // Ferry Note using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_4)
           .whileTrue(
-            new MoveArmToPos(m_armSmartMotionSubsystem, 0.15)
+            new MoveArmToPos(m_armSmartMotionSubsystem, ArmConstants.SHOOTER_GOAL)
             .andThen(new WaitCommand(0.5))
             .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.8).withTimeout(0.5))
             .andThen(
@@ -325,7 +326,7 @@ public class RobotContainer {
           //   .deadlineWith(
           //     new MoveShooter(m_shooterSubsystem, () -> -0.2)
           //   )
-          // new MoveArmToPos(m_armSmartMotionSubsystem, 0.15)
+          // new MoveArmToPos(m_armSmartMotionSubsystem, ArmConstants.SHOOTER_GOAL)
           new MoveArmToShootPosition(m_armSmartMotionSubsystem)
           // .alongWith(
               //     new MoveIntake(m_intakeSubsystem, () -> -0.3)

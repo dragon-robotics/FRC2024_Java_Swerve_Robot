@@ -46,7 +46,7 @@ public class ArmSubsystem extends SubsystemBase {
   // private final SparkPIDController m_armFollowController = m_shooterFollow.getPIDController();
   private final SparkAbsoluteEncoder m_armAbsEncoder = m_armLead.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
 
-  private double lastSetpoint = 0.01;
+  private double lastSetpoint = ArmConstants.INITIAL_GOAL;
   
   public ArmSubsystem() {
 

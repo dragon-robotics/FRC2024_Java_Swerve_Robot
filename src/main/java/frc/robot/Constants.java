@@ -124,9 +124,9 @@ public final class Constants {
     public static final int SMART_MOTION_ALLOWED_ERROR = 10;
 
     /* Desired absolute encoder setpoint for moving shooter and amp mechanism (to be tuned later using absolute encoder) */
-    public static final double INITIAL_GOAL = 0.0;
+    public static final double INITIAL_GOAL = 0.05;
     public static final double SHOOTER_GOAL = 0.15;
-    public static final double AMP_GOAL = 0.0;
+    public static final double AMP_GOAL = 0.305;
   }
 
   /** Climber Subsystem Constants */
@@ -255,8 +255,8 @@ public final class Constants {
     public static final double PULSE_PER_ROTATION = 1;
     public static final double WHEEL_DIAMETER_INCHES = 4.0;
     public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(WHEEL_DIAMETER_INCHES);
-    public static final double MAX_SPEED_FEET_PER_SECOND = 18.2; // 12.5 feet per second
-    public static final double MAX_SPEED_METERS_PER_SECOND = Units.feetToMeters(MAX_SPEED_FEET_PER_SECOND); // 12.5 feet per second
+    public static final double MAX_SPEED_FEET_PER_SECOND = 18.2; // 18.2 feet per second
+    public static final double MAX_SPEED_METERS_PER_SECOND = Units.feetToMeters(MAX_SPEED_FEET_PER_SECOND); // 18.2 feet per second
 
     public static final double ROBOT_MASS = (148 - 20.3) * 0.453592;
     public static final double CHASSIS_MASS = ROBOT_MASS;
