@@ -3,7 +3,7 @@
     "front": 11.5,
     "left": 11.5
   },
-  "absoluteEncoderOffset": 290.56640625,
+  "absoluteEncoderOffset": 288.984375,
   "drive": {
     "type": "falcon",
     "id": 3,

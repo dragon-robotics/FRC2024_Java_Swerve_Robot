@@ -86,8 +86,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             driveConversionFactor
           );
 
-      swerve.setHeadingCorrection(true);
-      swerve.setCosineCompensator(true);
+      // swerve.setHeadingCorrection(true);
+      // swerve.setCosineCompensator(true);
 
       // Configure the AutoBuilder //
       setupPathPlanner();
@@ -157,6 +157,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
           translation *= 0.5;
           strafe *= 0.5;
+          rotation *= 0.5;
         }
 
         double translationVal =
