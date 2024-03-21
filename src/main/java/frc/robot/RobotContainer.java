@@ -65,7 +65,7 @@ public class RobotContainer {
   // public final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   public final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   public final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
-  public final ArmSubsystem m_armSmartMotionSubsystem = new ArmSubsystem();
+  public final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   public final UptakeSubsystem m_uptakeSubsystem = new UptakeSubsystem();
 
   // Define Driver and Operator controllers //
@@ -151,14 +151,14 @@ public class RobotContainer {
       // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
       m_intakeSubsystem.setDefaultCommand(new TestIntake(m_intakeSubsystem, () -> -m_operatorController.getRightY()));
       m_uptakeSubsystem.setDefaultCommand(new TestUptake(m_uptakeSubsystem, () -> -m_operatorController.getLeftY()));
-      m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.0), m_armSmartMotionSubsystem));
+      m_armSubsystem.setDefaultCommand(Commands.run(() -> m_armSubsystem.setArmSpeed(0.0), m_armSubsystem));
       m_shooterSubsystem.setDefaultCommand(new TestShooter(m_shooterSubsystem, () -> -m_operatorController.getRightTriggerAxis(), () -> -m_operatorController.getLeftTriggerAxis()));
 
       m_operatorController.a()
-          .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.1), m_armSmartMotionSubsystem));
+          .whileTrue(Commands.run(() -> m_armSubsystem.setArmSpeed(0.1), m_armSubsystem));
 
       m_operatorController.b()
-          .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
+          .whileTrue(Commands.run(() -> m_armSubsystem.setArmSpeed(-0.1), m_armSubsystem));
 
     } else {
 
@@ -203,14 +203,14 @@ public class RobotContainer {
         new MoveUptake(m_uptakeSubsystem, () -> -m_operatorController.getLeftY()));
           
       // Set Default Command for Arm
-      // m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
-      m_armSmartMotionSubsystem.setDefaultCommand(new HoldArmToPosition(m_armSmartMotionSubsystem));
+      // m_armSubsystem.setDefaultCommand(Commands.run(() -> m_armSubsystem.stopArm(), m_armSubsystem));
+      m_armSubsystem.setDefaultCommand(new HoldArmToPosition(m_armSubsystem));
 
       m_operatorController.povDown().whileTrue(
-        Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.5), m_armSmartMotionSubsystem));
+        Commands.run(() -> m_armSubsystem.setArmSpeed(-0.5), m_armSubsystem));
 
       m_operatorController.povUp().whileTrue(
-        Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.5), m_armSmartMotionSubsystem));
+        Commands.run(() -> m_armSubsystem.setArmSpeed(0.5), m_armSubsystem));
 
       // Set Default Command for Shooter
       m_shooterSubsystem.setDefaultCommand(
@@ -254,7 +254,7 @@ public class RobotContainer {
       // Score Note to amp from intake using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_3)
           .whileTrue(
-              new MoveArmToPos(m_armSmartMotionSubsystem, ArmConstants.SHOOTER_GOAL)
+              new MoveArmToPos(m_armSubsystem, ArmConstants.SHOOTER_GOAL)
               .andThen(new WaitCommand(0.5))
               .andThen(
                   new MoveIntakeUptakeUntilNoteDetected(
@@ -265,16 +265,16 @@ public class RobotContainer {
                   .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.2))
               )
               .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
-              .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, ArmConstants.AMP_GOAL))
+              .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL))
               .andThen(new WaitCommand(0.5))
               .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.35).withTimeout(0.5))
-              .andThen(new MoveArmToPos(m_armSmartMotionSubsystem, ArmConstants.INITIAL_GOAL))
+              .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL))
           );
 
       // Ferry Note using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_4)
           .whileTrue(
-            new MoveArmToPos(m_armSmartMotionSubsystem, ArmConstants.SHOOTER_GOAL)
+            new MoveArmToPos(m_armSubsystem, ArmConstants.SHOOTER_GOAL)
             .andThen(new WaitCommand(0.5))
             .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.8).withTimeout(0.5))
             .andThen(
@@ -326,8 +326,8 @@ public class RobotContainer {
           //   .deadlineWith(
           //     new MoveShooter(m_shooterSubsystem, () -> -0.2)
           //   )
-          // new MoveArmToPos(m_armSmartMotionSubsystem, ArmConstants.SHOOTER_GOAL)
-          new MoveArmToShootPosition(m_armSmartMotionSubsystem)
+          // new MoveArmToPos(m_armSubsystem, ArmConstants.SHOOTER_GOAL)
+          new MoveArmToShootPosition(m_armSubsystem)
           // .alongWith(
               //     new MoveIntake(m_intakeSubsystem, () -> -0.3)
               //     .deadlineWith(new MoveIntakeUptakeUntilNoteDetected(m_uptakeSubsystem, () -> -0.3)))
@@ -400,8 +400,8 @@ public class RobotContainer {
     //       )
     //   );
 
-    //   m_armSmartMotionSubsystem.setDefaultCommand(
-    //       Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.0), m_armSmartMotionSubsystem));
+    //   m_armSubsystem.setDefaultCommand(
+    //       Commands.run(() -> m_armSubsystem.setArmSpeed(0.0), m_armSubsystem));
     //   m_shooterSubsystem.setDefaultCommand(
     //       new TestShooter(
     //           m_shooterSubsystem,
@@ -411,22 +411,22 @@ public class RobotContainer {
     //   );
 
     //   m_operatorController.button(JoystickConstants.BTN_A)
-    //       .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.1), m_armSmartMotionSubsystem));
+    //       .whileTrue(Commands.run(() -> m_armSubsystem.setArmSpeed(0.1), m_armSubsystem));
 
     //   m_operatorController.button(JoystickConstants.BTN_B)
-    //       .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
+    //       .whileTrue(Commands.run(() -> m_armSubsystem.setArmSpeed(-0.1), m_armSubsystem));
     // } else {
     //   // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
     //   m_intakeSubsystem.setDefaultCommand(Commands.run(() -> m_intakeSubsystem.stopIntake(), m_intakeSubsystem));
     //   m_uptakeSubsystem.setDefaultCommand(Commands.run(() -> m_uptakeSubsystem.stopUptake(), m_uptakeSubsystem));
-    //   m_armSmartMotionSubsystem.setDefaultCommand(Commands.run(() -> m_armSmartMotionSubsystem.stopArm(), m_armSmartMotionSubsystem));
+    //   m_armSubsystem.setDefaultCommand(Commands.run(() -> m_armSubsystem.stopArm(), m_armSubsystem));
     //   m_shooterSubsystem.setDefaultCommand(Commands.run(() -> m_shooterSubsystem.stopShooter(), m_shooterSubsystem));
 
     //   m_operatorController.button(JoystickConstants.BTN_A)
-    //       .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(0.1), m_armSmartMotionSubsystem));
+    //       .whileTrue(Commands.run(() -> m_armSubsystem.setArmSpeed(0.1), m_armSubsystem));
 
     //   m_operatorController.button(JoystickConstants.BTN_B)
-    //       .whileTrue(Commands.run(() -> m_armSmartMotionSubsystem.setArmSpeed(-0.1), m_armSmartMotionSubsystem));
+    //       .whileTrue(Commands.run(() -> m_armSubsystem.setArmSpeed(-0.1), m_armSubsystem));
 
     //   // Intake to Uptake - User should hold the button //
 
