@@ -21,6 +21,7 @@ import frc.robot.commands.Teleop.MoveShooter;
 import frc.robot.commands.Teleop.MoveShooterAdjPercent;
 import frc.robot.commands.Teleop.MoveUptake;
 import frc.robot.commands.Teleop.MoveUptakeAdjPercent;
+import frc.robot.commands.Teleop.ScoreAmp;
 import frc.robot.commands.Teleop.MoveIntakeUptakeUntilNoteDetected;
 import frc.robot.commands.Test.TestArmSetpoints;
 import frc.robot.commands.Test.TestClimber;
@@ -104,15 +105,16 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
+    // Register Named Commands //
+    NamedCommands.registerCommand("ScoreAmp", new ScoreAmp(m_intakeSubsystem, m_uptakeSubsystem, m_armSubsystem, m_shooterSubsystem));
+    // NamedCommands.registerCommand("Auto", getAutonomousCommand());
 
     // Init Auto Chooser //
     autoChooser = AutoBuilder.buildAutoChooser("OnePieceExit");
-    SmartDashboard.putData("OnePieceExit", autoChooser);
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    // // Register Named Commands //
-    // NamedCommands.registerCommand("OnePieceExit", getAutonomousCommand());
+    // Configure the trigger bindings
+    configureBindings();
   }
 
   /**
@@ -161,38 +163,6 @@ public class RobotContainer {
           .whileTrue(Commands.run(() -> m_armSubsystem.setArmSpeed(-0.1), m_armSubsystem));
 
     } else {
-
-      // // Set default intake command to increase and decrease in power //
-      // m_intakeSubsystem.setDefaultCommand(
-      //   new MoveIntakeAdjPercent(
-      //     m_intakeSubsystem,
-      //     m_operatorController.a(),
-      //     m_operatorController.povUp(),
-      //     m_operatorController.povDown()
-      //   )
-      // );
-
-      // // Set default uptake command to increase and decrease in power //
-      // m_uptakeSubsystem.setDefaultCommand(
-      //   new MoveUptakeAdjPercent(
-      //     m_uptakeSubsystem,
-      //     m_operatorController.b(),
-      //     m_operatorController.povRight(),
-      //     m_operatorController.povLeft()
-      //   )
-      // );
-
-      // // Set the shooter command to increase and decrease in power //
-      // m_shooterSubsystem.setDefaultCommand(
-      //   new MoveShooterAdjPercent(
-      //     m_shooterSubsystem,
-      //     m_operatorController.back(),
-      //     m_operatorController.rightTrigger(),
-      //     m_operatorController.leftTrigger()
-      //   )
-      // );
-      
-      // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
       
       // Set Default Command for Intake
       m_intakeSubsystem.setDefaultCommand(
@@ -240,6 +210,13 @@ public class RobotContainer {
               .andThen(
                   new MoveIntake(m_intakeSubsystem, () -> 0.65).withTimeout(0.25)
               )
+              .andThen(
+                Commands.runOnce(() -> LimelightHelpers.setLEDMode_ForceBlink("limelight"))
+              )
+              .andThen(new WaitCommand(0.5))
+              .andThen(
+                Commands.runOnce(() -> LimelightHelpers.setLEDMode_ForceOn("limelight"))
+              )
           );
 
       // // Intake and center + drive to note //
@@ -267,7 +244,7 @@ public class RobotContainer {
               .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
               .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL))
               .andThen(new WaitCommand(0.5))
-              .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.35).withTimeout(0.5))
+              .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.5).withTimeout(0.5))
               .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL))
           );
 
@@ -286,6 +263,13 @@ public class RobotContainer {
               .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.8))
             ) 
             .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.8).withTimeout(1.0))
+            .andThen(
+              Commands.runOnce(() -> LimelightHelpers.setLEDMode_ForceBlink("limelight"))
+            )
+            .andThen(new WaitCommand(0.5))
+            .andThen(
+              Commands.runOnce(() -> LimelightHelpers.setLEDMode_ForceOff("limelight"))
+            )
           );
 
       // RBump. MoveIntakeUntilNoteDetected
@@ -353,6 +337,9 @@ public class RobotContainer {
 
     // Use the "A" button to reset the Gyro orientation //
     m_driverController.a().onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.zeroGyro()));
+
+    // Use the "B" button to x-lock the wheels //
+    m_driverController.b().onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.lock()));
 
     // // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)

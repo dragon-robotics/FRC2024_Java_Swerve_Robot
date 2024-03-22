@@ -12,15 +12,15 @@
     "data": {
       "commands": [
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 0.0
+            "pathName": "AmpPreloadPath"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "AmpOnePieceExitPath"
+            "name": "ScoreAmp"
           }
         }
       ]

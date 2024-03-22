@@ -84,7 +84,7 @@ public final class Constants {
     public static final int STALL_CURRENT_LIMIT = 55;
     public static final int FREE_CURRENT_LIMIT = 40;
     public static final double SECONDARY_CURRENT_LIMIT = 60.0;
-    public static final double RAMP_RATE_IN_SEC = 0.25; // Ramp rate in seconds
+    public static final double RAMP_RATE_IN_SEC = 0.05; // Ramp rate in seconds
 
     public static final int NOTE_BEAM_BREAK_DIGITAL_CHANNEL = 1;
 
@@ -126,7 +126,7 @@ public final class Constants {
     /* Desired absolute encoder setpoint for moving shooter and amp mechanism (to be tuned later using absolute encoder) */
     public static final double INITIAL_GOAL = 0.05;
     public static final double SHOOTER_GOAL = 0.15;
-    public static final double AMP_GOAL = 0.305;
+    public static final double AMP_GOAL = 0.315;
   }
 
   /** Climber Subsystem Constants */
