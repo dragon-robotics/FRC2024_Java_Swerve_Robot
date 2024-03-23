@@ -86,11 +86,13 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             driveConversionFactor
           );
 
-      // swerve.setHeadingCorrection(true);
+      swerve.setHeadingCorrection(true);
       // swerve.setCosineCompensator(true);
 
       // Configure the AutoBuilder //
       setupPathPlanner();
+
+      m_ledController.set(LEDConstants.BLACK);
         
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -153,7 +155,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Apply half speed if the half speed button is pressed
         if(halfSpeed)
         {
-          m_ledController.set(LEDConstants.TWINKLES_LAVA_PALETTE);
 
           translation *= 0.5;
           strafe *= 0.5;

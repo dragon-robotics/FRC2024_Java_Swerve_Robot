@@ -75,7 +75,7 @@ public final class Constants {
 
   /** Shooter Subsystem Constants */
   public static class ShooterConstants {
-    public static final int LED_CHANNEL = 0;
+    public static final int LED_CHANNEL = 9;
 
     public static final int TOP_MOTOR_ID = 5;
     public static final int BOTTOM_MOTOR_ID = 6;
@@ -126,7 +126,7 @@ public final class Constants {
     /* Desired absolute encoder setpoint for moving shooter and amp mechanism (to be tuned later using absolute encoder) */
     public static final double INITIAL_GOAL = 0.05;
     public static final double SHOOTER_GOAL = 0.15;
-    public static final double AMP_GOAL = 0.315;
+    public static final double AMP_GOAL = 0.32;
   }
 
   /** Climber Subsystem Constants */

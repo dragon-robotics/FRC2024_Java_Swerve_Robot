@@ -17,7 +17,7 @@ public class HoldArmToPosition extends PIDCommand {
   public HoldArmToPosition(ArmSubsystem arm) {
     super(
         // The controller that the command will use
-        new PIDController(1, 0, 0),
+        new PIDController(2, 0, 0),
         // This should return the measurement
         () -> arm.getArmPosition(),
         // This should return the setpoint (can also be a constant)
@@ -31,7 +31,7 @@ public class HoldArmToPosition extends PIDCommand {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(arm);
     // Configure additional PID options by calling `getController` here.
-    getController().setTolerance(0.02);
+    getController().setTolerance(0.01);
   }
 
   // Returns true when the command should end.

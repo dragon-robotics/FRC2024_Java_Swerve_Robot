@@ -30,11 +30,12 @@ public class MoveArmToPos extends PIDCommand {
           System.out.println(output);
           arm.setArmSpeed(output);
         });
-    m_arm = arm;
+    // m_arm = arm;
     m_reference = reference;
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(arm);
     // Configure additional PID options by calling `getController` here.
-    getController().setTolerance(0.02);
+    getController().setTolerance(0.01);
 
   }
 

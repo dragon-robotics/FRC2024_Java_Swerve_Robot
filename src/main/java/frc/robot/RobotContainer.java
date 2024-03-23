@@ -8,6 +8,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CustomButtonBoxConstants;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.JoystickConstants;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Teleop.MoveArmToPos;
@@ -137,7 +138,7 @@ public class RobotContainer {
         () -> -m_driverController.getLeftX(),   // Strafe
         () -> -m_driverController.getRightX(),  // Rotation
         () -> m_driverController.rightBumper().getAsBoolean()  // Half-Speed
-      )
+      ).alongWith(Commands.runOnce(() -> m_swerveDriveSubsystem.setLED(LEDConstants.BLACK)))
     );
 
     // m_swerveDriveSubsystem.setDefaultCommand(
@@ -207,16 +208,8 @@ public class RobotContainer {
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_2)
           .whileTrue(
               new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.65)
-              .andThen(
-                  new MoveIntake(m_intakeSubsystem, () -> 0.65).withTimeout(0.25)
-              )
-              .andThen(
-                Commands.runOnce(() -> LimelightHelpers.setLEDMode_ForceBlink("limelight"))
-              )
-              .andThen(new WaitCommand(0.5))
-              .andThen(
-                Commands.runOnce(() -> LimelightHelpers.setLEDMode_ForceOn("limelight"))
-              )
+              .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.65).withTimeout(0.25))
+              .andThen(Commands.runOnce(() -> m_swerveDriveSubsystem.setLED(LEDConstants.ORANGE)))
           );
 
       // // Intake and center + drive to note //
@@ -245,14 +238,21 @@ public class RobotContainer {
               .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL))
               .andThen(new WaitCommand(0.5))
               .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.5).withTimeout(0.5))
+              .andThen(new MoveArmToPos(m_armSubsystem, 0.4))
+              .andThen(
+                Commands.runOnce(() -> m_swerveDriveSubsystem.setLED(LEDConstants.GREEN))
+              )
+              .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.0).withTimeout(0.1))
               .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL))
+              .andThen(
+                Commands.runOnce(() -> m_swerveDriveSubsystem.setLED(LEDConstants.BLACK))
+              )
           );
 
       // Ferry Note using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_4)
           .whileTrue(
             new MoveArmToPos(m_armSubsystem, ArmConstants.SHOOTER_GOAL)
-            .andThen(new WaitCommand(0.5))
             .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.8).withTimeout(0.5))
             .andThen(
               new MoveIntakeUptakeUntilNoteDetected(
@@ -261,14 +261,13 @@ public class RobotContainer {
                 () -> - 0.6, 
                 () -> -0.4)
               .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.8))
-            ) 
-            .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.8).withTimeout(1.0))
-            .andThen(
-              Commands.runOnce(() -> LimelightHelpers.setLEDMode_ForceBlink("limelight"))
             )
-            .andThen(new WaitCommand(0.5))
             .andThen(
-              Commands.runOnce(() -> LimelightHelpers.setLEDMode_ForceOff("limelight"))
+              new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5)
+              .deadlineWith(Commands.runOnce(() -> m_swerveDriveSubsystem.setLED(LEDConstants.GREEN)))
+            )
+            .andThen(
+              Commands.runOnce(() -> m_swerveDriveSubsystem.setLED(LEDConstants.BLACK))
             )
           );
 
