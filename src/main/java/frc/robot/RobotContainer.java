@@ -111,7 +111,7 @@ public class RobotContainer {
     // NamedCommands.registerCommand("Auto", getAutonomousCommand());
 
     // Init Auto Chooser //
-    autoChooser = AutoBuilder.buildAutoChooser("OnePieceExit");
+    autoChooser = AutoBuilder.buildAutoChooser("Disrupt");
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Configure the trigger bindings
