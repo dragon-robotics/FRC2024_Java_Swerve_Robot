@@ -4,11 +4,14 @@
 
 package frc.robot.commands.Teleop;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
 
@@ -21,7 +24,8 @@ public class ScoreAmp extends SequentialCommandGroup {
     IntakeSubsystem intake,
     UptakeSubsystem uptake,
     ArmSubsystem arm,
-    ShooterSubsystem shooter
+    ShooterSubsystem shooter,
+    LEDSubsystem led
   ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
@@ -29,16 +33,21 @@ public class ScoreAmp extends SequentialCommandGroup {
       new MoveArmToPos(arm, ArmConstants.SHOOTER_GOAL),
       new WaitCommand(0.5),
       new MoveIntakeUptakeUntilNoteDetected(
-          intake, 
+          intake,
           uptake, 
           () -> - 0.6, 
           () -> -0.4)
       .deadlineWith(new MoveShooter(shooter, () -> -0.2)),
-      new MoveShooter(shooter, () -> 0.0).withTimeout(0.5),
+      Commands.runOnce(() -> shooter.set(0.0)),
       new MoveArmToPos(arm, ArmConstants.AMP_GOAL),
       new WaitCommand(0.5),
-      new MoveShooter(shooter, () -> -0.35).withTimeout(0.5),
-      new MoveArmToPos(arm, ArmConstants.INITIAL_GOAL)
+      new MoveShooter(shooter, () -> -0.5).withTimeout(0.5),
+      new MoveArmToPos(arm, ArmConstants.AMP_ASSIST_GOAL),
+      new MoveArmToPos(arm, ArmConstants.INITIAL_GOAL).deadlineWith(
+        Commands.runOnce(() -> led.set(LEDConstants.GREEN)),
+        Commands.runOnce(() -> shooter.set(0.0))        
+      ),
+      Commands.runOnce(() -> led.set(LEDConstants.BLACK))
     );
   }
 }

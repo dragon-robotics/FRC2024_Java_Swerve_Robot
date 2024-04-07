@@ -41,9 +41,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   private final SlewRateLimiter strafeLimiter = new SlewRateLimiter(SwerveConstants.MAX_SPEED_METERS_PER_SECOND);
   private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(SwerveConstants.MAX_SPEED_METERS_PER_SECOND);
 
-  // LED Controller //
-  private final Spark m_ledController = new Spark(ShooterConstants.LED_CHANNEL);
-
   /** Creates a new SwerveDriveSubsystem. */
   public SwerveDriveSubsystem() {
     /* 
@@ -91,8 +88,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
       // Configure the AutoBuilder //
       setupPathPlanner();
-
-      m_ledController.set(LEDConstants.BLACK);
         
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -269,10 +264,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
 
     swerve.drive(targetSpeeds);
-  }
-
-  public void setLED(double value) {
-    m_ledController.set(value);
   }
 
   @Override

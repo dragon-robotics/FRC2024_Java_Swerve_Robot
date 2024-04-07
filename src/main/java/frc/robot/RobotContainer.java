@@ -33,6 +33,7 @@ import frc.robot.commands.Test.TuneUptakeAmpShot;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
@@ -64,11 +65,11 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final SwerveDriveSubsystem m_swerveDriveSubsystem = new SwerveDriveSubsystem();
 
-  // public final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   public final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-  public final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
-  public final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   public final UptakeSubsystem m_uptakeSubsystem = new UptakeSubsystem();
+  public final ArmSubsystem m_armSubsystem = new ArmSubsystem();
+  public final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
+  public final LEDSubsystem m_ledSubsystem = new LEDSubsystem();
 
   // Define Driver and Operator controllers //
   private final CommandXboxController m_driverController =
@@ -107,7 +108,16 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Register Named Commands //
-    NamedCommands.registerCommand("ScoreAmp", new ScoreAmp(m_intakeSubsystem, m_uptakeSubsystem, m_armSubsystem, m_shooterSubsystem));
+    NamedCommands.registerCommand(
+        "ScoreAmp",
+        new ScoreAmp(
+            m_intakeSubsystem,
+            m_uptakeSubsystem,
+            m_armSubsystem,
+            m_shooterSubsystem,
+            m_ledSubsystem
+      )
+      );
     // NamedCommands.registerCommand("Auto", getAutonomousCommand());
 
     // Init Auto Chooser //
@@ -138,7 +148,7 @@ public class RobotContainer {
         () -> -m_driverController.getLeftX(),   // Strafe
         () -> -m_driverController.getRightX(),  // Rotation
         () -> m_driverController.rightBumper().getAsBoolean()  // Half-Speed
-      ).alongWith(Commands.runOnce(() -> m_swerveDriveSubsystem.setLED(LEDConstants.BLACK)))
+      ).alongWith(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK)))
     );
 
     // m_swerveDriveSubsystem.setDefaultCommand(
@@ -209,9 +219,9 @@ public class RobotContainer {
           .whileTrue(
               new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.65)
               .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.65).withTimeout(0.25))
-              .andThen(Commands.runOnce(() -> m_swerveDriveSubsystem.setLED(LEDConstants.ORANGE)))
+              .andThen(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.ORANGE)))
           );
-
+      
       // // Intake and center + drive to note //
       // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_12)
       // .whileTrue(
@@ -230,7 +240,7 @@ public class RobotContainer {
                   new MoveIntakeUptakeUntilNoteDetected(
                       m_intakeSubsystem, 
                       m_uptakeSubsystem, 
-                      () -> - 0.6, 
+                      () -> - 0.6,
                       () -> -0.4)
                   .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.2))
               )
@@ -240,12 +250,12 @@ public class RobotContainer {
               .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.5).withTimeout(0.5))
               .andThen(new MoveArmToPos(m_armSubsystem, 0.4))
               .andThen(
-                Commands.runOnce(() -> m_swerveDriveSubsystem.setLED(LEDConstants.GREEN))
+                Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.GREEN))
               )
               .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.0).withTimeout(0.1))
               .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL))
               .andThen(
-                Commands.runOnce(() -> m_swerveDriveSubsystem.setLED(LEDConstants.BLACK))
+                Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK))
               )
           );
 
@@ -264,10 +274,10 @@ public class RobotContainer {
             )
             .andThen(
               new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5)
-              .deadlineWith(Commands.runOnce(() -> m_swerveDriveSubsystem.setLED(LEDConstants.GREEN)))
+              .deadlineWith(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.GREEN)))
             )
             .andThen(
-              Commands.runOnce(() -> m_swerveDriveSubsystem.setLED(LEDConstants.BLACK))
+              Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK))
             )
           );
 
@@ -295,27 +305,6 @@ public class RobotContainer {
       // X. MoveIntake(100%) (Shoot using uptake)
       //   - Move intake at 100%
       m_operatorController.x().whileTrue(new MoveIntake(m_intakeSubsystem, () -> -1.0));
-
-      // // B. PrimeShooterShot
-      // //   - Move intake and uptake until beambreak breaks at slow (x%)
-      // //   - MoveArmToShooterPosition
-      // //   - Spin up Shooter to (y)%
-      m_operatorController.b().whileTrue(
-          // new MoveIntakeUptakeUntilNoteDetected(
-          //   m_intakeSubsystem, 
-          //   m_uptakeSubsystem, 
-          //   () -> - 0.6, 
-          //   () -> -0.4)
-          //   .deadlineWith(
-          //     new MoveShooter(m_shooterSubsystem, () -> -0.2)
-          //   )
-          // new MoveArmToPos(m_armSubsystem, ArmConstants.SHOOTER_GOAL)
-          new MoveArmToShootPosition(m_armSubsystem)
-          // .alongWith(
-              //     new MoveIntake(m_intakeSubsystem, () -> -0.3)
-              //     .deadlineWith(new MoveIntakeUptakeUntilNoteDetected(m_uptakeSubsystem, () -> -0.3)))
-              // .alongWith(new MoveShooter(m_shooterSubsystem, () -> -0.8))
-      );
 
       // Y. MoveUptake(50%) (Shoot using shooter)
       m_operatorController.y().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -0.43));

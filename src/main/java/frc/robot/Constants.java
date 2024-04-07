@@ -125,8 +125,9 @@ public final class Constants {
 
     /* Desired absolute encoder setpoint for moving shooter and amp mechanism (to be tuned later using absolute encoder) */
     public static final double INITIAL_GOAL = 0.05;
-    public static final double SHOOTER_GOAL = 0.15;
+    public static final double SHOOTER_GOAL = 0.13;
     public static final double AMP_GOAL = 0.32;
+    public static final double AMP_ASSIST_GOAL = 0.4;
   }
 
   /** Climber Subsystem Constants */

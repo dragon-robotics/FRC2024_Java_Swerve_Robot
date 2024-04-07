@@ -27,10 +27,10 @@ public class MoveArmToPos extends PIDCommand {
         // This uses the output
         output -> {
           // Use the output here
-          System.out.println(output);
+          // System.out.println(output);
           arm.setArmSpeed(output);
         });
-    // m_arm = arm;
+    m_arm = arm;
     m_reference = reference;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(arm);
