@@ -189,6 +189,11 @@ public class ShooterSubsystem extends SubsystemBase {
     m_shooterLeadController.setFF(f);
   }
 
+  public void setIdleMode(CANSparkMax.IdleMode mode) {
+    m_shooterLead.setIdleMode(mode);
+    m_shooterFollow.setIdleMode(mode);
+  }
+
   //#endregion //
 
   // /**

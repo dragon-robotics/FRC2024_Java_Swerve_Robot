@@ -55,6 +55,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import com.revrobotics.CANSparkMax;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -217,8 +219,8 @@ public class RobotContainer {
       // Intake using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_2)
           .whileTrue(
-              new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.65)
-              .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.65).withTimeout(0.25))
+              new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
+              .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.45).withTimeout(0.25))
               .andThen(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.ORANGE)))
           );
       
@@ -236,18 +238,37 @@ public class RobotContainer {
           .whileTrue(
               new MoveArmToPos(m_armSubsystem, ArmConstants.SHOOTER_GOAL)
               .andThen(new WaitCommand(0.5))
+              .andThen(Commands.runOnce(() -> m_shooterSubsystem.setIdleMode(CANSparkMax.IdleMode.kBrake)))
               .andThen(
                   new MoveIntakeUptakeUntilNoteDetected(
                       m_intakeSubsystem, 
                       m_uptakeSubsystem, 
                       () -> - 0.6,
                       () -> -0.4)
-                  .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.2))
+                  .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.25))
               )
               .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
-              .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL))
+              // .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL))
+              // .andThen(new WaitCommand(0.5))
+              // .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.5).withTimeout(0.5))
+              // .andThen(new MoveArmToPos(m_armSubsystem, 0.4))
+              // .andThen(
+              //   Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.GREEN))
+              // )
+              // .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.0).withTimeout(0.1))
+              // .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL))
+              // .andThen(
+              //   Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK))
+              // )
+          );
+
+      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_5)
+      .whileTrue(
+          new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL)
+          
               .andThen(new WaitCommand(0.5))
               .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.5).withTimeout(0.5))
+              .andThen(Commands.runOnce(() -> m_shooterSubsystem.setIdleMode(CANSparkMax.IdleMode.kCoast)))
               .andThen(new MoveArmToPos(m_armSubsystem, 0.4))
               .andThen(
                 Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.GREEN))
@@ -257,7 +278,8 @@ public class RobotContainer {
               .andThen(
                 Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK))
               )
-          );
+
+      );
 
       // Ferry Note using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_4)
