@@ -110,20 +110,26 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Register Named Commands //
+    NamedCommands.registerCommand("MoveUptake0", new MoveUptake(m_uptakeSubsystem, () -> 0.0));
+    NamedCommands.registerCommand("MoveUptake100", new MoveUptake(m_uptakeSubsystem, () -> -1.0));    
+    NamedCommands.registerCommand("MoveIntake0", new MoveIntake(m_intakeSubsystem, () -> 0.0));
+    NamedCommands.registerCommand("MoveIntake100", new MoveIntake(m_intakeSubsystem, () -> -1.0));
     NamedCommands.registerCommand(
-        "ScoreAmp",
-        new ScoreAmp(
-            m_intakeSubsystem,
-            m_uptakeSubsystem,
-            m_armSubsystem,
-            m_shooterSubsystem,
-            m_ledSubsystem
-      )
-      );
-    // NamedCommands.registerCommand("Auto", getAutonomousCommand());
+      "MoveIntakeUntilNoteDetected",
+      new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
+              .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.45).withTimeout(0.25))
+              .andThen(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.ORANGE))));
+    NamedCommands.registerCommand(
+      "UptakeShoot",
+      new MoveIntake(m_intakeSubsystem, () -> 0.3).withTimeout(0.1)
+      .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(0.0)))
+      .andThen(
+        new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(1.0))
+        .andThen(new MoveIntake(m_intakeSubsystem, () -> -0.5)));
+    
 
     // Init Auto Chooser //
-    autoChooser = AutoBuilder.buildAutoChooser("Disrupt");
+    autoChooser = AutoBuilder.buildAutoChooser("UptakeShootExit");
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Configure the trigger bindings
@@ -235,7 +241,7 @@ public class RobotContainer {
 
       // Score Note to amp from intake using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_3)
-          .whileTrue(
+          .onTrue(
               new MoveArmToPos(m_armSubsystem, ArmConstants.SHOOTER_GOAL)
               .andThen(new WaitCommand(0.5))
               .andThen(Commands.runOnce(() -> m_shooterSubsystem.setIdleMode(CANSparkMax.IdleMode.kBrake)))
@@ -245,10 +251,10 @@ public class RobotContainer {
                       m_uptakeSubsystem, 
                       () -> - 0.6,
                       () -> -0.4)
-                  .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.25))
+                  .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.22))
               )
               .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
-              // .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL))
+              .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL))
               // .andThen(new WaitCommand(0.5))
               // .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.5).withTimeout(0.5))
               // .andThen(new MoveArmToPos(m_armSubsystem, 0.4))
@@ -263,11 +269,8 @@ public class RobotContainer {
           );
 
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_5)
-      .whileTrue(
-          new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL)
-          
-              .andThen(new WaitCommand(0.5))
-              .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.5).withTimeout(0.5))
+      .onTrue(
+          new MoveShooter(m_shooterSubsystem, () -> -0.5).withTimeout(0.5)
               .andThen(Commands.runOnce(() -> m_shooterSubsystem.setIdleMode(CANSparkMax.IdleMode.kCoast)))
               .andThen(new MoveArmToPos(m_armSubsystem, 0.4))
               .andThen(

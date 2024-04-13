@@ -19,7 +19,7 @@ public class MoveArmToPos extends PIDCommand {
   public MoveArmToPos(ArmSubsystem arm, double reference) {
     super(
         // The controller that the command will use
-        new PIDController(6, 0, 0),
+        new PIDController(10, 0, 0),
         // This should return the measurement
         () -> arm.getArmPosition(),
         // This should return the setpoint (can also be a constant)
@@ -27,7 +27,7 @@ public class MoveArmToPos extends PIDCommand {
         // This uses the output
         output -> {
           // Use the output here
-          // System.out.println(output);
+          System.out.println(output);
           arm.setArmSpeed(output);
         });
     m_arm = arm;
@@ -35,13 +35,14 @@ public class MoveArmToPos extends PIDCommand {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(arm);
     // Configure additional PID options by calling `getController` here.
-    getController().setTolerance(0.01);
+    getController().setTolerance(0.02);
 
   }
 
   @Override
   public void end(boolean interrupted) {
     m_arm.setLastSetpoint(m_reference);
+    m_arm.setArmSpeed(0);
   }
 
   // Returns true when the command should end.
