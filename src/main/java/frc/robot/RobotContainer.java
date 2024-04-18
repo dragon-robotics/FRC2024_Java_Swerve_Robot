@@ -38,9 +38,12 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
 
+import java.util.Map;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -106,6 +109,12 @@ public class RobotContainer {
   public ShuffleboardTab m_shooterShuffleboardTab = null;
   public ShuffleboardTab m_ampShuffleboardTab = null;
   public ShuffleboardTab m_climberShuffleboardTab = null;
+
+  GenericEntry noteIsInIntakeEntry = Shuffleboard.getTab("SmartDashboard")
+      .add("NoteIsInIntake", false)
+      .withWidget("Boolean Box")
+      .withProperties(Map.of("colorWhenTrue", "green", "colorWhenFalse", "maroon"))
+      .getEntry();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -224,17 +233,11 @@ public class RobotContainer {
           .whileTrue(
               new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
               .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.45).withTimeout(0.25))
-              .andThen(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.ORANGE)))
+              .andThen(Commands.runOnce(() -> {
+                m_ledSubsystem.set(LEDConstants.ORANGE);
+                noteIsInIntakeEntry.setBoolean(true);
+              }))
           );
-      
-      // // Intake and center + drive to note //
-      // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_12)
-      // .whileTrue(
-      //     new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.65)
-      //     .andThen(
-      //         new MoveIntake(m_intakeSubsystem, () -> 0.65).withTimeout(0.25)
-      //     )
-      // );
 
       // Score Note to amp from intake using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_3)
@@ -252,17 +255,6 @@ public class RobotContainer {
               )
               .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
               .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL))
-              // .andThen(new WaitCommand(0.5))
-              // .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.5).withTimeout(0.5))
-              // .andThen(new MoveArmToPos(m_armSubsystem, 0.4))
-              // .andThen(
-              //   Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.GREEN))
-              // )
-              // .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.0).withTimeout(0.1))
-              // .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL))
-              // .andThen(
-              //   Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK))
-              // )
           );
 
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_5)
@@ -275,9 +267,10 @@ public class RobotContainer {
               )
               .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.0).withTimeout(0.1))
               .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL))
-              .andThen(
-                Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK))
-              )
+              .andThen(Commands.runOnce(() -> {
+                m_ledSubsystem.set(LEDConstants.BLACK);
+                noteIsInIntakeEntry.setBoolean(false);
+              }))
 
       );
 
@@ -285,34 +278,32 @@ public class RobotContainer {
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_4)
           .whileTrue(
             new MoveArmToPos(m_armSubsystem, ArmConstants.SHOOTER_GOAL)
-            .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.8).withTimeout(0.5))
-            .andThen(
-              new MoveIntakeUptakeUntilNoteDetected(
-                m_intakeSubsystem, 
-                m_uptakeSubsystem, 
-                () -> - 0.6, 
-                () -> -0.4)
-              .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.8))
-            )
-            .andThen(
-              new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5)
-              .deadlineWith(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.GREEN)))
-            )
-            .andThen(
-              Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK))
-            )
+            .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.8))              
+          ).whileFalse(
+            new MoveIntake(m_intakeSubsystem, () -> -0.6)
+            .alongWith(new MoveUptake(m_uptakeSubsystem, () -> -0.6)).withTimeout(1.0)
+            .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
+            .andThen(Commands.runOnce(() -> {
+                m_ledSubsystem.set(LEDConstants.BLACK);
+                noteIsInIntakeEntry.setBoolean(false);
+              }))
           );
 
       // Prime Uptake Shot //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_11)
         .whileTrue(
-            new MoveIntake(m_intakeSubsystem, () -> 0.3).withTimeout(0.1)
+            new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL)
+            .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.3).withTimeout(0.1))
             .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(0.0)))
             .andThen(new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(5.0))
             .andThen(new MoveIntake(m_intakeSubsystem, () -> -1.0))
         ).whileFalse(
           new MoveUptake(m_uptakeSubsystem, () -> -1.0)
           .alongWith(new MoveIntake(m_intakeSubsystem, () -> -1.0)).withTimeout(1.0)
+          .andThen(Commands.runOnce(() -> {
+            m_ledSubsystem.set(LEDConstants.BLACK);
+            noteIsInIntakeEntry.setBoolean(false);
+          }))
         );
 
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_12)
