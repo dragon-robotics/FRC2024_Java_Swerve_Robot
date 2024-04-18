@@ -152,7 +152,7 @@ public class RobotContainer {
         () -> -m_driverController.getLeftY(),   // Translation
         () -> -m_driverController.getLeftX(),   // Strafe
         () -> -m_driverController.getRightX(),  // Rotation
-        () -> m_driverController.rightBumper().getAsBoolean()  // Half-Speed
+        () -> m_driverController.getHID().getRightBumper()  // Half-Speed
       ).alongWith(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK)))
     );
 
@@ -248,7 +248,7 @@ public class RobotContainer {
                       m_uptakeSubsystem, 
                       () -> - 0.6,
                       () -> -0.4)
-                  .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.22))
+                  .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.25))
               )
               .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
               .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL))
@@ -303,35 +303,54 @@ public class RobotContainer {
             )
           );
 
-      // RBump. MoveIntakeUntilNoteDetected
-      //   - Note travel distance depends on intake power
-      //   - apply a 0.1 second down for both intake and uptake at low percentage (20%) (if needed)
-      m_operatorController.rightBumper()
-          .whileTrue(
-              new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.65)
-              .andThen(
-                  new MoveIntake(m_intakeSubsystem, () -> 0.65).withTimeout(0.25)
-              )
-          );
+      // Prime Uptake Shot //
+      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_11)
+        .whileTrue(
+            new MoveIntake(m_intakeSubsystem, () -> 0.3).withTimeout(0.1)
+            .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(0.0)))
+            .andThen(new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(5.0))
+            .andThen(new MoveIntake(m_intakeSubsystem, () -> -1.0))
+        ).whileFalse(
+          new MoveUptake(m_uptakeSubsystem, () -> -1.0)
+          .alongWith(new MoveIntake(m_intakeSubsystem, () -> -1.0)).withTimeout(1.0)
+        );
 
-      m_operatorController.leftBumper().whileTrue(
-        new MoveIntakeUptakeUntilNoteDetected(
-          m_intakeSubsystem, m_uptakeSubsystem, () -> -0.6, () -> -0.3)
-        .andThen(new MoveUptake(m_uptakeSubsystem, () -> 0.3).withTimeout(0.15))
-      );
-      
-      // A. PrimeUptakeShot
-      //   - Spin Uptake to (x%) power
-      m_operatorController.a().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -1.0));
+      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_12)
+        .whileTrue(
+          new MoveIntake(m_intakeSubsystem, () -> -1.0)
+          .alongWith(new MoveUptake(m_uptakeSubsystem, () -> -1.0)));
 
-      // X. MoveIntake(100%) (Shoot using uptake)
-      //   - Move intake at 100%
-      m_operatorController.x().whileTrue(new MoveIntake(m_intakeSubsystem, () -> -1.0));
 
-      // Y. MoveUptake(50%) (Shoot using shooter)
-      m_operatorController.y().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -0.43));
+      // // RBump. MoveIntakeUntilNoteDetected
+      // //   - Note travel distance depends on intake power
+      // //   - apply a 0.1 second down for both intake and uptake at low percentage (20%) (if needed)
+      // m_operatorController.rightBumper()
+      //     .whileTrue(
+      //         new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.65)
+      //         .andThen(
+      //             new MoveIntake(m_intakeSubsystem, () -> 0.65).withTimeout(0.25)
+      //         )
+      //     );
 
-      // // Driver
+      // m_operatorController.leftBumper()
+      // .whileTrue(
+      //     new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
+      //     .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.45).withTimeout(0.25))
+      //     .andThen(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.ORANGE)))
+      // );
+
+      // // A. PrimeUptakeShot
+      // //   - Spin Uptake to (x%) power
+      // m_operatorController.a().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -1.0));
+
+      // // X. MoveIntake(100%) (Shoot using uptake)
+      // //   - Move intake at 100%
+      // m_operatorController.x().whileTrue(new MoveIntake(m_intakeSubsystem, () -> -1.0));
+
+      // // Y. MoveUptake(50%) (Shoot using shooter)
+      // m_operatorController.y().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -0.43));
+
+      // // // Driver
 
 
       // Intake to Uptake - User should hold the button //
