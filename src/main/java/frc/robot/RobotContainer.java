@@ -117,15 +117,12 @@ public class RobotContainer {
     NamedCommands.registerCommand(
       "MoveIntakeUntilNoteDetected",
       new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
-              .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.45).withTimeout(0.25))
+              .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.0).withTimeout(0.25))
               .andThen(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.ORANGE))));
     NamedCommands.registerCommand(
       "UptakeShoot",
-      new MoveIntake(m_intakeSubsystem, () -> 0.3).withTimeout(0.1)
-      .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(0.0)))
-      .andThen(
-        new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(1.0))
-        .andThen(new MoveIntake(m_intakeSubsystem, () -> -0.5)));
+      new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(1.0)
+      .andThen(new MoveIntake(m_intakeSubsystem, () -> -0.5)));
     
 
     // Init Auto Chooser //

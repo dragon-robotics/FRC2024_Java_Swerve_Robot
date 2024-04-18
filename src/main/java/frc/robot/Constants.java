@@ -124,7 +124,7 @@ public final class Constants {
     public static final int SMART_MOTION_ALLOWED_ERROR = 10;
 
     /* Desired absolute encoder setpoint for moving shooter and amp mechanism (to be tuned later using absolute encoder) */
-    public static final double INITIAL_GOAL = 0.05;
+    public static final double INITIAL_GOAL = 0.03;
     public static final double SHOOTER_GOAL = 0.13;
     public static final double AMP_GOAL = 0.32;
     public static final double AMP_ASSIST_GOAL = 0.4;
