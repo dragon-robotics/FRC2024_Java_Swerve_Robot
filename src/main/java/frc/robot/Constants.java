@@ -56,7 +56,7 @@ public final class Constants {
     public static final double RAMP_RATE_IN_SEC = 0.1; // Ramp rate in seconds
     
     // public static final int BEAM_BREAK_DIGITAL_CHANNEL = 0;
-    public static final double NOTE_DETECT_CURRENT_THRESHOLD = 40.0;
+    public static final double NOTE_DETECT_CURRENT_THRESHOLD = 30.0;
   }
 
   /** Uptake Subsystem Constants */
@@ -108,6 +108,8 @@ public final class Constants {
     public static final double NOMINAL_VOLTAGE = 10.0;
     public static final int STALL_CURRENT_LIMIT = 40;
     public static final double SECONDARY_CURRENT_LIMIT = 60.0;
+
+    public static final double ABS_ENC_OFFSET_VAL = 0.7346013;
 
     public static final double P = 1.0;
     public static final double I = 0.0;

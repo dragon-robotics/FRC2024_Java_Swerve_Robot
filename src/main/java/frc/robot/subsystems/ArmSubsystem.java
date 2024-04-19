@@ -74,7 +74,7 @@ public class ArmSubsystem extends SubsystemBase {
     m_armLeadController.setFeedbackDevice(m_armAbsEncoder);
 
     // Initialize the absolute encoder to 0//
-    m_armAbsEncoder.setZeroOffset(0.557);
+    m_armAbsEncoder.setZeroOffset(ArmConstants.ABS_ENC_OFFSET_VAL);
 
     // PID Controller settings for the arm //
     m_armLeadController.setP(ArmConstants.P, ArmConstants.SMART_MOTION_SLOT);

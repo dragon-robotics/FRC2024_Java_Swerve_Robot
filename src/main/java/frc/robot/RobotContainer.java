@@ -231,8 +231,8 @@ public class RobotContainer {
       // Intake using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_2)
           .whileTrue(
-              new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
-              .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.45).withTimeout(0.25))
+              new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.8)
+              .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.1).withTimeout(0.25))
               .andThen(Commands.runOnce(() -> {
                 m_ledSubsystem.set(LEDConstants.ORANGE);
                 noteIsInIntakeEntry.setBoolean(true);
@@ -278,7 +278,12 @@ public class RobotContainer {
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_4)
           .whileTrue(
             new MoveArmToPos(m_armSubsystem, ArmConstants.SHOOTER_GOAL)
-            .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.8))              
+            .andThen(
+              new HoldArmToPosition(m_armSubsystem)
+              .alongWith(
+                new MoveShooter(m_shooterSubsystem, () -> -0.8)
+              )
+            )              
           ).whileFalse(
             new MoveIntake(m_intakeSubsystem, () -> -0.6)
             .alongWith(new MoveUptake(m_uptakeSubsystem, () -> -0.6)).withTimeout(1.0)
@@ -293,7 +298,7 @@ public class RobotContainer {
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_11)
         .whileTrue(
             new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL)
-            .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.3).withTimeout(0.1))
+            .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.2).withTimeout(0.1))
             .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(0.0)))
             .andThen(new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(5.0))
             .andThen(new MoveIntake(m_intakeSubsystem, () -> -1.0))
