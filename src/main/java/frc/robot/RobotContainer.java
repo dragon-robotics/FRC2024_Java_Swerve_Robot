@@ -300,8 +300,7 @@ public class RobotContainer {
             new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL)
             .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.2).withTimeout(0.1))
             .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(0.0)))
-            .andThen(new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(5.0))
-            .andThen(new MoveIntake(m_intakeSubsystem, () -> -1.0))
+            .andThen(new MoveUptake(m_uptakeSubsystem, () -> -1.0))
         ).whileFalse(
           new MoveUptake(m_uptakeSubsystem, () -> -1.0)
           .alongWith(new MoveIntake(m_intakeSubsystem, () -> -1.0)).withTimeout(1.0)
@@ -311,10 +310,30 @@ public class RobotContainer {
           }))
         );
 
+      // Party Mode - AKA Trick Shot //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_12)
         .whileTrue(
-          new MoveIntake(m_intakeSubsystem, () -> -1.0)
-          .alongWith(new MoveUptake(m_uptakeSubsystem, () -> -1.0)));
+            new MoveArmToPos(m_armSubsystem, ArmConstants.SHOOTER_GOAL)
+            .andThen(
+              new HoldArmToPosition(m_armSubsystem)
+              .alongWith(
+                new MoveShooter(m_shooterSubsystem, () -> 0.8)
+              )
+            )              
+          ).whileFalse(
+            new MoveIntake(m_intakeSubsystem, () -> -0.6)
+            .alongWith(new MoveUptake(m_uptakeSubsystem, () -> -0.6)).withTimeout(1.0)
+            .andThen(Commands.runOnce(() -> m_shooterSubsystem.set(0.0)))
+            .andThen(Commands.runOnce(() -> {
+                m_ledSubsystem.set(LEDConstants.BLACK);
+                noteIsInIntakeEntry.setBoolean(false);
+              }))
+          );
+
+      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
+          .whileTrue(
+              new MoveIntake(m_intakeSubsystem, () -> 0.5)
+          );
 
 
       // // RBump. MoveIntakeUntilNoteDetected
