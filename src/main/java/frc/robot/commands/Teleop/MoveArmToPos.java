@@ -19,7 +19,7 @@ public class MoveArmToPos extends PIDCommand {
   public MoveArmToPos(ArmSubsystem arm, double reference) {
     super(
         // The controller that the command will use
-        new PIDController(10, 0, 0),
+        new PIDController(12, 0, 0),
         // This should return the measurement
         () -> arm.getArmPosition(),
         // This should return the setpoint (can also be a constant)

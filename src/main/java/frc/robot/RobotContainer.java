@@ -135,7 +135,7 @@ public class RobotContainer {
     
 
     // Init Auto Chooser //
-    autoChooser = AutoBuilder.buildAutoChooser("UptakeShootExit");
+    autoChooser = AutoBuilder.buildAutoChooser("UptakeShoot");
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Configure the trigger bindings
