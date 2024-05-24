@@ -247,6 +247,9 @@ public final class Constants {
   }
 
   /** Limelight Subsystem Constants */
+  public static class LimelightConstants {
+    public static final double HORIZONTAL_KP = 0.8;
+  }
   /** PhotonVision Subsystem Constants */
   
   public static class SwerveConstants {

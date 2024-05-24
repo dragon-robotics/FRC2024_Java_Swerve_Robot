@@ -9,6 +9,7 @@ import frc.robot.Constants.CustomButtonBoxConstants;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.LEDConstants;
+import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Teleop.MoveArmToPos;
@@ -37,6 +38,7 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
+import frc.robot.subsystems.Limelight3Subsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -72,10 +74,14 @@ public class RobotContainer {
   public final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   public final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
   public final LEDSubsystem m_ledSubsystem = new LEDSubsystem();
+  public final Limelight3Subsystem m_limelight3Subsystem = new Limelight3Subsystem();
 
   // Define Driver and Operator controllers //
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.DRIVER_PORT);
+  
+  private final XboxController m_driverControllerRaw = 
+      new XboxController(OperatorConstants.DRIVER_PORT);
 
   private final CommandXboxController m_operatorController =
       new CommandXboxController(OperatorConstants.OPERATOR_PORT);
@@ -117,12 +123,21 @@ public class RobotContainer {
     NamedCommands.registerCommand(
       "MoveIntakeUntilNoteDetected",
       new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
-              .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.45).withTimeout(0.25))
+              .andThen(Commands.runOnce(() -> {
+                m_intakeSubsystem.set(0);
+                m_uptakeSubsystem.set(0);
+              }))
               .andThen(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.ORANGE))));
     NamedCommands.registerCommand(
       "UptakeShoot",
-      new MoveIntake(m_intakeSubsystem, () -> 0.3).withTimeout(0.1)
-      .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(0.0)))
+      new MoveIntake(m_intakeSubsystem, () -> 0.4).withTimeout(0.2)
+      .raceWith(
+          new MoveUptake(m_uptakeSubsystem, () -> 0.4)
+      )
+      .andThen(Commands.runOnce(() -> {
+                m_intakeSubsystem.set(0);
+                m_uptakeSubsystem.set(0);
+              }))
       .andThen(
         new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(1.0))
         .andThen(new MoveIntake(m_intakeSubsystem, () -> -0.5)));
@@ -154,7 +169,9 @@ public class RobotContainer {
       m_swerveDriveSubsystem.drive(
         () -> -m_driverController.getLeftY(),   // Translation
         () -> -m_driverController.getLeftX(),   // Strafe
-        () -> -m_driverController.getRightX(),  // Rotation
+        () -> -m_driverController.getRightX()
+         + (m_limelight3Subsystem.alignHorizontal(LimelightConstants.HORIZONTAL_KP)
+           * m_driverControllerRaw.getRawAxis(JoystickConstants.TRIGGER_RIGHT)),  // Rotation
         () -> m_driverController.rightBumper().getAsBoolean()  // Half-Speed
       ).alongWith(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK)))
     );
@@ -221,13 +238,17 @@ public class RobotContainer {
       // Operator
       // @TODO Tune handoff setpoint for the shooter arm
       // @TODO Tune amp setpoint for the shooter arm
-      
+
+      // Unjam //
+      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_1)
+          .whileTrue(new MoveIntake(m_intakeSubsystem, () -> 0.5));
+
       // Intake using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_2)
-          .whileTrue(
+          .onTrue(
               new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
-              .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.45).withTimeout(0.25))
               .andThen(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.ORANGE)))
+              .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.45).withTimeout(0.25))
           );
       
       // // Intake and center + drive to note //
@@ -287,8 +308,9 @@ public class RobotContainer {
       // Ferry Note using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_4)
           .whileTrue(
-            new MoveArmToPos(m_armSubsystem, ArmConstants.SHOOTER_GOAL)
-            .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.8).withTimeout(0.5))
+            new MoveShooter(m_shooterSubsystem, () -> -0.8).withTimeout(0.5)
+            .andThen(
+              new MoveArmToPos(m_armSubsystem, ArmConstants.SHOOTER_GOAL))
             .andThen(
               new MoveIntakeUptakeUntilNoteDetected(
                 m_intakeSubsystem, 
@@ -305,6 +327,25 @@ public class RobotContainer {
               Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK))
             )
           );
+      
+
+      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
+        .onTrue(
+          new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
+          .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.4).withTimeout(0.2)
+          .raceWith(
+              new MoveUptake(m_uptakeSubsystem, () -> 0.4)
+          )
+          .andThen(Commands.runOnce(() -> {
+                    m_intakeSubsystem.set(0);
+                    m_uptakeSubsystem.set(0);
+                  }))
+          .andThen(
+            new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(1.0))
+            .andThen(new MoveIntake(m_intakeSubsystem, () -> -0.5)))
+        );
+        
+      
 
       // RBump. MoveIntakeUntilNoteDetected
       //   - Note travel distance depends on intake power
