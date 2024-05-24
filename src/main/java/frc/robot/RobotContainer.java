@@ -40,9 +40,12 @@ import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
 import frc.robot.subsystems.Limelight3Subsystem;
 
+import java.util.Map;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -113,6 +116,12 @@ public class RobotContainer {
   public ShuffleboardTab m_ampShuffleboardTab = null;
   public ShuffleboardTab m_climberShuffleboardTab = null;
 
+  GenericEntry noteIsInIntakeEntry = Shuffleboard.getTab("SmartDashboard")
+      .add("NoteIsInIntake", false)
+      .withWidget("Boolean Box")
+      .withProperties(Map.of("colorWhenTrue", "green", "colorWhenFalse", "maroon"))
+      .getEntry();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Register Named Commands //
@@ -123,24 +132,12 @@ public class RobotContainer {
     NamedCommands.registerCommand(
       "MoveIntakeUntilNoteDetected",
       new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
-              .andThen(Commands.runOnce(() -> {
-                m_intakeSubsystem.set(0);
-                m_uptakeSubsystem.set(0);
-              }))
+              .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.0).withTimeout(0.25))
               .andThen(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.ORANGE))));
     NamedCommands.registerCommand(
       "UptakeShoot",
-      new MoveIntake(m_intakeSubsystem, () -> 0.4).withTimeout(0.2)
-      .raceWith(
-          new MoveUptake(m_uptakeSubsystem, () -> 0.4)
-      )
-      .andThen(Commands.runOnce(() -> {
-                m_intakeSubsystem.set(0);
-                m_uptakeSubsystem.set(0);
-              }))
-      .andThen(
-        new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(1.0))
-        .andThen(new MoveIntake(m_intakeSubsystem, () -> -0.5)));
+      new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(1.0)
+      .andThen(new MoveIntake(m_intakeSubsystem, () -> -0.5)));
     
 
     // Init Auto Chooser //
@@ -247,18 +244,12 @@ public class RobotContainer {
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_2)
           .onTrue(
               new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
-              .andThen(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.ORANGE)))
               .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.45).withTimeout(0.25))
+              .andThen(Commands.runOnce(() -> {
+                m_ledSubsystem.set(LEDConstants.ORANGE);
+                noteIsInIntakeEntry.setBoolean(true);
+              }))
           );
-      
-      // // Intake and center + drive to note //
-      // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_12)
-      // .whileTrue(
-      //     new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.65)
-      //     .andThen(
-      //         new MoveIntake(m_intakeSubsystem, () -> 0.65).withTimeout(0.25)
-      //     )
-      // );
 
       // Score Note to amp from intake using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_3)
@@ -272,21 +263,10 @@ public class RobotContainer {
                       m_uptakeSubsystem, 
                       () -> - 0.6,
                       () -> -0.4)
-                  .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.22))
+                  .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.25))
               )
               .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
               .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL))
-              // .andThen(new WaitCommand(0.5))
-              // .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.5).withTimeout(0.5))
-              // .andThen(new MoveArmToPos(m_armSubsystem, 0.4))
-              // .andThen(
-              //   Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.GREEN))
-              // )
-              // .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.0).withTimeout(0.1))
-              // .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL))
-              // .andThen(
-              //   Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK))
-              // )
           );
 
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_5)
@@ -299,33 +279,26 @@ public class RobotContainer {
               )
               .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.0).withTimeout(0.1))
               .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL))
-              .andThen(
-                Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK))
-              )
+              .andThen(Commands.runOnce(() -> {
+                m_ledSubsystem.set(LEDConstants.BLACK);
+                noteIsInIntakeEntry.setBoolean(false);
+              }))
 
       );
 
       // Ferry Note using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_4)
           .whileTrue(
-            new MoveShooter(m_shooterSubsystem, () -> -0.8).withTimeout(0.5)
-            .andThen(
-              new MoveArmToPos(m_armSubsystem, ArmConstants.SHOOTER_GOAL))
-            .andThen(
-              new MoveIntakeUptakeUntilNoteDetected(
-                m_intakeSubsystem, 
-                m_uptakeSubsystem, 
-                () -> - 0.6, 
-                () -> -0.4)
-              .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.8))
-            )
-            .andThen(
-              new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5)
-              .deadlineWith(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.GREEN)))
-            )
-            .andThen(
-              Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK))
-            )
+            new MoveArmToPos(m_armSubsystem, ArmConstants.SHOOTER_GOAL)
+            .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.8))              
+          ).whileFalse(
+            new MoveIntake(m_intakeSubsystem, () -> -0.6)
+            .alongWith(new MoveUptake(m_uptakeSubsystem, () -> -0.6)).withTimeout(1.0)
+            .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
+            .andThen(Commands.runOnce(() -> {
+                m_ledSubsystem.set(LEDConstants.BLACK);
+                noteIsInIntakeEntry.setBoolean(false);
+              }))
           );
       
 
@@ -347,35 +320,59 @@ public class RobotContainer {
         
       
 
-      // RBump. MoveIntakeUntilNoteDetected
-      //   - Note travel distance depends on intake power
-      //   - apply a 0.1 second down for both intake and uptake at low percentage (20%) (if needed)
-      m_operatorController.rightBumper()
-          .whileTrue(
-              new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.65)
-              .andThen(
-                  new MoveIntake(m_intakeSubsystem, () -> 0.65).withTimeout(0.25)
-              )
-          );
+      // Prime Uptake Shot //
+      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_11)
+        .whileTrue(
+            new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL)
+            .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.3).withTimeout(0.1))
+            .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(0.0)))
+            .andThen(new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(5.0))
+            .andThen(new MoveIntake(m_intakeSubsystem, () -> -1.0))
+        ).whileFalse(
+          new MoveUptake(m_uptakeSubsystem, () -> -1.0)
+          .alongWith(new MoveIntake(m_intakeSubsystem, () -> -1.0)).withTimeout(1.0)
+          .andThen(Commands.runOnce(() -> {
+            m_ledSubsystem.set(LEDConstants.BLACK);
+            noteIsInIntakeEntry.setBoolean(false);
+          }))
+        );
 
-      m_operatorController.leftBumper().whileTrue(
-        new MoveIntakeUptakeUntilNoteDetected(
-          m_intakeSubsystem, m_uptakeSubsystem, () -> -0.6, () -> -0.3)
-        .andThen(new MoveUptake(m_uptakeSubsystem, () -> 0.3).withTimeout(0.15))
-      );
-      
-      // A. PrimeUptakeShot
-      //   - Spin Uptake to (x%) power
-      m_operatorController.a().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -1.0));
+      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_12)
+        .whileTrue(
+          new MoveIntake(m_intakeSubsystem, () -> -1.0)
+          .alongWith(new MoveUptake(m_uptakeSubsystem, () -> -1.0)));
 
-      // X. MoveIntake(100%) (Shoot using uptake)
-      //   - Move intake at 100%
-      m_operatorController.x().whileTrue(new MoveIntake(m_intakeSubsystem, () -> -1.0));
 
-      // Y. MoveUptake(50%) (Shoot using shooter)
-      m_operatorController.y().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -0.43));
+      // // RBump. MoveIntakeUntilNoteDetected
+      // //   - Note travel distance depends on intake power
+      // //   - apply a 0.1 second down for both intake and uptake at low percentage (20%) (if needed)
+      // m_operatorController.rightBumper()
+      //     .whileTrue(
+      //         new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.65)
+      //         .andThen(
+      //             new MoveIntake(m_intakeSubsystem, () -> 0.65).withTimeout(0.25)
+      //         )
+      //     );
 
-      // // Driver
+      // m_operatorController.leftBumper()
+      // .whileTrue(
+      //     new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
+      //     .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.45).withTimeout(0.25))
+      //     .andThen(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.ORANGE)))
+      // );
+
+      // // A. PrimeUptakeShot
+      // //   - Spin Uptake to (x%) power
+      // m_operatorController.a().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -1.0));
+
+      // // X. MoveIntake(100%) (Shoot using uptake)
+      // //   - Move intake at 100%
+      // m_operatorController.x().whileTrue(new MoveIntake(m_intakeSubsystem, () -> -1.0));
+
+      // // Y. MoveUptake(50%) (Shoot using shooter)
+      // m_operatorController.y().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -0.43));
+
+      // // // Driver
 
 
       // Intake to Uptake - User should hold the button //
