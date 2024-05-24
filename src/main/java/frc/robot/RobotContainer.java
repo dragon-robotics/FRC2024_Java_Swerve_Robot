@@ -9,6 +9,7 @@ import frc.robot.Constants.CustomButtonBoxConstants;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.LEDConstants;
+import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Teleop.MoveArmToPos;
@@ -37,6 +38,7 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
+import frc.robot.subsystems.Limelight3Subsystem;
 
 import java.util.Map;
 
@@ -75,10 +77,14 @@ public class RobotContainer {
   public final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   public final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
   public final LEDSubsystem m_ledSubsystem = new LEDSubsystem();
+  public final Limelight3Subsystem m_limelight3Subsystem = new Limelight3Subsystem();
 
   // Define Driver and Operator controllers //
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.DRIVER_PORT);
+  
+  private final XboxController m_driverControllerRaw = 
+      new XboxController(OperatorConstants.DRIVER_PORT);
 
   private final CommandXboxController m_operatorController =
       new CommandXboxController(OperatorConstants.OPERATOR_PORT);
@@ -160,8 +166,10 @@ public class RobotContainer {
       m_swerveDriveSubsystem.drive(
         () -> -m_driverController.getLeftY(),   // Translation
         () -> -m_driverController.getLeftX(),   // Strafe
-        () -> -m_driverController.getRightX(),  // Rotation
-        () -> m_driverController.getHID().getRightBumper()  // Half-Speed
+        () -> -m_driverController.getRightX()
+         + (m_limelight3Subsystem.alignHorizontal(LimelightConstants.HORIZONTAL_KP)
+           * m_driverControllerRaw.getRawAxis(JoystickConstants.TRIGGER_RIGHT)),  // Rotation
+        () -> m_driverController.rightBumper().getAsBoolean()  // Half-Speed
       ).alongWith(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK)))
     );
 
@@ -227,7 +235,11 @@ public class RobotContainer {
       // Operator
       // @TODO Tune handoff setpoint for the shooter arm
       // @TODO Tune amp setpoint for the shooter arm
-      
+
+      // Unjam //
+      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_1)
+          .whileTrue(new MoveIntake(m_intakeSubsystem, () -> 0.5));
+
       // Intake using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_2)
           .whileTrue(
@@ -293,6 +305,25 @@ public class RobotContainer {
                 noteIsInIntakeEntry.setBoolean(false);
               }))
           );
+      
+
+      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
+        .onTrue(
+          new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
+          .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.4).withTimeout(0.2)
+          .raceWith(
+              new MoveUptake(m_uptakeSubsystem, () -> 0.4)
+          )
+          .andThen(Commands.runOnce(() -> {
+                    m_intakeSubsystem.set(0);
+                    m_uptakeSubsystem.set(0);
+                  }))
+          .andThen(
+            new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(1.0))
+            .andThen(new MoveIntake(m_intakeSubsystem, () -> -0.5)))
+        );
+        
+      
 
       // Prime Uptake Shot //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_11)
