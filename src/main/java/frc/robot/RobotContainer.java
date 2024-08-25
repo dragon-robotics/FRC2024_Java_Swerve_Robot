@@ -166,9 +166,9 @@ public class RobotContainer {
       m_swerveDriveSubsystem.drive(
         () -> -m_driverController.getLeftY(),   // Translation
         () -> -m_driverController.getLeftX(),   // Strafe
-        () -> -m_driverController.getRightX()
-         + (m_limelight3Subsystem.alignHorizontal(LimelightConstants.HORIZONTAL_KP)
-           * m_driverControllerRaw.getRawAxis(JoystickConstants.TRIGGER_RIGHT)),  // Rotation
+        () -> -m_driverController.getRightX(),
+        //  + (m_limelight3Subsystem.alignHorizontal(LimelightConstants.HORIZONTAL_KP)
+        //    * m_driverControllerRaw.getRawAxis(JoystickConstants.TRIGGER_RIGHT)),  // Rotation
         () -> m_driverController.rightBumper().getAsBoolean()  // Half-Speed
       ).alongWith(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK)))
     );
@@ -262,8 +262,8 @@ public class RobotContainer {
                       m_intakeSubsystem, 
                       m_uptakeSubsystem, 
                       () -> - 0.6,
-                      () -> -0.4)
-                  .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.25))
+                      () -> -0.275)
+                  .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.35))
               )
               .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
               .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL))
