@@ -161,29 +161,29 @@ public class RobotContainer {
 
     //#region Xbox Controller Bindings
 
-    // Set default teleop command to drive + align note using rotation //
-    m_swerveDriveSubsystem.setDefaultCommand(
-      m_swerveDriveSubsystem.drive(
-        () -> -m_driverController.getLeftY(),   // Translation
-        () -> -m_driverController.getLeftX(),   // Strafe
-        () -> -m_driverController.getRightX()   // Rotation + Limelight Alignment
-          + (m_limelight3Subsystem.alignHorizontal(LimelightConstants.HORIZONTAL_KP)
-          * m_driverControllerRaw.getRawAxis(JoystickConstants.TRIGGER_RIGHT)),
-        () -> m_driverController.rightBumper().getAsBoolean()  // Half-Speed
-      ).alongWith(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK)))
-    );
-
-    // // Set default teleop command to drive + align note using strafe //
+    // // Set default teleop command to drive + align note using rotation //
     // m_swerveDriveSubsystem.setDefaultCommand(
     //   m_swerveDriveSubsystem.drive(
     //     () -> -m_driverController.getLeftY(),   // Translation
-    //     () -> -m_driverController.getLeftX()    // Strafe + Limelight Alignment
+    //     () -> -m_driverController.getLeftX(),   // Strafe
+    //     () -> -m_driverController.getRightX()   // Rotation + Limelight Alignment
     //       + (m_limelight3Subsystem.alignHorizontal(LimelightConstants.HORIZONTAL_KP)
     //       * m_driverControllerRaw.getRawAxis(JoystickConstants.TRIGGER_RIGHT)),
-    //     () -> -m_driverController.getRightX(),  // Rotation + Limelight Alignment
     //     () -> m_driverController.rightBumper().getAsBoolean()  // Half-Speed
     //   ).alongWith(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK)))
     // );
+
+    // Set default teleop command to drive + align note using strafe //
+    m_swerveDriveSubsystem.setDefaultCommand(
+      m_swerveDriveSubsystem.drive(
+        () -> -m_driverController.getLeftY(),   // Translation
+        () -> -m_driverController.getLeftX()    // Strafe + Limelight Alignment
+          + (m_limelight3Subsystem.alignHorizontal(LimelightConstants.HORIZONTAL_KP)
+          * m_driverControllerRaw.getRawAxis(JoystickConstants.TRIGGER_RIGHT)),
+        () -> -m_driverController.getRightX(),  // Rotation + Limelight Alignment
+        () -> m_driverController.rightBumper().getAsBoolean()  // Half-Speed
+      ).alongWith(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK)))
+    );
 
     // m_swerveDriveSubsystem.setDefaultCommand(
     //   m_swerveDriveSubsystem.driveHeading(
