@@ -166,9 +166,9 @@ public class RobotContainer {
       m_swerveDriveSubsystem.drive(
         () -> -m_driverController.getLeftY(),   // Translation
         () -> -m_driverController.getLeftX(),   // Strafe
-        () -> -m_driverController.getRightX(),
-        //  + (m_limelight3Subsystem.alignHorizontal(LimelightConstants.HORIZONTAL_KP)
-        //    * m_driverControllerRaw.getRawAxis(JoystickConstants.TRIGGER_RIGHT)),  // Rotation
+        () -> -m_driverController.getRightX()   // Rotation + Limelight Alignment
+         + (m_limelight3Subsystem.alignHorizontal(LimelightConstants.HORIZONTAL_KP)
+           * m_driverControllerRaw.getRawAxis(JoystickConstants.TRIGGER_RIGHT)),
         () -> m_driverController.rightBumper().getAsBoolean()  // Half-Speed
       ).alongWith(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK)))
     );
