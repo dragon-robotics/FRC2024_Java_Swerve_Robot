@@ -29,7 +29,7 @@ public class Limelight3Subsystem extends SubsystemBase {
       // tx ranges from (-hfov/2) to (hfov/2) in degrees. If your target is on the
       // rightmost edge of
       // your limelight 3 feed, tx should return roughly 31 degrees.
-      double targetingAngularVelocity = (LimelightHelpers.getTX("limelight") * Math.PI / 180) * kp;
+      double targetingAngularVelocity = (LimelightHelpers.getTX("limelight-note") * Math.PI / 180) * kp;
 
       // convert to radians per second for our drive method
       targetingAngularVelocity *= 2 * Math.PI;
@@ -59,7 +59,7 @@ public class Limelight3Subsystem extends SubsystemBase {
   public double alignHorizontal(double kp) {
       final var rot_limelight = limelight_aim_note_proportional(kp);
       double m_current = m_rotlimiter.calculate(rot_limelight);
-      SmartDashboard.putNumber("limelight tX", LimelightHelpers.getTX("limelight"));
+      SmartDashboard.putNumber("limelight tX", LimelightHelpers.getTX("limelight-note"));
       SmartDashboard.putNumber("limelight rot mod [deg]", m_current * (180 / Math.PI));
       return m_current;
   }
