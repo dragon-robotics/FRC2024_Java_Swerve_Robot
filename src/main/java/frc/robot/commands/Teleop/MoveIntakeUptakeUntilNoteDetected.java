@@ -44,45 +44,45 @@ public class MoveIntakeUptakeUntilNoteDetected extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    thread = new Thread(() -> {
-      while (!Thread.interrupted()) {
-        // Command update logic here
-        m_intake.set(m_intakeSpeed.getAsDouble());
-        m_uptake.set(m_uptakeSpeed.getAsDouble());
+    // thread = new Thread(() -> {
+    //   while (!Thread.interrupted()) {
+    //     // Command update logic here
+    //     m_intake.set(m_intakeSpeed.getAsDouble());
+    //     m_uptake.set(m_uptakeSpeed.getAsDouble());
 
-        // If the note is detected, break the loop
-        if(!m_uptake.isNoteDetected()) break;
+    //     // If the note is detected, break the loop
+    //     if(!m_uptake.isNoteDetected()) break;
 
-        try {
-          Thread.sleep(10); // Sleep for 10ms, for a 100Hz update rate
-        } catch (InterruptedException e) {
-          break;
-        }
-      }
-    });
+    //     try {
+    //       Thread.sleep(10); // Sleep for 10ms, for a 100Hz update rate
+    //     } catch (InterruptedException e) {
+    //       break;
+    //     }
+    //   }
+    // });
 
-    thread.start();
+    // thread.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // m_intake.set(m_intakeSpeed.getAsDouble());
-    // m_uptake.set(m_uptakeSpeed.getAsDouble());
+    m_intake.set(m_intakeSpeed.getAsDouble());
+    m_uptake.set(m_uptakeSpeed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (thread != null) {
-      thread.interrupt();
-    }
+    // if (thread != null) {
+    //   thread.interrupt();
+    // }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // return !m_uptake.isNoteDetected();
-    return !thread.isAlive();
+    return !m_uptake.isNoteDetected();
+    // return !thread.isAlive();
   }
 }
