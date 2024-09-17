@@ -31,6 +31,11 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  // Commented out as a last resort test to solve our amp sequence issues
+  // public Robot(){
+  //   super(0.01);
+  // }
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
