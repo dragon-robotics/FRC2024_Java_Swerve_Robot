@@ -211,6 +211,13 @@ public class ShooterSubsystem extends SubsystemBase {
     m_shooterLead.set(0);
   }
 
+  /**
+   * Get the current of the top shooter motor
+   */
+  public double getLeadMotorCurrent() {
+    return m_shooterLead.getOutputCurrent();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

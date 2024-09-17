@@ -17,12 +17,13 @@ public class MoveIntakeUptakeUntilNoteDetected extends Command {
   private DoubleSupplier m_intakeSpeed;
   private DoubleSupplier m_uptakeSpeed;
 
-  // private Thread thread;
+  private Thread thread;
 
-  // @TODO: 1. Make sure to clean the sensors
+  // @TODO: 1. Make sure to clean the sensors - No effect
   // @TODO: 2. Make sure to position the sensors differently
   // @TODO: 3. Use the 5mm sensor instead
   // @TODO: 4. Use threads to speed up update rate
+  // @TODO: 5. Make the shooter detect a current spike
 
   /** Creates a new MoveUptakeUntilNoteDetected. */
   public MoveIntakeUptakeUntilNoteDetected(
@@ -44,24 +45,24 @@ public class MoveIntakeUptakeUntilNoteDetected extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // thread = new Thread(() -> {
-    //   while (!Thread.interrupted()) {
-    //     // Command update logic here
-    //     m_intake.set(m_intakeSpeed.getAsDouble());
-    //     m_uptake.set(m_uptakeSpeed.getAsDouble());
+    thread = new Thread(() -> {
+      while (!Thread.interrupted()) {
+        // Command update logic here
+        m_intake.set(m_intakeSpeed.getAsDouble());
+        m_uptake.set(m_uptakeSpeed.getAsDouble());
 
-    //     // If the note is detected, break the loop
-    //     if(!m_uptake.isNoteDetected()) break;
+        // If the note is detected, break the loop
+        if(!m_uptake.isNoteDetected()) break;
 
-    //     try {
-    //       Thread.sleep(10); // Sleep for 10ms, for a 100Hz update rate
-    //     } catch (InterruptedException e) {
-    //       break;
-    //     }
-    //   }
-    // });
+        try {
+          Thread.sleep(10); // Sleep for 10ms, for a 100Hz update rate
+        } catch (InterruptedException e) {
+          break;
+        }
+      }
+    });
 
-    // thread.start();
+    thread.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -74,15 +75,17 @@ public class MoveIntakeUptakeUntilNoteDetected extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // if (thread != null) {
-    //   thread.interrupt();
-    // }
+    m_intake.set(0);
+    m_uptake.set(0);
+
+    if (thread != null) {
+      thread.interrupt();
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return !m_uptake.isNoteDetected();
-    // return !thread.isAlive();
   }
 }
