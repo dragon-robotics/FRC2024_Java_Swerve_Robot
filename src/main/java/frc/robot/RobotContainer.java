@@ -19,6 +19,7 @@ import frc.robot.commands.Teleop.HoldArmToPosition;
 import frc.robot.commands.Teleop.MoveIntake;
 // import frc.robot.commands.Teleop.MoveIntakeAdjPercent;
 import frc.robot.commands.Teleop.MoveIntakeUntilNoteDetected;
+import frc.robot.commands.Teleop.MoveIntakeUptake;
 import frc.robot.commands.Teleop.MoveShooter;
 import frc.robot.commands.Teleop.MoveShooterUntilNoteDetected;
 // import frc.robot.commands.Teleop.MoveShooterAdjPercent;
@@ -259,12 +260,14 @@ public class RobotContainer {
               .andThen(new WaitCommand(0.5))
               .andThen(Commands.runOnce(() -> m_shooterSubsystem.setIdleMode(CANSparkMax.IdleMode.kBrake)))
               .andThen(
-                  new MoveIntakeUptakeUntilNoteDetected(
+                  // new MoveIntakeUptakeUntilNoteDetected(
+                  new MoveIntakeUptake(  
                       m_intakeSubsystem, 
                       m_uptakeSubsystem, 
-                      () -> - 0.6,
-                      () -> -0.275)
-                  .raceWith(new MoveShooterUntilNoteDetected(m_shooterSubsystem, () -> -0.35))
+                      () -> - 0.5,
+                      () -> -0.3)
+                  .raceWith(new MoveShooterUntilNoteDetected(m_shooterSubsystem, () -> -0.25))
+                  // .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.35))
               )
               .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(0)))
               .andThen(Commands.runOnce(() -> m_uptakeSubsystem.set(0)))
@@ -365,10 +368,10 @@ public class RobotContainer {
               }))
           );
 
-      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
-          .whileTrue(
-              new MoveIntake(m_intakeSubsystem, () -> 0.5)
-          );
+      // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
+      //     .whileTrue(
+      //         new MoveIntake(m_intakeSubsystem, () -> 0.5)
+      //     );
 
 
       // // RBump. MoveIntakeUntilNoteDetected
