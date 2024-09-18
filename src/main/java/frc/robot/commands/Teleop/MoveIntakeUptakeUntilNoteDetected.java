@@ -12,32 +12,30 @@ import frc.robot.subsystems.UptakeSubsystem;
 
 public class MoveIntakeUptakeUntilNoteDetected extends Command {
 
-  private IntakeSubsystem m_intake;
-  private UptakeSubsystem m_uptake;
-  private DoubleSupplier m_intakeSpeed;
-  private DoubleSupplier m_uptakeSpeed;
-
-  // private Thread thread;
-
   // @TODO: x 1. Make sure to clean the sensors
   // @TODO:   2. Make sure to position the sensors differently
   // @TODO:   3. Use the 5mm sensor instead - Change the sensor
   // @TODO: x 4. Use threads to speed up update rate
   // @TODO: x 5. Make the shooter detect a current spike
   // @TODO:   6. Use Voltage to set the motor speeds instead of using percentages
-  // @TODO:   7. Use Voltage to set the motor speeds instead of using percentages
+  // @TODO:   7. If the timing is consistent, extend the sequence by a little bit
+
+  private IntakeSubsystem m_intake;
+  private UptakeSubsystem m_uptake;
+  private DoubleSupplier m_intakeVoltage;
+  private DoubleSupplier m_uptakeVoltage;
 
   /** Creates a new MoveUptakeUntilNoteDetected. */
   public MoveIntakeUptakeUntilNoteDetected(
     IntakeSubsystem intake,
     UptakeSubsystem uptake,
-    DoubleSupplier intakeSpeed,
-    DoubleSupplier uptakeSpeed) {
+    DoubleSupplier intakeVoltage,
+    DoubleSupplier uptakeVoltage) {
 
     m_intake = intake;
     m_uptake = uptake;
-    m_uptakeSpeed = uptakeSpeed;
-    m_intakeSpeed = intakeSpeed;
+    m_uptakeVoltage = uptakeVoltage;
+    m_intakeVoltage = intakeVoltage;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
@@ -51,8 +49,8 @@ public class MoveIntakeUptakeUntilNoteDetected extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intake.set(m_intakeSpeed.getAsDouble());
-    m_uptake.set(m_uptakeSpeed.getAsDouble());
+    m_intake.setVoltage(m_intakeVoltage.getAsDouble());
+    m_uptake.setVoltage(m_uptakeVoltage.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

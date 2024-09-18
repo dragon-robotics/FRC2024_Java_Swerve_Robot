@@ -260,12 +260,11 @@ public class RobotContainer {
               .andThen(new WaitCommand(0.5))
               .andThen(Commands.runOnce(() -> m_shooterSubsystem.setIdleMode(CANSparkMax.IdleMode.kBrake)))
               .andThen(
-                  // new MoveIntakeUptakeUntilNoteDetected(
-                  new MoveIntakeUptake(  
+                  new MoveIntakeUptakeUntilNoteDetected(
                       m_intakeSubsystem, 
                       m_uptakeSubsystem, 
-                      () -> - 0.5,
-                      () -> -0.3)
+                      () -> -5.0,
+                      () -> -3.0)
                   .raceWith(new MoveShooterUntilNoteDetected(m_shooterSubsystem, () -> -0.25))
                   // .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.35))
               )
@@ -314,23 +313,21 @@ public class RobotContainer {
           );
       
 
-      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
-        .onTrue(
-          new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
-          .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.4).withTimeout(0.2)
-          .raceWith(
-              new MoveUptake(m_uptakeSubsystem, () -> 0.4)
-          )
-          .andThen(Commands.runOnce(() -> {
-                    m_intakeSubsystem.set(0);
-                    m_uptakeSubsystem.set(0);
-                  }))
-          .andThen(
-            new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(1.0))
-            .andThen(new MoveIntake(m_intakeSubsystem, () -> -0.5)))
-        );
-        
-      
+      // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
+      //   .onTrue(
+      //     new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
+      //     .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.4).withTimeout(0.2)
+      //     .raceWith(
+      //         new MoveUptake(m_uptakeSubsystem, () -> 0.4)
+      //     )
+      //     .andThen(Commands.runOnce(() -> {
+      //               m_intakeSubsystem.set(0);
+      //               m_uptakeSubsystem.set(0);
+      //             }))
+      //     .andThen(
+      //       new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(1.0))
+      //       .andThen(new MoveIntake(m_intakeSubsystem, () -> -0.5)))
+      //   );
 
       // Prime Uptake Shot //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_11)

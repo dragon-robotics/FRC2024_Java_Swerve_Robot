@@ -43,7 +43,7 @@ public class IntakeSubsystem extends SubsystemBase {
     // Restore motor to factory default //
     m_intake.restoreFactoryDefaults();
 
-    // Set the motor to only use 8 volts of power //
+    // Set the motor to only use 10 volts of power //
     m_intake.enableVoltageCompensation(IntakeConstants.NOMINAL_VOLTAGE);
 
     // Set the motor to only use 20 amp stall limit, 10 amp free limit, and limit to 3k RPM //
@@ -110,6 +110,14 @@ public class IntakeSubsystem extends SubsystemBase {
    */
   public void set(double speed) {
     m_intake.set(speed);
+  }
+
+  /**
+   * Set the intake to a specific voltage
+   * @param voltage the voltage to set the intake to
+   */
+  public void setVoltage(double voltage) {
+    m_intake.setVoltage(voltage);
   }
 
   /**
