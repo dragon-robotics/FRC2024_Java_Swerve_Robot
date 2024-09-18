@@ -268,9 +268,10 @@ public class RobotContainer {
                   .raceWith(new MoveShooterUntilNoteDetected(m_shooterSubsystem, () -> -0.25))
                   // .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.35))
               )
-              .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(0)))
-              .andThen(Commands.runOnce(() -> m_uptakeSubsystem.set(0)))
-              .andThen(Commands.runOnce(() -> m_shooterSubsystem.set(0)))
+              .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(0)).alongWith(
+                Commands.runOnce(() -> m_uptakeSubsystem.set(0)),
+                Commands.runOnce(() -> m_shooterSubsystem.set(0))
+              ))
               // .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL))
           );
 
@@ -299,6 +300,7 @@ public class RobotContainer {
             .andThen(
               new HoldArmToPosition(m_armSubsystem)
               .alongWith(
+                Commands.runOnce(() -> m_shooterSubsystem.setIdleMode(CANSparkMax.IdleMode.kCoast)),
                 new MoveShooter(m_shooterSubsystem, () -> -0.8)
               )
             )              
