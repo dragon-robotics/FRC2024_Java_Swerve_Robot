@@ -9,30 +9,32 @@ import frc.robot.Constants.CustomButtonBoxConstants;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.LEDConstants;
-import frc.robot.Constants.LimelightConstants;
+// import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Teleop.MoveArmToPos;
 import frc.robot.commands.Teleop.HoldArmToPosition;
-import frc.robot.commands.Teleop.MoveArmToInitialPosition;
-import frc.robot.commands.Teleop.MoveArmToShootPosition;
+// import frc.robot.commands.Teleop.MoveArmToInitialPosition;
+// import frc.robot.commands.Teleop.MoveArmToShootPosition;
 import frc.robot.commands.Teleop.MoveIntake;
-import frc.robot.commands.Teleop.MoveIntakeAdjPercent;
+// import frc.robot.commands.Teleop.MoveIntakeAdjPercent;
 import frc.robot.commands.Teleop.MoveIntakeUntilNoteDetected;
+import frc.robot.commands.Teleop.MoveIntakeUptake;
 import frc.robot.commands.Teleop.MoveShooter;
-import frc.robot.commands.Teleop.MoveShooterAdjPercent;
+import frc.robot.commands.Teleop.MoveShooterUntilNoteDetected;
+// import frc.robot.commands.Teleop.MoveShooterAdjPercent;
 import frc.robot.commands.Teleop.MoveUptake;
-import frc.robot.commands.Teleop.MoveUptakeAdjPercent;
-import frc.robot.commands.Teleop.ScoreAmp;
+// import frc.robot.commands.Teleop.MoveUptakeAdjPercent;
+// import frc.robot.commands.Teleop.ScoreAmp;
 import frc.robot.commands.Teleop.MoveIntakeUptakeUntilNoteDetected;
-import frc.robot.commands.Test.TestArmSetpoints;
-import frc.robot.commands.Test.TestClimber;
+// import frc.robot.commands.Test.TestArmSetpoints;
+// import frc.robot.commands.Test.TestClimber;
 import frc.robot.commands.Test.TestIntake;
 import frc.robot.commands.Test.TestShooter;
 import frc.robot.commands.Test.TestUptake;
 import frc.robot.commands.Test.TuneUptakeAmpShot;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClimberSubsystem;
+// import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -47,14 +49,14 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
+// import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+// import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -83,8 +85,8 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.DRIVER_PORT);
   
-  private final XboxController m_driverControllerRaw = 
-      new XboxController(OperatorConstants.DRIVER_PORT);
+  // private final XboxController m_driverControllerRaw = 
+  //     new XboxController(OperatorConstants.DRIVER_PORT);
 
   private final CommandXboxController m_operatorController =
       new CommandXboxController(OperatorConstants.OPERATOR_PORT);
@@ -258,20 +260,25 @@ public class RobotContainer {
               .andThen(new WaitCommand(0.5))
               .andThen(Commands.runOnce(() -> m_shooterSubsystem.setIdleMode(CANSparkMax.IdleMode.kBrake)))
               .andThen(
-                  new MoveIntakeUptakeUntilNoteDetected(
+                  // new MoveIntakeUptakeUntilNoteDetected(
+                  new MoveIntakeUptake(  
                       m_intakeSubsystem, 
                       m_uptakeSubsystem, 
-                      () -> - 0.6,
-                      () -> -0.275)
-                  .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.35))
+                      () -> - 0.5,
+                      () -> -0.3)
+                  .raceWith(new MoveShooterUntilNoteDetected(m_shooterSubsystem, () -> -0.25))
+                  // .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.35))
               )
-              .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
-              .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL))
+              .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(0)))
+              .andThen(Commands.runOnce(() -> m_uptakeSubsystem.set(0)))
+              .andThen(Commands.runOnce(() -> m_shooterSubsystem.set(0)))
+              // .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL))
           );
 
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_5)
       .onTrue(
-          new MoveShooter(m_shooterSubsystem, () -> -0.5).withTimeout(0.5)
+          new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL)
+              .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.5).withTimeout(0.5))
               .andThen(Commands.runOnce(() -> m_shooterSubsystem.setIdleMode(CANSparkMax.IdleMode.kCoast)))
               .andThen(new MoveArmToPos(m_armSubsystem, 0.4))
               .andThen(
@@ -361,10 +368,10 @@ public class RobotContainer {
               }))
           );
 
-      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
-          .whileTrue(
-              new MoveIntake(m_intakeSubsystem, () -> 0.5)
-          );
+      // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
+      //     .whileTrue(
+      //         new MoveIntake(m_intakeSubsystem, () -> 0.5)
+      //     );
 
 
       // // RBump. MoveIntakeUntilNoteDetected
