@@ -185,6 +185,14 @@ public class UptakeSubsystem extends SubsystemBase {
   }
 
   /**
+   * Set the uptake to a specific voltage
+   * @param voltage the voltage to set the uptake to
+   */
+  public void setVoltage(double voltage) {
+    m_uptakeLead.setVoltage(voltage);
+  }
+
+  /**
    * Set the uptake to uptake at 100% speed
    */
   public void uptake100() {

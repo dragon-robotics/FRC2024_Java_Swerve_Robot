@@ -99,6 +99,8 @@ public final class Constants {
     /* Desired and max RPM for the shooter (to be tuned later) */
     public static final double DESIRED_SHOOTER_RPM = 4000;
     public static final double MAX_RPM = 5000;
+
+    public static final double NOTE_DETECT_CURRENT_THRESHOLD = 20.0;
   }
 
   public static class ArmConstants {

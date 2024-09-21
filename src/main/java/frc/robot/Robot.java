@@ -11,11 +11,11 @@ package frc.robot;
 // import org.littletonrobotics.junction.wpilog.WPILOGReader;
 // import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-import com.pathplanner.lib.pathfinding.Pathfinding;
+// import com.pathplanner.lib.pathfinding.Pathfinding;
 
-import edu.wpi.first.wpilibj.PowerDistribution;
+// import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+// import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -30,6 +30,11 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  // Commented out as a last resort test to solve our amp sequence issues
+  // public Robot(){
+  //   super(0.01);
+  // }
 
   /**
    * This function is run when the robot is first started up and should be used for any
