@@ -169,7 +169,7 @@ public class RobotContainer {
         () -> -m_driverController.getRightX(),
         //  + (m_limelight3Subsystem.alignHorizontal(LimelightConstants.HORIZONTAL_KP)
         //    * m_driverControllerRaw.getRawAxis(JoystickConstants.TRIGGER_RIGHT)),  // Rotation
-        () -> m_driverController.rightBumper().getAsBoolean()  // Half-Speed
+        () -> m_driverController.getHID().getRightBumper()  // Half-Speed
       ).alongWith(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK)))
     );
 
