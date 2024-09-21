@@ -100,8 +100,8 @@ public class RobotContainer {
   private final Joystick m_testController =
       new Joystick(OperatorConstants.TEST_PORT);
 
-  private final CommandJoystick m_testCommandJoystick =
-      new CommandJoystick(OperatorConstants.TEST_PORT);
+  // private final CommandJoystick m_testCommandJoystick =
+  //     new CommandJoystick(OperatorConstants.TEST_PORT);
 
 //   // Define Driver and Operator controllers - Temporary fix for forgetting Xbox Controller //
 //   private final CommandJoystick m_driverController =
@@ -227,14 +227,14 @@ public class RobotContainer {
             () -> -m_operatorController.getRightTriggerAxis(),
             () -> -m_operatorController.getLeftTriggerAxis()));
 
-      m_testCommandJoystick.button(JoystickConstants.BTN_Y)
-          .whileTrue(new TuneUptakeAmpShot(
-            m_uptakeSubsystem, 
-            () -> m_testController.getRawButtonPressed(JoystickConstants.BUMPER_LEFT),
-            () -> m_testController.getRawButtonPressed(JoystickConstants.BUMPER_RIGHT), 
-            () -> m_testController.getRawButtonPressed(JoystickConstants.BTN_A), 
-            () -> m_testController.getRawButtonPressed(JoystickConstants.BTN_B)
-          ));
+      // m_testCommandJoystick.button(JoystickConstants.BTN_Y)
+      //     .whileTrue(new TuneUptakeAmpShot(
+      //       m_uptakeSubsystem, 
+      //       () -> m_testController.getRawButtonPressed(JoystickConstants.BUMPER_LEFT),
+      //       () -> m_testController.getRawButtonPressed(JoystickConstants.BUMPER_RIGHT), 
+      //       () -> m_testController.getRawButtonPressed(JoystickConstants.BTN_A), 
+      //       () -> m_testController.getRawButtonPressed(JoystickConstants.BTN_B)
+      //     ));
 
       // @TODOs
       // Operator
@@ -268,8 +268,17 @@ public class RobotContainer {
                       m_uptakeSubsystem, 
                       () -> -5.0,
                       () -> -3.0)
-                  .raceWith(new MoveShooterUntilNoteDetected(m_shooterSubsystem, () -> -0.25))
-                  // .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.35))
+                  // .raceWith(new MoveShooterUntilNoteDetected(m_shooterSubsystem, () -> -0.25))
+                  .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.25))
+              )
+              .andThen(
+                new MoveIntakeUptake(
+                  m_intakeSubsystem, 
+                  m_uptakeSubsystem,
+                  () -> -5.0,
+                  () -> -2.5
+                )
+                .alongWith(new MoveShooter(m_shooterSubsystem, () -> -0.25)).withTimeout(0.1)
               )
               .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(0)).alongWith(
                 Commands.runOnce(() -> m_uptakeSubsystem.set(0)),
@@ -298,7 +307,7 @@ public class RobotContainer {
 
       // Ferry Note using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_4)
-          .whileTrue(
+          .onTrue(
             new MoveArmToPos(m_armSubsystem, ArmConstants.SHOOTER_GOAL)
             .andThen(
               new HoldArmToPosition(m_armSubsystem)
@@ -307,36 +316,41 @@ public class RobotContainer {
                 new MoveShooter(m_shooterSubsystem, () -> -0.8)
               )
             )              
-          ).whileFalse(
+          ).onFalse(
             // Lock the robot at 10 degrees heading before ferrying the note //
             new MoveIntake(m_intakeSubsystem, () -> -0.6)
-            .alongWith(new MoveUptake(m_uptakeSubsystem, () -> -0.6).withTimeout(1.0))
+            .alongWith(new MoveUptake(m_uptakeSubsystem, () -> -0.6)).withTimeout(1.0)
             .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
             .andThen(Commands.runOnce(() -> {
               m_ledSubsystem.set(LEDConstants.BLACK);
               noteIsInIntakeEntry.setBoolean(false);
             }))
+            .andThen(
+              Commands.runOnce(() -> m_intakeSubsystem.set(0)).alongWith(
+              Commands.runOnce(() -> m_uptakeSubsystem.set(0)),
+              Commands.runOnce(() -> m_shooterSubsystem.set(0))
+            ))
           );
       
-      // Test Lock Heading //
-      var alliance = DriverStation.getAlliance();
-      boolean color = alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
-      double desiredFerryAngle = color ? 10.0 : -10.0;
-      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
-          .onTrue(
-            Commands.run(
-              () -> m_swerveDriveSubsystem.swerve.drive(
-                m_swerveDriveSubsystem.swerve.swerveController.getTargetSpeeds(
-                  0,
-                  0,
-                  desiredFerryAngle,
-                  m_swerveDriveSubsystem.swerve.getYaw().getRadians(),
-                  m_swerveDriveSubsystem.swerve.swerveController.config.maxAngularVelocity
-                )
-              ),
-              m_swerveDriveSubsystem
-            ).until(() -> Math.abs(m_swerveDriveSubsystem.swerve.getYaw().getDegrees()) <= 0.1)
-          );
+      // // Test Lock Heading //
+      // var alliance = DriverStation.getAlliance();
+      // boolean color = alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
+      // double desiredFerryAngle = color ? 10.0 : -10.0;
+      // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
+      //     .onTrue(
+      //       Commands.run(
+      //         () -> m_swerveDriveSubsystem.swerve.drive(
+      //           m_swerveDriveSubsystem.swerve.swerveController.getTargetSpeeds(
+      //             0,
+      //             0,
+      //             desiredFerryAngle,
+      //             m_swerveDriveSubsystem.swerve.getYaw().getRadians(),
+      //             m_swerveDriveSubsystem.swerve.swerveController.config.maxAngularVelocity
+      //           )
+      //         ),
+      //         m_swerveDriveSubsystem
+      //       ).until(() -> Math.abs(m_swerveDriveSubsystem.swerve.getYaw().getDegrees()) <= 0.1)
+      //     );
 
       // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
       //   .onTrue(

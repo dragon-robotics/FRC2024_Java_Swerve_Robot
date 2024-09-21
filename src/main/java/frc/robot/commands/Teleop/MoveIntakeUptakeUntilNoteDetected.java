@@ -56,8 +56,8 @@ public class MoveIntakeUptakeUntilNoteDetected extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intake.set(0);
-    m_uptake.set(0);
+    m_intake.setVoltage(0);
+    m_uptake.setVoltage(0);
   }
 
   // Returns true when the command should end.

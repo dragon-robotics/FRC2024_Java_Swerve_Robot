@@ -68,15 +68,15 @@ public class MoveIntakeUptake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intake.set(m_intakeSpeed.getAsDouble());
-    m_uptake.set(m_uptakeSpeed.getAsDouble());
+    m_intake.setVoltage(m_intakeSpeed.getAsDouble());
+    m_uptake.setVoltage(m_uptakeSpeed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // m_intake.set(0);
-    // m_uptake.set(0);
+    m_intake.setVoltage(0.0);
+    m_uptake.setVoltage(0);
 
     // if (thread != null) {
     //   thread.interrupt();
