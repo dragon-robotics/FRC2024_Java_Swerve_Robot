@@ -2,15 +2,21 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.76,
-      "y": 2.302
+      "x": 0.71,
+      "y": 6.76
     },
-    "rotation": 0
+    "rotation": 60.61
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "UptakeShoot"
+          }
+        },
         {
           "type": "wait",
           "data": {
@@ -20,7 +26,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "OnePieceExitPath"
+            "pathName": "RightOnePieceExitPath"
           }
         }
       ]
