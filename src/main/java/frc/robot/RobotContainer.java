@@ -170,7 +170,7 @@ public class RobotContainer {
         () -> -m_driverController.getRightX(),
         //  + (m_limelight3Subsystem.alignHorizontal(LimelightConstants.HORIZONTAL_KP)
         //    * m_driverControllerRaw.getRawAxis(JoystickConstants.TRIGGER_RIGHT)),  // Rotation
-        () -> m_driverController.rightBumper().getAsBoolean()  // Half-Speed
+        () -> m_driverController.getHID().getRightBumper()  // Half-Speed
       ).alongWith(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK)))
     );
 
@@ -299,9 +299,8 @@ public class RobotContainer {
             )              
           ).whileFalse(
             // Lock the robot at 10 degrees heading before shooting
-            new LockHeading(m_swerveDriveSubsystem, 10)
-            .andThen(new MoveIntake(m_intakeSubsystem, () -> -0.6)
-            .alongWith(new MoveUptake(m_uptakeSubsystem, () -> -0.6)).withTimeout(1.0))
+            new MoveIntake(m_intakeSubsystem, () -> -0.6)
+            .alongWith(new MoveUptake(m_uptakeSubsystem, () -> -0.6).withTimeout(1.0))
             .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
             .andThen(Commands.runOnce(() -> {
               m_ledSubsystem.set(LEDConstants.BLACK);
