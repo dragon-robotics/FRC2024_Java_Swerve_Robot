@@ -48,7 +48,9 @@ import java.util.Map;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 // import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -306,7 +308,7 @@ public class RobotContainer {
               )
             )              
           ).whileFalse(
-            // Lock the robot at 10 degrees heading before shooting
+            // Lock the robot at 10 degrees heading before ferrying the note //
             new MoveIntake(m_intakeSubsystem, () -> -0.6)
             .alongWith(new MoveUptake(m_uptakeSubsystem, () -> -0.6).withTimeout(1.0))
             .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
@@ -316,6 +318,25 @@ public class RobotContainer {
             }))
           );
       
+      // Test Lock Heading //
+      var alliance = DriverStation.getAlliance();
+      boolean color = alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
+      double desiredFerryAngle = color ? 10.0 : -10.0;
+      m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
+          .onTrue(
+            Commands.run(
+              () -> m_swerveDriveSubsystem.swerve.drive(
+                m_swerveDriveSubsystem.swerve.swerveController.getTargetSpeeds(
+                  0,
+                  0,
+                  desiredFerryAngle,
+                  m_swerveDriveSubsystem.swerve.getYaw().getRadians(),
+                  m_swerveDriveSubsystem.swerve.swerveController.config.maxAngularVelocity
+                )
+              ),
+              m_swerveDriveSubsystem
+            ).until(() -> Math.abs(m_swerveDriveSubsystem.swerve.getYaw().getDegrees()) <= 0.1)
+          );
 
       // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
       //   .onTrue(
