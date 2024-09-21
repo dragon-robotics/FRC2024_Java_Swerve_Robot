@@ -141,6 +141,13 @@ public class ClimberSubsystem extends SubsystemBase {
     m_climberLead.set(speed);
   }
 
+  /** Set the climber to a specific voltage
+   * @param voltage the voltage to set the climber to
+   */
+  public void setVoltage(double voltage) {
+    m_climberLead.setVoltage(voltage);
+  }
+
   /**
    * Set the climber to climb or descend
    * @param climb true to climb, false to descend
