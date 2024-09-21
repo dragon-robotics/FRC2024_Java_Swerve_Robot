@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
 
-public class MoveIntakeUptake extends Command {
+public class MoveIntakeUptakeVoltage extends Command {
 
   private IntakeSubsystem m_intake;
   private UptakeSubsystem m_uptake;
@@ -26,7 +26,7 @@ public class MoveIntakeUptake extends Command {
   // @TODO: 5. Make the shooter detect a current spike
 
   /** Creates a new MoveUptakeUntilNoteDetected. */
-  public MoveIntakeUptake(
+  public MoveIntakeUptakeVoltage(
     IntakeSubsystem intake,
     UptakeSubsystem uptake,
     DoubleSupplier intakeSpeed,
@@ -49,15 +49,15 @@ public class MoveIntakeUptake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intake.set(m_intakeSpeed.getAsDouble());
-    m_uptake.set(m_uptakeSpeed.getAsDouble());
+    m_intake.setVoltage(m_intakeSpeed.getAsDouble());
+    m_uptake.setVoltage(m_uptakeSpeed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intake.set(0.0);
-    m_uptake.set(0);
+    m_intake.setVoltage(0.0);
+    m_uptake.setVoltage(0);
   }
 
   // Returns true when the command should end.

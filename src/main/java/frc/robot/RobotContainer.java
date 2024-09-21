@@ -21,6 +21,7 @@ import frc.robot.commands.Teleop.MoveIntake;
 // import frc.robot.commands.Teleop.MoveIntakeAdjPercent;
 import frc.robot.commands.Teleop.MoveIntakeUntilNoteDetected;
 import frc.robot.commands.Teleop.MoveIntakeUptake;
+import frc.robot.commands.Teleop.MoveIntakeUptakeVoltage;
 import frc.robot.commands.Teleop.MoveShooter;
 import frc.robot.commands.Teleop.MoveShooterUntilNoteDetected;
 // import frc.robot.commands.Teleop.MoveShooterAdjPercent;
@@ -175,7 +176,7 @@ public class RobotContainer {
         //  + (m_limelight3Subsystem.alignHorizontal(LimelightConstants.HORIZONTAL_KP)
         //    * m_driverControllerRaw.getRawAxis(JoystickConstants.TRIGGER_RIGHT)),  // Rotation
         () -> m_driverController.getHID().getRightBumper()  // Half-Speed
-      ).alongWith(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.BLACK)))
+      )
     );
 
     // m_swerveDriveSubsystem.setDefaultCommand(
@@ -272,7 +273,7 @@ public class RobotContainer {
                   .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.25))
               )
               .andThen(
-                new MoveIntakeUptake(
+                new MoveIntakeUptakeVoltage(
                   m_intakeSubsystem, 
                   m_uptakeSubsystem,
                   () -> -5.0,
@@ -280,9 +281,10 @@ public class RobotContainer {
                 )
                 .alongWith(new MoveShooter(m_shooterSubsystem, () -> -0.25)).withTimeout(0.1)
               )
-              .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(0)).alongWith(
+              .andThen(
+                Commands.runOnce(() -> m_intakeSubsystem.set(0)),
                 Commands.runOnce(() -> m_uptakeSubsystem.set(0)),
-                Commands.runOnce(() -> m_shooterSubsystem.set(0))
+                Commands.runOnce(() -> m_shooterSubsystem.set(0)
               ))
               // .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL))
           );
@@ -318,17 +320,16 @@ public class RobotContainer {
             )              
           ).onFalse(
             // Lock the robot at 10 degrees heading before ferrying the note //
-            new MoveIntake(m_intakeSubsystem, () -> -0.6)
-            .alongWith(new MoveUptake(m_uptakeSubsystem, () -> -0.6)).withTimeout(1.0)
+            new MoveIntakeUptake(m_intakeSubsystem, m_uptakeSubsystem, () -> -0.6, () -> -0.6).withTimeout(1.0)
             .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
             .andThen(Commands.runOnce(() -> {
               m_ledSubsystem.set(LEDConstants.BLACK);
               noteIsInIntakeEntry.setBoolean(false);
             }))
             .andThen(
-              Commands.runOnce(() -> m_intakeSubsystem.set(0)).alongWith(
+              Commands.runOnce(() -> m_intakeSubsystem.set(0)),
               Commands.runOnce(() -> m_uptakeSubsystem.set(0)),
-              Commands.runOnce(() -> m_shooterSubsystem.set(0))
+              Commands.runOnce(() -> m_shooterSubsystem.set(0)
             ))
           );
       
@@ -376,8 +377,7 @@ public class RobotContainer {
             .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(0.0)))
             .andThen(new MoveUptake(m_uptakeSubsystem, () -> -1.0))
         ).whileFalse(
-          new MoveUptake(m_uptakeSubsystem, () -> -1.0)
-          .alongWith(new MoveIntake(m_intakeSubsystem, () -> -1.0)).withTimeout(1.0)
+          new MoveIntakeUptake(m_intakeSubsystem, m_uptakeSubsystem, () -> -1.0, () -> -1.0).withTimeout(1.0)
           .andThen(Commands.runOnce(() -> {
             m_ledSubsystem.set(LEDConstants.BLACK);
             noteIsInIntakeEntry.setBoolean(false);
@@ -395,8 +395,7 @@ public class RobotContainer {
               )
             )              
           ).whileFalse(
-            new MoveIntake(m_intakeSubsystem, () -> -0.6)
-            .alongWith(new MoveUptake(m_uptakeSubsystem, () -> -0.6)).withTimeout(1.0)
+            new MoveIntakeUptake(m_intakeSubsystem, m_uptakeSubsystem, () -> -0.6, () -> -0.6).withTimeout(1.0)
             .andThen(Commands.runOnce(() -> m_shooterSubsystem.set(0.0)))
             .andThen(Commands.runOnce(() -> {
                 m_ledSubsystem.set(LEDConstants.BLACK);
