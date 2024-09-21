@@ -74,13 +74,13 @@ public class IntakeSubsystem extends SubsystemBase {
           .withWidget(BuiltInWidgets.kNumberSlider)
           .getEntry();
     } else {
-      // Set status 2, 3, 4, 5, 6, and 7 to be 500ms for the intake motor
-      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
-      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
-      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 500);
-      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 500);
-      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 500);
-      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus7, 500);
+      // Set status 2, 3, 4, 5, 6, and 7 to be 50000ms for the intake motor
+      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50000);
+      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 50000);
+      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 50000);
+      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 50000);
+      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50000);
+      m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus7, 50000);
     }
   }
 

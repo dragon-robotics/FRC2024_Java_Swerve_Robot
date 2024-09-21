@@ -117,25 +117,25 @@ public class ArmSubsystem extends SubsystemBase {
       // Set the lead arm motor to read the absolute encoder position every 5ms //
       m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 5);
 
-      // Set status 1, 2, 3, 4, 6, and 7 to be 500ms for the arm motor
-      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
-      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
-      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 500);
-      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 500);
-      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus7, 500);
+      // Set status 1, 2, 3, 4, 6, and 7 to be 50000ms for the arm motor
+      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 50000);
+      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50000);
+      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 50000);
+      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 50000);
+      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50000);
+      m_armLead.setPeriodicFramePeriod(PeriodicFrame.kStatus7, 50000);
 
       // Set the follow arm motor bandwidth to 200Hz (every 5ms) //
       m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
 
-      // Set status 1-7 to be 500ms for the follow arm motor
-      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
-      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
-      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 500);
-      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 500);
-      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 500);
-      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus7, 500);
+      // Set status 1-7 to be 50000ms for the follow arm motor
+      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 50000);
+      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50000);
+      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 50000);
+      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 50000);
+      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 50000);
+      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50000);
+      m_armFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus7, 50000);
     }
   }
 

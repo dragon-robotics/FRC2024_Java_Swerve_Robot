@@ -122,25 +122,25 @@ public class UptakeSubsystem extends SubsystemBase {
           .withWidget(BuiltInWidgets.kNumberSlider)
           .getEntry();
     } else {
-      // Set status 2, 3, 4, 5, 6, and 7 to be 500ms for the lead uptake motor //
-      m_uptakeLead.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-      m_uptakeLead.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
-      m_uptakeLead.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
-      m_uptakeLead.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 500);
-      m_uptakeLead.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 500);
-      m_uptakeLead.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 500);
-      m_uptakeLead.setPeriodicFramePeriod(PeriodicFrame.kStatus7, 500);
+      // Set status 2, 3, 4, 5, 6, and 7 to be 50000ms for the lead uptake motor //
+      m_uptakeLead.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 50000);
+      m_uptakeLead.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50000);
+      m_uptakeLead.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 50000);
+      m_uptakeLead.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 50000);
+      m_uptakeLead.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 50000);
+      m_uptakeLead.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50000);
+      m_uptakeLead.setPeriodicFramePeriod(PeriodicFrame.kStatus7, 50000);
 
       // Set the follow uptake motor bandwidth to 200Hz (every 5ms) //
       m_uptakeFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
 
-      // Set status 2, 3, 4, 5, 6, and 7 to be 500ms for the follow uptake motor //
-      m_uptakeFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-      m_uptakeFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
-      m_uptakeFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
-      m_uptakeFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 500);
-      m_uptakeFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 500);
-      m_uptakeFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 500);
+      // Set status 2, 3, 4, 5, 6, and 7 to be 50000ms for the follow uptake motor //
+      m_uptakeFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 50000);
+      m_uptakeFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50000);
+      m_uptakeFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 50000);
+      m_uptakeFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 50000);
+      m_uptakeFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 50000);
+      m_uptakeFollow.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50000);
     }
   }
 

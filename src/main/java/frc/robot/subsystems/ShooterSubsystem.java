@@ -105,25 +105,25 @@ public class ShooterSubsystem extends SubsystemBase {
           .getEntry();
     } else {
       // Set status 1-7 to be 500ms for the lead shooter motors
-      m_shooterLead.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus1, 500);
-      m_shooterLead.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus2, 500);
-      m_shooterLead.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus3, 500);
-      m_shooterLead.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus4, 500);
-      m_shooterLead.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus5, 500);
-      m_shooterLead.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus6, 500);
-      m_shooterLead.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus7, 500);
+      m_shooterLead.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus1, 50000);
+      m_shooterLead.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus2, 50000);
+      m_shooterLead.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus3, 50000);
+      m_shooterLead.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus4, 50000);
+      m_shooterLead.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus5, 50000);
+      m_shooterLead.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus6, 50000);
+      m_shooterLead.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus7, 50000);
 
       // Set the follow shooter motor bandwidth to 200Hz (every 5ms) //
       m_shooterFollow.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus0, 5);
 
       // Set status 1-7 to be 500ms for the follow shooter motors
-      m_shooterFollow.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus1, 500);
-      m_shooterFollow.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus2, 500);
-      m_shooterFollow.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus3, 500);
-      m_shooterFollow.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus4, 500);
-      m_shooterFollow.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus5, 500);
-      m_shooterFollow.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus6, 500);
-      m_shooterFollow.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus7, 500);
+      m_shooterFollow.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus1, 50000);
+      m_shooterFollow.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus2, 50000);
+      m_shooterFollow.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus3, 50000);
+      m_shooterFollow.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus4, 50000);
+      m_shooterFollow.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus5, 50000);
+      m_shooterFollow.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus6, 50000);
+      m_shooterFollow.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus7, 50000);
     }
   }
 
@@ -131,6 +131,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void set(double speed) {
     m_shooterLead.set(speed);
+  }
+
+  public void setVoltage(double voltage) {
+    m_shooterLead.setVoltage(voltage);
   }
 
   /**
