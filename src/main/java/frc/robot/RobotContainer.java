@@ -98,9 +98,6 @@ public class RobotContainer {
   private final CommandJoystick m_operatorButtonBoxController =
       new CommandJoystick(OperatorConstants.OPERATOR_BUTTON_PORT);
 
-  private final Joystick m_testController =
-      new Joystick(OperatorConstants.TEST_PORT);
-
   // private final CommandJoystick m_testCommandJoystick =
   //     new CommandJoystick(OperatorConstants.TEST_PORT);
 
