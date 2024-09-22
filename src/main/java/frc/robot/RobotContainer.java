@@ -58,7 +58,6 @@ import com.revrobotics.CANSparkMax;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final SwerveDriveSubsystem m_swerveDriveSubsystem = new SwerveDriveSubsystem();
-
   public final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   public final UptakeSubsystem m_uptakeSubsystem = new UptakeSubsystem();
   public final ArmSubsystem m_armSubsystem = new ArmSubsystem();
@@ -92,22 +91,77 @@ public class RobotContainer {
       .withProperties(Map.of("colorWhenTrue", "green", "colorWhenFalse", "maroon"))
       .getEntry();
 
+  // This is where the command sequence constants are defined //
+  private final double INTAKE_STOP = 0.0;
+  private final double UPTAKE_STOP = 0.0;
+  private final double SHOOTER_STOP = 0.0;
+
+  private final double INTAKE_REVERSE_FULL_SPEED = 1.0;
+  private final double UPTAKE_REVERSE_FULL_SPEED = 1.0;
+  private final double SHOOTER_REVERSE_FULL_SPEED = 1.0;
+
+  private final double INTAKE_FULL_SPEED = -1.0;
+  private final double UPTAKE_FULL_SPEED = -1.0;
+  private final double SHOOTER_FULL_SPEED = -1.0;
+
+  private final double MANUAL_ARM_UP_SPEED = 0.5;
+  private final double MANUAL_ARM_DOWN_SPEED = -0.5;
+
+  private final double INTAKE_SLIGHT_REVERSE_SPEED = 0.1;
+  private final double INTAKE_UNJAM_SPEED = 0.5;
+  private final double INTAKE_UNTIL_NOTE_DETECTED_SPEED = -0.8;
+  private final double INTAKE_UNTIL_NOTE_DETECTED_TIMEOUT = 0.25;
+
+  private final double UPTAKE_SHOOT_SPEED = -1.0;
+  private final double UPTAKE_SHOOT_TIMEOUT = 1.0;
+  private final double UPTAKE_SHOOT_INTAKE_SPEED = -0.5;
+
+  private final double AMP_PREP_ARM_SETPOINT_WAIT_TIME = -5.0;
+  private final double AMP_PREP_INTAKE_VOLTAGE = -5.0;
+  private final double AMP_PREP_UPTAKE_VOLTAGE = -3.0;
+  private final double AMP_PREP_SHOOTER_SPEED = -0.25;
+  private final double AMP_PREP_UPTAKE_BUMP_VOLTAGE = -2.5;  // This voltage is to bump the note into the shooter after beambreak activation
+  private final double AMP_PREP_BUMP_TIMEOUT = 0.1;  // This timeout is to bump the note into the shooter after beambreak activation
+
+  private final double AMP_SCORE_SHOOTER_SPEED = -0.5;
+  private final double AMP_SCORE_SHOOTER_TIMEOUT = 0.5;
+  private final double AMP_SCORE_SHOOTER_STOP_TIMEOUT = 0.1;  // This is the timeout to stop the shooter after scoring the note
+
+  private final double FERRY_SHOOTER_SPEED = -0.8;
+  private final double FERRY_INTAKE_RELEASE_SPEED = -0.6;
+  private final double FERRY_UPTAKE_RELEASE_SPEED = -0.6;
+  private final double FERRY_INTAKE_UPTAKE_RELEASE_TIMEOUT = -0.6;
+  private final double FERRY_SHOOTER_STOP_TIMEOUT = -0.6;
+
+  private final double PRIME_UPTAKE_SPEAKER_SHOT_INTAKE_REVERSE_SPEED = 0.2;
+  private final double PRIME_UPTAKE_SPEAKER_SHOT_INTAKE_REVERSE_TIMEOUT = 0.1;
+  private final double PRIME_UPTAKE_SPEAKER_SHOT_UPTAKE_SPEED = -1.0;
+
+  private final double UPTAKE_SHOT_INTAKE_RELEASE_SPEED = -1.0;
+  private final double UPTAKE_SHOT_UPTAKE_RELEASE_SPEED = -1.0;
+  private final double UPTAKE_SHOT_INTAKE_UPTAKE_RELEASE_TIMEOUT = 1.0;
+
+  private final double PARTY_MODE_SHOOTER_SPEED = 0.8;
+  private final double PARTY_MODE_INTAKE_SPEED = -0.6;
+  private final double PARTY_MODE_UPTAKE_SPEED = -0.6;
+  private final double PARTY_MODE_INTAKE_REVERSE_TIMEOUT = 1.0;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Register Named Commands //
-    NamedCommands.registerCommand("MoveUptake0", new MoveUptake(m_uptakeSubsystem, () -> 0.0));
-    NamedCommands.registerCommand("MoveUptake100", new MoveUptake(m_uptakeSubsystem, () -> -1.0));    
-    NamedCommands.registerCommand("MoveIntake0", new MoveIntake(m_intakeSubsystem, () -> 0.0));
-    NamedCommands.registerCommand("MoveIntake100", new MoveIntake(m_intakeSubsystem, () -> -1.0));
+    NamedCommands.registerCommand("MoveUptake0", new MoveUptake(m_uptakeSubsystem, () -> UPTAKE_STOP));
+    NamedCommands.registerCommand("MoveUptake100", new MoveUptake(m_uptakeSubsystem, () -> UPTAKE_FULL_SPEED));    
+    NamedCommands.registerCommand("MoveIntake0", new MoveIntake(m_intakeSubsystem, () -> INTAKE_STOP));
+    NamedCommands.registerCommand("MoveIntake100", new MoveIntake(m_intakeSubsystem, () -> INTAKE_FULL_SPEED));
     NamedCommands.registerCommand(
       "MoveIntakeUntilNoteDetected",
-      new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
-              .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.0).withTimeout(0.25))
+      new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> INTAKE_UNTIL_NOTE_DETECTED_SPEED)
+              .andThen(new MoveIntake(m_intakeSubsystem, () -> INTAKE_STOP).withTimeout(INTAKE_UNTIL_NOTE_DETECTED_TIMEOUT))
               .andThen(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.ORANGE))));
     NamedCommands.registerCommand(
       "UptakeShoot",
-      new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(1.0)
-      .andThen(new MoveIntake(m_intakeSubsystem, () -> -0.5)));
+      new MoveUptake(m_uptakeSubsystem, () -> UPTAKE_SHOOT_SPEED).withTimeout(UPTAKE_SHOOT_TIMEOUT)
+      .andThen(new MoveIntake(m_intakeSubsystem, () -> UPTAKE_SHOOT_INTAKE_SPEED)));
 
     // Init Auto Chooser //
     autoChooser = AutoBuilder.buildAutoChooser("UptakeShoot");
@@ -179,10 +233,10 @@ public class RobotContainer {
       m_armSubsystem.setDefaultCommand(new HoldArmToPosition(m_armSubsystem));
 
       m_operatorController.povDown().whileTrue(
-        Commands.run(() -> m_armSubsystem.setArmSpeed(-0.5), m_armSubsystem));
+        Commands.run(() -> m_armSubsystem.setArmSpeed(MANUAL_ARM_DOWN_SPEED), m_armSubsystem));
 
       m_operatorController.povUp().whileTrue(
-        Commands.run(() -> m_armSubsystem.setArmSpeed(0.5), m_armSubsystem));
+        Commands.run(() -> m_armSubsystem.setArmSpeed(MANUAL_ARM_UP_SPEED), m_armSubsystem));
 
       // Set Default Command for Shooter
       m_shooterSubsystem.setDefaultCommand(
@@ -191,24 +245,15 @@ public class RobotContainer {
             () -> -m_operatorController.getRightTriggerAxis(),
             () -> -m_operatorController.getLeftTriggerAxis()));
 
-      // m_testCommandJoystick.button(JoystickConstants.BTN_Y)
-      //     .whileTrue(new TuneUptakeAmpShot(
-      //       m_uptakeSubsystem, 
-      //       () -> m_testController.getRawButtonPressed(JoystickConstants.BUMPER_LEFT),
-      //       () -> m_testController.getRawButtonPressed(JoystickConstants.BUMPER_RIGHT), 
-      //       () -> m_testController.getRawButtonPressed(JoystickConstants.BTN_A), 
-      //       () -> m_testController.getRawButtonPressed(JoystickConstants.BTN_B)
-      //     ));
-
       // Unjam //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_1)
-          .whileTrue(new MoveIntake(m_intakeSubsystem, () -> 0.5));
+          .whileTrue(new MoveIntake(m_intakeSubsystem, () -> INTAKE_UNJAM_SPEED));
 
       // Intake using the button box //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_2)
           .whileTrue(
-              new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.8)
-              .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.1).withTimeout(0.25))
+              new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> INTAKE_UNTIL_NOTE_DETECTED_SPEED)
+              .andThen(new MoveIntake(m_intakeSubsystem, () -> INTAKE_SLIGHT_REVERSE_SPEED).withTimeout(INTAKE_UNTIL_NOTE_DETECTED_TIMEOUT))
               .andThen(Commands.runOnce(() -> {
                 m_ledSubsystem.set(LEDConstants.ORANGE);
                 noteIsInIntakeEntry.setBoolean(true);
@@ -219,43 +264,42 @@ public class RobotContainer {
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_3)
           .onTrue(
               new MoveArmToPos(m_armSubsystem, ArmConstants.SHOOTER_GOAL)
-              .andThen(new WaitCommand(0.5))
               .andThen(Commands.runOnce(() -> m_shooterSubsystem.setIdleMode(CANSparkMax.IdleMode.kBrake)))
+              .andThen(new WaitCommand(AMP_PREP_ARM_SETPOINT_WAIT_TIME))
               .andThen(
                   new MoveIntakeUptakeUntilNoteDetected(
                       m_intakeSubsystem, 
                       m_uptakeSubsystem, 
-                      () -> -5.0,
-                      () -> -3.0)
-                  // .raceWith(new MoveShooterUntilNoteDetected(m_shooterSubsystem, () -> -0.25))
-                  .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> -0.25))
+                      () -> AMP_PREP_INTAKE_VOLTAGE,
+                      () -> AMP_PREP_UPTAKE_VOLTAGE)
+                  .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> AMP_PREP_SHOOTER_SPEED))
               )
               .andThen(
                 new MoveIntakeUptakeVoltage(
                   m_intakeSubsystem, 
                   m_uptakeSubsystem,
-                  () -> -5.0,
-                  () -> -2.5
+                  () -> AMP_PREP_INTAKE_VOLTAGE,
+                  () -> AMP_PREP_UPTAKE_BUMP_VOLTAGE
                 )
-                .alongWith(new MoveShooter(m_shooterSubsystem, () -> -0.25)).withTimeout(0.1)
+                .alongWith(new MoveShooter(m_shooterSubsystem, () -> AMP_PREP_UPTAKE_BUMP_VOLTAGE)).withTimeout(AMP_PREP_BUMP_TIMEOUT)
               )
               .andThen(
-                Commands.runOnce(() -> m_intakeSubsystem.set(0)),
-                Commands.runOnce(() -> m_uptakeSubsystem.set(0)),
-                Commands.runOnce(() -> m_shooterSubsystem.set(0)
+                Commands.runOnce(() -> m_intakeSubsystem.set(INTAKE_STOP)),
+                Commands.runOnce(() -> m_uptakeSubsystem.set(UPTAKE_STOP)),
+                Commands.runOnce(() -> m_shooterSubsystem.set(SHOOTER_STOP)
               ))
           );
-
+        
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_5)
       .onTrue(
           new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL)
-          .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.5).withTimeout(0.5))
+          .andThen(new MoveShooter(m_shooterSubsystem, () -> AMP_SCORE_SHOOTER_SPEED).withTimeout(AMP_SCORE_SHOOTER_TIMEOUT))
           .andThen(Commands.runOnce(() -> m_shooterSubsystem.setIdleMode(CANSparkMax.IdleMode.kCoast)))
-            .andThen(new MoveArmToPos(m_armSubsystem, 0.4))
+            .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_ASSIST_GOAL))
             .andThen(
               Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.GREEN))
             )
-            .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.0).withTimeout(0.1))
+            .andThen(new MoveShooter(m_shooterSubsystem, () -> SHOOTER_STOP).withTimeout(AMP_SCORE_SHOOTER_STOP_TIMEOUT))
             .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL))
             .andThen(Commands.runOnce(() -> {
               m_ledSubsystem.set(LEDConstants.BLACK);
@@ -272,69 +316,38 @@ public class RobotContainer {
               new HoldArmToPosition(m_armSubsystem)
               .alongWith(
                 Commands.runOnce(() -> m_shooterSubsystem.setIdleMode(CANSparkMax.IdleMode.kCoast)),
-                new MoveShooter(m_shooterSubsystem, () -> -0.8)
+                new MoveShooter(m_shooterSubsystem, () -> FERRY_SHOOTER_SPEED)
               )
             )              
           ).onFalse(
             // Lock the robot at 10 degrees heading before ferrying the note //
-            new MoveIntakeUptake(m_intakeSubsystem, m_uptakeSubsystem, () -> -0.6, () -> -0.6).withTimeout(1.0)
-            .andThen(new MoveShooter(m_shooterSubsystem, () -> 0.0).withTimeout(0.5))
+            new MoveIntakeUptake(
+              m_intakeSubsystem,
+              m_uptakeSubsystem,
+              () -> FERRY_INTAKE_RELEASE_SPEED,
+              () -> FERRY_UPTAKE_RELEASE_SPEED)
+            .withTimeout(FERRY_INTAKE_UPTAKE_RELEASE_TIMEOUT)
+            .andThen(new MoveShooter(m_shooterSubsystem, () -> SHOOTER_STOP).withTimeout(FERRY_SHOOTER_STOP_TIMEOUT))
             .andThen(Commands.runOnce(() -> {
               m_ledSubsystem.set(LEDConstants.BLACK);
               noteIsInIntakeEntry.setBoolean(false);
             }))
             .andThen(
-              Commands.runOnce(() -> m_intakeSubsystem.set(0)),
-              Commands.runOnce(() -> m_uptakeSubsystem.set(0)),
-              Commands.runOnce(() -> m_shooterSubsystem.set(0)
+              Commands.runOnce(() -> m_intakeSubsystem.set(INTAKE_STOP)),
+              Commands.runOnce(() -> m_uptakeSubsystem.set(UPTAKE_STOP)),
+              Commands.runOnce(() -> m_shooterSubsystem.set(SHOOTER_STOP)
             ))
           );
-      
-      // // Test Lock Heading //
-      // var alliance = DriverStation.getAlliance();
-      // boolean color = alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
-      // double desiredFerryAngle = color ? 10.0 : -10.0;
-      // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
-      //     .onTrue(
-      //       Commands.run(
-      //         () -> m_swerveDriveSubsystem.swerve.drive(
-      //           m_swerveDriveSubsystem.swerve.swerveController.getTargetSpeeds(
-      //             0,
-      //             0,
-      //             desiredFerryAngle,
-      //             m_swerveDriveSubsystem.swerve.getYaw().getRadians(),
-      //             m_swerveDriveSubsystem.swerve.swerveController.config.maxAngularVelocity
-      //           )
-      //         ),
-      //         m_swerveDriveSubsystem
-      //       ).until(() -> Math.abs(m_swerveDriveSubsystem.swerve.getYaw().getDegrees()) <= 0.1)
-      //     );
-
-      // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
-      //   .onTrue(
-      //     new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
-      //     .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.4).withTimeout(0.2)
-      //     .raceWith(
-      //         new MoveUptake(m_uptakeSubsystem, () -> 0.4)
-      //     )
-      //     .andThen(Commands.runOnce(() -> {
-      //               m_intakeSubsystem.set(0);
-      //               m_uptakeSubsystem.set(0);
-      //             }))
-      //     .andThen(
-      //       new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(1.0))
-      //       .andThen(new MoveIntake(m_intakeSubsystem, () -> -0.5)))
-      //   );
 
       // Prime Uptake Shot //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_11)
         .whileTrue(
             new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL)
-            .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.2).withTimeout(0.1))
-            .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(0.0)))
-            .andThen(new MoveUptake(m_uptakeSubsystem, () -> -1.0))
+            .andThen(new MoveIntake(m_intakeSubsystem, () -> PRIME_UPTAKE_SPEAKER_SHOT_INTAKE_REVERSE_SPEED).withTimeout(PRIME_UPTAKE_SPEAKER_SHOT_INTAKE_REVERSE_TIMEOUT))
+            .andThen(Commands.runOnce(() -> m_intakeSubsystem.set(INTAKE_STOP)))
+            .andThen(new MoveUptake(m_uptakeSubsystem, () -> PRIME_UPTAKE_SPEAKER_SHOT_UPTAKE_SPEED))
         ).whileFalse(
-          new MoveIntakeUptake(m_intakeSubsystem, m_uptakeSubsystem, () -> -1.0, () -> -1.0).withTimeout(1.0)
+          new MoveIntakeUptake(m_intakeSubsystem, m_uptakeSubsystem, () -> UPTAKE_SHOT_INTAKE_RELEASE_SPEED, () -> UPTAKE_SHOT_UPTAKE_RELEASE_SPEED).withTimeout(UPTAKE_SHOT_INTAKE_UPTAKE_RELEASE_TIMEOUT)
           .andThen(Commands.runOnce(() -> {
             m_ledSubsystem.set(LEDConstants.BLACK);
             noteIsInIntakeEntry.setBoolean(false);
@@ -348,12 +361,12 @@ public class RobotContainer {
             .andThen(
               new HoldArmToPosition(m_armSubsystem)
               .alongWith(
-                new MoveShooter(m_shooterSubsystem, () -> 0.8)
+                new MoveShooter(m_shooterSubsystem, () -> PARTY_MODE_SHOOTER_SPEED)
               )
             )              
           ).whileFalse(
-            new MoveIntakeUptake(m_intakeSubsystem, m_uptakeSubsystem, () -> -0.6, () -> -0.6).withTimeout(1.0)
-            .andThen(Commands.runOnce(() -> m_shooterSubsystem.set(0.0)))
+            new MoveIntakeUptake(m_intakeSubsystem, m_uptakeSubsystem, () -> PARTY_MODE_INTAKE_SPEED, () -> PARTY_MODE_UPTAKE_SPEED).withTimeout(PARTY_MODE_INTAKE_REVERSE_TIMEOUT)
+            .andThen(Commands.runOnce(() -> m_shooterSubsystem.set(SHOOTER_STOP)))
             .andThen(Commands.runOnce(() -> {
                 m_ledSubsystem.set(LEDConstants.BLACK);
                 noteIsInIntakeEntry.setBoolean(false);
@@ -366,6 +379,42 @@ public class RobotContainer {
 
     // Use the "B" button to x-lock the wheels //
     m_driverController.b().onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.lock()));
+
+    // // Test Lock Heading //
+    // var alliance = DriverStation.getAlliance();
+    // boolean color = alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
+    // double desiredFerryAngle = color ? 10.0 : -10.0;
+    // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
+    //     .onTrue(
+    //       Commands.run(
+    //         () -> m_swerveDriveSubsystem.swerve.drive(
+    //           m_swerveDriveSubsystem.swerve.swerveController.getTargetSpeeds(
+    //             0,
+    //             0,
+    //             desiredFerryAngle,
+    //             m_swerveDriveSubsystem.swerve.getYaw().getRadians(),
+    //             m_swerveDriveSubsystem.swerve.swerveController.config.maxAngularVelocity
+    //           )
+    //         ),
+    //         m_swerveDriveSubsystem
+    //       ).until(() -> Math.abs(m_swerveDriveSubsystem.swerve.getYaw().getDegrees()) <= 0.1)
+    //     );
+
+    // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
+    //   .onTrue(
+    //     new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
+    //     .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.4).withTimeout(0.2)
+    //     .raceWith(
+    //         new MoveUptake(m_uptakeSubsystem, () -> 0.4)
+    //     )
+    //     .andThen(Commands.runOnce(() -> {
+    //               m_intakeSubsystem.set(0);
+    //               m_uptakeSubsystem.set(0);
+    //             }))
+    //     .andThen(
+    //       new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(1.0))
+    //       .andThen(new MoveIntake(m_intakeSubsystem, () -> -0.5)))
+    //   );
   }
 
   /**
