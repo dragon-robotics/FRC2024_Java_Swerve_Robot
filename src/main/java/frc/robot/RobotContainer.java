@@ -69,26 +69,12 @@ public class RobotContainer {
   // Define Driver and Operator controllers //
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.DRIVER_PORT);
-  
-  // private final XboxController m_driverControllerRaw = 
-  //     new XboxController(OperatorConstants.DRIVER_PORT);
 
   private final CommandXboxController m_operatorController =
       new CommandXboxController(OperatorConstants.OPERATOR_PORT);
 
   private final CommandJoystick m_operatorButtonBoxController =
       new CommandJoystick(OperatorConstants.OPERATOR_BUTTON_PORT);
-
-  // private final CommandJoystick m_testCommandJoystick =
-  //     new CommandJoystick(OperatorConstants.TEST_PORT);
-
-//   // Define Driver and Operator controllers - Temporary fix for forgetting Xbox Controller //
-//   private final CommandJoystick m_driverController =
-//       new CommandJoystick(OperatorConstants.DRIVER_PORT);
-
-//   private final CommandJoystick m_operatorController =
-//       new CommandJoystick(OperatorConstants.OPERATOR_PORT);
-
 
   private final SendableChooser<Command> autoChooser;
 
