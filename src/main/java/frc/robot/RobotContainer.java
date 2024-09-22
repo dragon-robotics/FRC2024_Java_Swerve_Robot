@@ -280,24 +280,23 @@ public class RobotContainer {
                 Commands.runOnce(() -> m_uptakeSubsystem.set(0)),
                 Commands.runOnce(() -> m_shooterSubsystem.set(0)
               ))
-              // .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL))
           );
 
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_5)
       .onTrue(
           new MoveArmToPos(m_armSubsystem, ArmConstants.AMP_GOAL)
-              .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.5).withTimeout(0.5))
-              .andThen(Commands.runOnce(() -> m_shooterSubsystem.setIdleMode(CANSparkMax.IdleMode.kCoast)))
-              .andThen(new MoveArmToPos(m_armSubsystem, 0.4))
-              .andThen(
-                Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.GREEN))
-              )
-              .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.0).withTimeout(0.1))
-              .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL))
-              .andThen(Commands.runOnce(() -> {
-                m_ledSubsystem.set(LEDConstants.BLACK);
-                noteIsInIntakeEntry.setBoolean(false);
-              }))
+          .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.5).withTimeout(0.5))
+          .andThen(Commands.runOnce(() -> m_shooterSubsystem.setIdleMode(CANSparkMax.IdleMode.kCoast)))
+            .andThen(new MoveArmToPos(m_armSubsystem, 0.4))
+            .andThen(
+              Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.GREEN))
+            )
+            .andThen(new MoveShooter(m_shooterSubsystem, () -> -0.0).withTimeout(0.1))
+            .andThen(new MoveArmToPos(m_armSubsystem, ArmConstants.INITIAL_GOAL))
+            .andThen(Commands.runOnce(() -> {
+              m_ledSubsystem.set(LEDConstants.BLACK);
+              noteIsInIntakeEntry.setBoolean(false);
+            }))
 
       );
 
