@@ -51,41 +51,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     // SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.NONE;
-    
-    // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
-    //  In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
-    //  The encoder resolution per motor revolution is 1 per motor revolution.
-    double angleConversionFactor
-        = SwerveMath.calculateDegreesPerSteeringRotation(
-              SwerveConstants.ANGLE_GEAR_RATIO,
-              SwerveConstants.PULSE_PER_ROTATION
-          );
-
-    // Motor conversion factor is (PI * WHEEL DIAMETER IN METERS) / (GEAR RATIO * ENCODER RESOLUTION).
-    //  In this case the wheel diameter is 4 inches, which must be converted to meters to get meters/second.
-    //  The gear ratio is 6.75 motor revolutions per wheel rotation.
-    //  The encoder resolution per motor revolution is 1 per motor revolution.
-    double driveConversionFactor = SwerveMath.calculateMetersPerRotation(
-        SwerveConstants.WHEEL_DIAMETER_METERS,
-        SwerveConstants.DRIVE_GEAR_RATIO,
-        SwerveConstants.PULSE_PER_ROTATION
-    );
 
     try {
-      swerve =
-          new SwerveParser(
-            new File(
-              Filesystem.getDeployDirectory(), "swerve"
-            )
-          ).createSwerveDrive(
-            SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
-            angleConversionFactor,
-            driveConversionFactor
-          );
-
-      swerve.setOdometryPeriod(0.01);
-      // swerve.setHeadingCorrection(true);
-      swerve.setCosineCompensator(true);
+      swerve = new SwerveParser(
+        new File(Filesystem.getDeployDirectory(), "swerve"))
+        .createSwerveDrive(SwerveConstants.MAX_SPEED_METERS_PER_SECOND);
 
       // Configure the AutoBuilder //
       setupPathPlanner();
@@ -94,6 +64,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
       throw new RuntimeException(e);
     }
 
+    swerve.setOdometryPeriod(0.01);
+    swerve.setHeadingCorrection(false);
+    swerve.setCosineCompensator(true);
   }
 
   /**
@@ -146,7 +119,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         double translation = translationSup.getAsDouble();
         double strafe = strafeSup.getAsDouble();
         double rotation = rotationSup.getAsDouble();
-        Boolean halfSpeed = halfSpeedSup.getAsBoolean();
+        boolean halfSpeed = halfSpeedSup.getAsBoolean();
 
         // Apply half speed if the half speed button is pressed
         if(halfSpeed)
