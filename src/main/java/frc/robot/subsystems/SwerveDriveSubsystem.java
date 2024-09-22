@@ -83,7 +83,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             driveConversionFactor
           );
 
-      // swerve.setOdometryPeriod(0.01);
+      swerve.setOdometryPeriod(0.01);
       // swerve.setHeadingCorrection(true);
       swerve.setCosineCompensator(true);
 
@@ -269,8 +269,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // Update the robot odometry per scheduler run //
-    swerve.updateOdometry();
+    // // Update the robot odometry per scheduler run //
+    // swerve.updateOdometry();
   }
 
   @Override
