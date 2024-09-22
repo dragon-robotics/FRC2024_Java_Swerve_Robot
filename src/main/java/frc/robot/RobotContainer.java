@@ -144,7 +144,6 @@ public class RobotContainer {
       "UptakeShoot",
       new MoveUptake(m_uptakeSubsystem, () -> -1.0).withTimeout(1.0)
       .andThen(new MoveIntake(m_intakeSubsystem, () -> -0.5)));
-    
 
     // Init Auto Chooser //
     autoChooser = AutoBuilder.buildAutoChooser("UptakeShoot");
@@ -236,11 +235,6 @@ public class RobotContainer {
       //       () -> m_testController.getRawButtonPressed(JoystickConstants.BTN_A), 
       //       () -> m_testController.getRawButtonPressed(JoystickConstants.BTN_B)
       //     ));
-
-      // @TODOs
-      // Operator
-      // @TODO Tune handoff setpoint for the shooter arm
-      // @TODO Tune amp setpoint for the shooter arm
 
       // Unjam //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_1)
@@ -402,54 +396,6 @@ public class RobotContainer {
                 noteIsInIntakeEntry.setBoolean(false);
               }))
           );
-
-      // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
-      //     .whileTrue(
-      //         new MoveIntake(m_intakeSubsystem, () -> 0.5)
-      //     );
-
-
-      // // RBump. MoveIntakeUntilNoteDetected
-      // //   - Note travel distance depends on intake power
-      // //   - apply a 0.1 second down for both intake and uptake at low percentage (20%) (if needed)
-      // m_operatorController.rightBumper()
-      //     .whileTrue(
-      //         new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.65)
-      //         .andThen(
-      //             new MoveIntake(m_intakeSubsystem, () -> 0.65).withTimeout(0.25)
-      //         )
-      //     );
-
-      // m_operatorController.leftBumper()
-      // .whileTrue(
-      //     new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> -0.7)
-      //     .andThen(new MoveIntake(m_intakeSubsystem, () -> 0.45).withTimeout(0.25))
-      //     .andThen(Commands.runOnce(() -> m_ledSubsystem.set(LEDConstants.ORANGE)))
-      // );
-
-      // // A. PrimeUptakeShot
-      // //   - Spin Uptake to (x%) power
-      // m_operatorController.a().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -1.0));
-
-      // // X. MoveIntake(100%) (Shoot using uptake)
-      // //   - Move intake at 100%
-      // m_operatorController.x().whileTrue(new MoveIntake(m_intakeSubsystem, () -> -1.0));
-
-      // // Y. MoveUptake(50%) (Shoot using shooter)
-      // m_operatorController.y().whileTrue(new MoveUptake(m_uptakeSubsystem, () -> -0.43));
-
-      // // // Driver
-
-
-      // Intake to Uptake - User should hold the button //
-
-      // Intake Amp Sequence - User should hold the button //
-
-      // Prepare to Shoot Speaker - User should hold the button //
-
-      // Score Speaker - User should hold the button //
-
-      // Score Amp - User should hold the button //
     }
 
     // Use the "A" button to reset the Gyro orientation //
@@ -457,97 +403,6 @@ public class RobotContainer {
 
     // Use the "B" button to x-lock the wheels //
     m_driverController.b().onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.lock()));
-
-    // // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(m_exampleSubsystem::exampleCondition)
-    //     .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    // // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // // cancelling on release.
-    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-
-    //#endregion
-
-    //#region Joystick Bindings
-    
-    // // // Set default teleop command to drive //
-    // // m_swerveDriveSubsystem.setDefaultCommand(
-    // //   m_swerveDriveSubsystem.drive(
-    // //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_LEFT_Y),   // Translation
-    // //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_LEFT_X),   // Strafe
-    // //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_RIGHT_X)   // Rotation
-    // //   )
-    // // );
-
-    // // m_swerveDriveSubsystem.setDefaultCommand(
-    // //   m_swerveDriveSubsystem.driveHeading(
-    // //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_LEFT_Y),   // Translation
-    // //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_LEFT_X),   // Strafe
-    // //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_RIGHT_Y),  // X component of angle
-    // //     () -> -m_driverController.getRawAxis(JoystickConstants.STICK_RIGHT_Y)   // Y component of angle
-    // //   )
-    // // );
-
-    // if (GeneralConstants.CURRENT_MODE == RobotMode.TEST){
-    //   // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
-    //   m_intakeSubsystem.setDefaultCommand(
-    //       new TestIntake(
-    //           m_intakeSubsystem,
-    //           () -> -m_operatorController.getRawAxis(JoystickConstants.STICK_RIGHT_Y)
-    //       )
-    //   );
-
-    //   m_uptakeSubsystem.setDefaultCommand(
-    //       new TestUptake(
-    //           m_uptakeSubsystem,
-    //           () -> -m_operatorController.getRawAxis(JoystickConstants.STICK_LEFT_Y)
-    //       )
-    //   );
-
-    //   m_armSubsystem.setDefaultCommand(
-    //       Commands.run(() -> m_armSubsystem.setArmSpeed(0.0), m_armSubsystem));
-    //   m_shooterSubsystem.setDefaultCommand(
-    //       new TestShooter(
-    //           m_shooterSubsystem,
-    //           () -> -m_operatorController.getRawAxis(JoystickConstants.TRIGGER_RIGHT),
-    //           () -> -m_operatorController.getRawAxis(JoystickConstants.TRIGGER_LEFT)
-    //       )
-    //   );
-
-    //   m_operatorController.button(JoystickConstants.BTN_A)
-    //       .whileTrue(Commands.run(() -> m_armSubsystem.setArmSpeed(0.1), m_armSubsystem));
-
-    //   m_operatorController.button(JoystickConstants.BTN_B)
-    //       .whileTrue(Commands.run(() -> m_armSubsystem.setArmSpeed(-0.1), m_armSubsystem));
-    // } else {
-    //   // m_climberSubsystem.setDefaultCommand(new TestClimber(m_climberSubsystem));
-    //   m_intakeSubsystem.setDefaultCommand(Commands.run(() -> m_intakeSubsystem.stopIntake(), m_intakeSubsystem));
-    //   m_uptakeSubsystem.setDefaultCommand(Commands.run(() -> m_uptakeSubsystem.stopUptake(), m_uptakeSubsystem));
-    //   m_armSubsystem.setDefaultCommand(Commands.run(() -> m_armSubsystem.stopArm(), m_armSubsystem));
-    //   m_shooterSubsystem.setDefaultCommand(Commands.run(() -> m_shooterSubsystem.stopShooter(), m_shooterSubsystem));
-
-    //   m_operatorController.button(JoystickConstants.BTN_A)
-    //       .whileTrue(Commands.run(() -> m_armSubsystem.setArmSpeed(0.1), m_armSubsystem));
-
-    //   m_operatorController.button(JoystickConstants.BTN_B)
-    //       .whileTrue(Commands.run(() -> m_armSubsystem.setArmSpeed(-0.1), m_armSubsystem));
-
-    //   // Intake to Uptake - User should hold the button //
-
-    //   // Intake Amp Sequence - User should hold the button //
-
-    //   // Prepare to Shoot Speaker - User should hold the button //
-
-    //   // Score Speaker - User should hold the button //
-
-    //   // Score Amp - User should hold the button //
-    // }
-
-    // // Use the "A" button to reset the Gyro orientation //
-    // m_driverController.button(JoystickConstants.BTN_A)
-    //     .onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.zeroGyro()));
-
-    //#endregion
   }
 
   /**
@@ -557,6 +412,5 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
-    // return null;
   }
 }
