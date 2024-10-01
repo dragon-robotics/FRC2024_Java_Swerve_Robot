@@ -36,6 +36,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -118,8 +119,8 @@ public class RobotContainer {
 
   private final double AMP_PREP_ARM_SETPOINT_WAIT_TIME = -5.0;
   private final double AMP_PREP_INTAKE_VOLTAGE = -5.0;
-  private final double AMP_PREP_UPTAKE_VOLTAGE = -3.0;
-  private final double AMP_PREP_SHOOTER_SPEED = -0.25;
+  private final double AMP_PREP_UPTAKE_VOLTAGE = -4.0;
+  private final double AMP_PREP_SHOOTER_SPEED = -0.3;
   private final double AMP_PREP_UPTAKE_BUMP_VOLTAGE = -2.5;  // This voltage is to bump the note into the shooter after beambreak activation
   private final double AMP_PREP_BUMP_TIMEOUT = 0.1;  // This timeout is to bump the note into the shooter after beambreak activation
 
@@ -130,8 +131,8 @@ public class RobotContainer {
   private final double FERRY_SHOOTER_SPEED = -0.8;
   private final double FERRY_INTAKE_RELEASE_SPEED = -0.6;
   private final double FERRY_UPTAKE_RELEASE_SPEED = -0.6;
-  private final double FERRY_INTAKE_UPTAKE_RELEASE_TIMEOUT = -0.6;
-  private final double FERRY_SHOOTER_STOP_TIMEOUT = -0.6;
+  private final double FERRY_INTAKE_UPTAKE_RELEASE_TIMEOUT = 0.6;
+  private final double FERRY_SHOOTER_STOP_TIMEOUT = 0.6;
 
   private final double PRIME_UPTAKE_SPEAKER_SHOT_INTAKE_REVERSE_SPEED = 0.2;
   private final double PRIME_UPTAKE_SPEAKER_SHOT_INTAKE_REVERSE_TIMEOUT = 0.1;
@@ -274,15 +275,15 @@ public class RobotContainer {
                       () -> AMP_PREP_UPTAKE_VOLTAGE)
                   .deadlineWith(new MoveShooter(m_shooterSubsystem, () -> AMP_PREP_SHOOTER_SPEED))
               )
-              .andThen(
-                new MoveIntakeUptakeVoltage(
-                  m_intakeSubsystem, 
-                  m_uptakeSubsystem,
-                  () -> AMP_PREP_INTAKE_VOLTAGE,
-                  () -> AMP_PREP_UPTAKE_BUMP_VOLTAGE
-                )
-                .alongWith(new MoveShooter(m_shooterSubsystem, () -> AMP_PREP_UPTAKE_BUMP_VOLTAGE)).withTimeout(AMP_PREP_BUMP_TIMEOUT)
-              )
+              // .andThen(
+              //   new MoveIntakeUptakeVoltage(
+              //     m_intakeSubsystem, 
+              //     m_uptakeSubsystem,
+              //     () -> AMP_PREP_INTAKE_VOLTAGE,
+              //     () -> AMP_PREP_UPTAKE_BUMP_VOLTAGE
+              //   )
+              //   .alongWith(new MoveShooter(m_shooterSubsystem, () -> AMP_PREP_UPTAKE_BUMP_VOLTAGE)).withTimeout(AMP_PREP_BUMP_TIMEOUT)
+              // )
               .andThen(
                 Commands.runOnce(() -> m_intakeSubsystem.set(INTAKE_STOP)),
                 Commands.runOnce(() -> m_uptakeSubsystem.set(UPTAKE_STOP)),
@@ -380,25 +381,25 @@ public class RobotContainer {
     // Use the "B" button to x-lock the wheels //
     m_driverController.b().onTrue(Commands.runOnce(() -> m_swerveDriveSubsystem.lock()));
 
-    // // Test Lock Heading //
-    // var alliance = DriverStation.getAlliance();
-    // boolean color = alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
-    // double desiredFerryAngle = color ? 10.0 : -10.0;
-    // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
-    //     .onTrue(
-    //       Commands.run(
-    //         () -> m_swerveDriveSubsystem.swerve.drive(
-    //           m_swerveDriveSubsystem.swerve.swerveController.getTargetSpeeds(
-    //             0,
-    //             0,
-    //             desiredFerryAngle,
-    //             m_swerveDriveSubsystem.swerve.getYaw().getRadians(),
-    //             m_swerveDriveSubsystem.swerve.swerveController.config.maxAngularVelocity
-    //           )
-    //         ),
-    //         m_swerveDriveSubsystem
-    //       ).until(() -> Math.abs(m_swerveDriveSubsystem.swerve.getYaw().getDegrees()) <= 0.1)
-    //     );
+    // Test Lock Heading //
+    var alliance = DriverStation.getAlliance();
+    boolean color = alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
+    double desiredFerryAngle = color ? 10.0 : -10.0;
+    m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
+        .onTrue(
+          Commands.run(
+            () -> m_swerveDriveSubsystem.swerve.drive(
+              m_swerveDriveSubsystem.swerve.swerveController.getTargetSpeeds(
+                0,
+                0,
+                desiredFerryAngle,
+                m_swerveDriveSubsystem.swerve.getYaw().getRadians(),
+                m_swerveDriveSubsystem.swerve.swerveController.config.maxAngularVelocity
+              )
+            ),
+            m_swerveDriveSubsystem
+          ).until(() -> Math.abs(m_swerveDriveSubsystem.swerve.getYaw().getDegrees()) <= 0.1)
+        );
 
     // m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_7)
     //   .onTrue(

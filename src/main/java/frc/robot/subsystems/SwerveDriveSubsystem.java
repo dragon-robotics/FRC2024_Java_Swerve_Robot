@@ -61,7 +61,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     swerve.setOdometryPeriod(0.01);
-    swerve.setHeadingCorrection(false);
+    swerve.setHeadingCorrection(true);
     swerve.setCosineCompensator(true);
   }
 
