@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CustomButtonBoxConstants;
 import frc.robot.Constants.GeneralConstants;
+import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.Constants.GeneralConstants.RobotMode;
 import frc.robot.Constants.OperatorConstants;
@@ -197,6 +198,11 @@ public class RobotContainer {
       )
     );
 
+    // If button 1 is held, then we lock onto amp heading
+    // If button 2 is held, then we lock onto shoot heading
+    // Otherwise, simple swerve
+
+
     // m_swerveDriveSubsystem.setDefaultCommand(
     //   m_swerveDriveSubsystem.driveHeading(
     //     () -> -m_driverController.getLeftY(),   // Translation
@@ -220,7 +226,7 @@ public class RobotContainer {
           .whileTrue(Commands.run(() -> m_armSubsystem.setArmSpeed(-0.1), m_armSubsystem));
 
     } else {
-      
+
       // Set Default Command for Intake
       m_intakeSubsystem.setDefaultCommand(
         new MoveIntake(m_intakeSubsystem, () -> -m_operatorController.getRightY()));
@@ -246,6 +252,55 @@ public class RobotContainer {
             () -> -m_operatorController.getRightTriggerAxis(),
             () -> -m_operatorController.getLeftTriggerAxis()));
 
+      // Use the "Left Bumper" button to lock onto amp heading //
+      m_driverController.leftBumper()
+      .onTrue(
+        Commands.runOnce(() -> {
+          m_swerveDriveSubsystem.setDefaultCommand(
+            m_swerveDriveSubsystem.driveHeading(
+            () -> -m_driverController.getLeftY(),   // Translation
+            () -> -m_driverController.getLeftX(),   // Strafe
+            () -> 90.0
+          ));
+        }))
+      .onFalse(
+        Commands.runOnce(() -> {
+          m_swerveDriveSubsystem.setDefaultCommand(
+            m_swerveDriveSubsystem.drive(
+              () -> -m_driverController.getLeftY(),   // Translation
+              () -> -m_driverController.getLeftX(),   // Strafe
+              () -> -m_driverController.getRightX(),
+              //  + (m_limelight3Subsystem.alignHorizontal(LimelightConstants.HORIZONTAL_KP)
+              //    * m_driverControllerRaw.getRawAxis(JoystickConstants.TRIGGER_RIGHT)),  // Rotation
+              () -> m_driverController.getHID().getRightBumper()  // Half-Speed
+            )
+          );
+        }));
+
+      // Use the "Right Bumper" button to lock onto shoot heading //
+      m_driverController.rightBumper()
+      .onTrue(
+        Commands.run(() -> {
+          m_swerveDriveSubsystem.setDefaultCommand(
+            m_swerveDriveSubsystem.driveHeading(
+            () -> -m_driverController.getLeftY(),   // Translation
+            () -> -m_driverController.getLeftX(),   // Strafe
+            () -> 0.0
+          ));
+        }))
+      .onFalse(
+        Commands.run(() -> {
+          m_swerveDriveSubsystem.setDefaultCommand(
+            m_swerveDriveSubsystem.drive(
+              () -> -m_driverController.getLeftY(),   // Translation
+              () -> -m_driverController.getLeftX(),   // Strafe
+              () -> -m_driverController.getRightX(),
+              //  + (m_limelight3Subsystem.alignHorizontal(LimelightConstants.HORIZONTAL_KP)
+              //    * m_driverControllerRaw.getRawAxis(JoystickConstants.TRIGGER_RIGHT)),  // Rotation
+              () -> m_driverController.getHID().getRightBumper()  // Half-Speed
+            )
+          );
+        }));
       // Unjam //
       m_operatorButtonBoxController.button(CustomButtonBoxConstants.BTN_1)
           .whileTrue(new MoveIntake(m_intakeSubsystem, () -> INTAKE_UNJAM_SPEED));

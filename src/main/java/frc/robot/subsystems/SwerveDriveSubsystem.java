@@ -194,6 +194,43 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     swerve.driveFieldOriented(velocity); // Open loop is disabled since it shouldn't be used most of the time.
   }
 
+  public Command driveHeading(
+    DoubleSupplier translationSup,
+    DoubleSupplier strafeSup,
+    DoubleSupplier headingSup
+  ) {
+      return run(() -> {
+      double translation = translationSup.getAsDouble();
+      double strafe = strafeSup.getAsDouble();
+      double angle = headingSup.getAsDouble();
+
+      double translationVal =
+          translationLimiter.calculate(
+              MathUtil.applyDeadband(
+                  translation, Constants.SwerveConstants.SWERVE_DEADBAND));
+      double strafeVal =
+          strafeLimiter.calculate(
+              MathUtil.applyDeadband(
+                  strafe, Constants.SwerveConstants.SWERVE_DEADBAND));
+
+      ChassisSpeeds desiredSpeeds
+          = swerve.swerveController.getTargetSpeeds(
+              translationVal,
+              strafeVal,
+              angle,
+              swerve.getYaw().getRadians(),
+              SwerveConstants.MAX_SPEED_METERS_PER_SECOND
+          );
+
+      driveHeading(desiredSpeeds);
+    })
+    .withName("TeleopStickyHeadingSwerve");
+  }
+
+  public void driveStickyHeading(ChassisSpeeds velocity) {
+    swerve.driveFieldOriented(velocity); // Open loop is disabled since it shouldn't be used most of the time.
+  }
+
   public void setChassisSpeeds(ChassisSpeeds speeds) {
     swerve.setChassisSpeeds(speeds);
   }
