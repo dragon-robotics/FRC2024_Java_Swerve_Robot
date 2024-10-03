@@ -88,7 +88,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "CenterNoteIntakePart1"
+                  "pathName": "CenterNoteIntakePath"
                 }
               },
               {
@@ -113,7 +113,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "CenterNoteShootPart1"
+                  "pathName": "CenterNoteShootPath"
                 }
               },
               {
