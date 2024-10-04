@@ -148,13 +148,18 @@ public class RobotContainer {
   private final double PARTY_MODE_UPTAKE_SPEED = -0.6;
   private final double PARTY_MODE_INTAKE_REVERSE_TIMEOUT = 1.0;
 
+  // @TODO: Sweeping Motion on 4 Note //
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Register Named Commands //
     NamedCommands.registerCommand("MoveUptake0", new MoveUptake(m_uptakeSubsystem, () -> UPTAKE_STOP));
-    NamedCommands.registerCommand("MoveUptake100", new MoveUptake(m_uptakeSubsystem, () -> UPTAKE_FULL_SPEED));    
+    NamedCommands.registerCommand("MoveUptake100", new MoveUptake(m_uptakeSubsystem, () -> -0.7));   
+    NamedCommands.registerCommand("MoveUptake90", new MoveUptake(m_uptakeSubsystem, () -> -0.65));
     NamedCommands.registerCommand("MoveIntake0", new MoveIntake(m_intakeSubsystem, () -> INTAKE_STOP));
     NamedCommands.registerCommand("MoveIntake100", new MoveIntake(m_intakeSubsystem, () -> INTAKE_FULL_SPEED));
+    NamedCommands.registerCommand("MoveIntake90", new MoveIntake(m_intakeSubsystem, () -> -0.7));
+
     NamedCommands.registerCommand(
       "MoveIntakeUntilNoteDetected",
       new MoveIntakeUntilNoteDetected(m_intakeSubsystem, () -> INTAKE_UNTIL_NOTE_DETECTED_SPEED)
