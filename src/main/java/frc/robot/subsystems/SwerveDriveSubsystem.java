@@ -70,6 +70,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
    */
   public void setupPathPlanner()
   {
+    // @TODO: Figure out why the intake sequence doesn't work initially sometimes //
+    // @TODO: Add the uptake shot sequence to improve our uptake shot consistency (BTN 11) //
+    // @TODO: Slow down the uptake shot to have the shot be lobbed in //
+    // @TODO: Have the return sequences on the 4-note auto go a bit further into the subwoofer to align our shots better //
+    // @TODO: Sweeping motion on 4-note auto to clear out missed notes //
+
     AutoBuilder.configureHolonomic(
         this::getPose, // Robot pose supplier
         this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
