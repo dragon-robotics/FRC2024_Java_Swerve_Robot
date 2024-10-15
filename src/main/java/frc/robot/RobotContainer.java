@@ -137,10 +137,10 @@ public class RobotContainer {
 
   private final double PRIME_UPTAKE_SPEAKER_SHOT_INTAKE_REVERSE_SPEED = 0.2;
   private final double PRIME_UPTAKE_SPEAKER_SHOT_INTAKE_REVERSE_TIMEOUT = 0.1;
-  private final double PRIME_UPTAKE_SPEAKER_SHOT_UPTAKE_SPEED = -1.0;
+  private final double PRIME_UPTAKE_SPEAKER_SHOT_UPTAKE_SPEED = -0.8;
 
-  private final double UPTAKE_SHOT_INTAKE_RELEASE_SPEED = -1.0;
-  private final double UPTAKE_SHOT_UPTAKE_RELEASE_SPEED = -1.0;
+  private final double UPTAKE_SHOT_INTAKE_RELEASE_SPEED = -0.8;
+  private final double UPTAKE_SHOT_UPTAKE_RELEASE_SPEED = -0.8;
   private final double UPTAKE_SHOT_INTAKE_UPTAKE_RELEASE_TIMEOUT = 1.0;
 
   private final double PARTY_MODE_SHOOTER_SPEED = 0.8;
