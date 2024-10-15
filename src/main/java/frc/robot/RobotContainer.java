@@ -148,8 +148,6 @@ public class RobotContainer {
   private final double PARTY_MODE_UPTAKE_SPEED = -0.6;
   private final double PARTY_MODE_INTAKE_REVERSE_TIMEOUT = 1.0;
 
-  // @TODO: Sweeping Motion on 4 Note //
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Register Named Commands //
